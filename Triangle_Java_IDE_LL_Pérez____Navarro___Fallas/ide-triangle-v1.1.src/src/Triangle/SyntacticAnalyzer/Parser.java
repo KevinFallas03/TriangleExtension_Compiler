@@ -271,7 +271,13 @@ public class Parser {
     start(commandPos);
 
     switch (currentToken.kind) {
-
+    
+    case Token.NOTHING:
+        acceptIt();
+        finish(commandPos);
+        commandAST = new EmptyCommand(commandPos);
+        break;
+        
     case Token.IDENTIFIER:
       {
         Identifier iAST = parseIdentifier();
@@ -293,18 +299,20 @@ public class Parser {
       }
       break;
 
-    case Token.BEGIN:
-      acceptIt();
-      commandAST = parseCommand();
-      accept(Token.END);
-      break;
+    // SE ELIMINA EL BEGIN
+    // case Token.BEGIN:
+    //   acceptIt();
+    //   commandAST = parseCommand();
+    //   accept(Token.END);
+    //   break;
 
     case Token.LET:
       {
         acceptIt();
         Declaration dAST = parseDeclaration();
         accept(Token.IN);
-        Command cAST = parseSingleCommand();
+        Command cAST = parseCommand(); // Cambia de parseSingleCommand a parseCommand
+        accept(Token.END); // Agrega END como token final
         finish(commandPos);
         commandAST = new LetCommand(dAST, cAST, commandPos);
       }
@@ -315,9 +323,10 @@ public class Parser {
         acceptIt();
         Expression eAST = parseExpression();
         accept(Token.THEN);
-        Command c1AST = parseSingleCommand();
+        Command c1AST = parseCommand();
         accept(Token.ELSE);
-        Command c2AST = parseSingleCommand();
+        Command c2AST = parseCommand();
+        accept(Token.END); //SE AGREGA COMO TOKEN FINAL
         finish(commandPos);
         commandAST = new IfCommand(eAST, c1AST, c2AST, commandPos);
       }
@@ -328,20 +337,11 @@ public class Parser {
         acceptIt();
         Expression eAST = parseExpression();
         accept(Token.DO);
-        Command cAST = parseSingleCommand();
+        Command cAST = parseCommand();
+        accept(Token.END);//SE AGREGA COMO TOKEN FINAL
         finish(commandPos);
         commandAST = new WhileCommand(eAST, cAST, commandPos);
       }
-      break;
-
-    case Token.SEMICOLON:
-    case Token.END:
-    case Token.ELSE:
-    case Token.IN:
-    case Token.EOT:
-
-      finish(commandPos);
-      commandAST = new EmptyCommand(commandPos);
       break;
 
     default:
@@ -375,6 +375,7 @@ public class Parser {
         Declaration dAST = parseDeclaration();
         accept(Token.IN);
         Expression eAST = parseExpression();
+        accept(Token.END);//SE AGREGA COMO TOKEN FINAL
         finish(expressionPos);
         expressionAST = new LetExpression(dAST, eAST, expressionPos);
       }
@@ -388,6 +389,7 @@ public class Parser {
         Expression e2AST = parseExpression();
         accept(Token.ELSE);
         Expression e3AST = parseExpression();
+        accept(Token.END);//SE AGREGA COMO TOKEN FINAL
         finish(expressionPos);
         expressionAST = new IfExpression(e1AST, e2AST, e3AST, expressionPos);
       }
