@@ -301,12 +301,6 @@ public class Parser {
       }
       break;
 
-    case Token.BEGIN:
-      acceptIt();
-      commandAST = parseCommand();
-      accept(Token.END);
-      break;
-
     case Token.LET:
       {
         acceptIt();
