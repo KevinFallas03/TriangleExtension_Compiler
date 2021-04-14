@@ -64,46 +64,62 @@ final class Token extends Object {
     INTLITERAL	= 0,
     CHARLITERAL	= 1,
     IDENTIFIER	= 2,
-    OPERATOR	= 3,
+    OPERATOR	  = 3,
 
     // reserved words - must be in alphabetical order...
-    ARRAY		= 4,
-    CONST		= 5,
-    DO			= 6,
-    ELSE		= 7,
-    END			= 8,
-    FUNC		= 9,
-    IF			= 10,
-    IN			= 11,
-    LET			= 12,
-    NOTHING             = 13, // ADD TOKEN FOR NOTHING INSTEAD OF EMPTHY
-    OF			= 14,
-    PROC		= 15,
-    RECORD		= 16,
-    THEN		= 17,
-    TYPE		= 18,
-    VAR			= 19,
-    WHILE		= 20,
+    ARRAY       = 4, // se elimina el token BEGIN
+    CHOOSE      = 5, // se agrega el token CHOOSE
+    CONST       = 6,
+    DO          = 7,
+    ELSE        = 8,
+    ELSIF       = 9, // se agrega el token ELSIF
+    END         = 10,
+    FOR         = 11, // se agrega el token FOR
+    FROM        = 12, // se agrega el token FROM
+    FUNC        = 13,
+    IF          = 14,
+    IN          = 15,
+    LET         = 16,
+    LOOP        = 17, // se agrega el LOOP
+    NOTHING     = 18, // se agrega el token NOTHING
+    OF          = 19,
+    PACKAGE     = 20, // se agrega el token PACKAGE
+    PRIVATE     = 21, // se agrega el token PRIVATE
+    PROC        = 22,
+    RECORD      = 23,
+    RECURSIVE   = 24, // se agrega el token RECURSIVE
+    THEN	= 25,
+    TO          = 26, // se agrega el token TO
+    TYPE	= 27,
+    UNTIL       = 28, // se agrega el token UNTIL
+    VAR		= 29,
+    WHEN        = 30, // se agrega el token WHEN
+    WHILE	= 31,
 
     // punctuation...
-    DOT			= 21,
-    COLON		= 22,
-    SEMICOLON           = 23,
-    COMMA		= 24,
-    BECOMES		= 25,
-    IS			= 26,
+    DOT		= 32,
+    COLON	= 33,
+    SEMICOLON	= 34,
+    COMMA	= 35,
+    BECOMES	= 36,
+    IS		= 37,
+    
+    // NEW ONES
+    PIPE        = 38, // se agrega el token PIPE |
+    DOLLAR      = 39,   // se agrega el token $
+    DOUBLEDOT   = 40, //
 
-    // brackets...
-    LPAREN		= 27,
-    RPAREN		= 28,
-    LBRACKET            = 29,
-    RBRACKET            = 30,
-    LCURLY		= 31,
-    RCURLY		= 32,
+    // brackets..
+    LPAREN	= 41,
+    RPAREN	= 42,
+    LBRACKET	= 43,
+    RBRACKET	= 44,
+    LCURLY	= 45,
+    RCURLY	= 46,
 
     // special tokens...
-    EOT			= 33,
-    ERROR		= 34;
+    EOT         = 47,
+    ERROR	= 48;
 
   private static String[] tokenTable = new String[] {
     "<int>",
@@ -111,21 +127,32 @@ final class Token extends Object {
     "<identifier>",
     "<operator>",
     "array",
+    "choose",   // Se agrega el caracter de la palabra reservada choose
     "const",
     "do",
     "else",
-    "end",
+    "elsif",    // Se agrega el caracter de la palabra reservada elsif
+    "end",      // Se agrega el caracter de la palabra reservada for
+    "for",      // Se agrega el caracter de la palabra reservada from
+    "from",
     "func",
     "if",
     "in",
     "let",
-    "nothing",
+    "loop",     // Se agrega el caracter de la palabra reservada loop
+    "nothing",  // Se agrega el caracter de la palabra reservada nothing
     "of",
+    "package",  // Se agrega el caracter de la palabra reservada package
+    "private",  // Se agrega el caracter de la palabra reservada private
     "proc",
     "record",
+    "recursive",// Se agrega el caracter de la palabra reservada recursive
     "then",
+    "to",       // Se agrega el caracter de la palabra reservada to
     "type",
+    "until",    // Se agrega el caracter de la palabra reservada until
     "var",
+    "when",     // Se agrega el caracter de la palabra reservada when
     "while",
     ".",
     ":",
@@ -133,6 +160,9 @@ final class Token extends Object {
     ",",
     ":=",
     "~",
+    "|",    // Se agrega el caracter del simbolo |
+    "$",    // Se agrega el caracter del simbolo $
+    "..",   // Se agrega el caracter del simbolo ..
     "(",
     ")",
     "[",
