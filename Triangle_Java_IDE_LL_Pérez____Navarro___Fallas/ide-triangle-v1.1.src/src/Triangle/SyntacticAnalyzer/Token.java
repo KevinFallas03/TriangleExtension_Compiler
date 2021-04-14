@@ -67,8 +67,7 @@ final class Token extends Object {
     OPERATOR	= 3,
 
     // reserved words - must be in alphabetical order...
-    ARRAY		= 4,
-    // se elimina el token BEGIN
+    ARRAY       = 4, // se elimina el token BEGIN
     CHOOSE      = 5, // se agrega el token CHOOSE
     CONST       = 6,
     DO          = 7,
@@ -119,7 +118,8 @@ final class Token extends Object {
     RCURLY	= 46,
 
     // special tokens...
-    ERROR	= 47;
+    EOT         = 47,
+    ERROR	= 48;
 
   private static String[] tokenTable = new String[] {
     "<int>",
@@ -170,6 +170,7 @@ final class Token extends Object {
     "]",
     "{",
     "}",
+    "",
     "<error>"
   };
 
