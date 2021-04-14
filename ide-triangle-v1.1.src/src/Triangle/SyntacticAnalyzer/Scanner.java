@@ -128,9 +128,15 @@ public final class Scanner {
       } else
         return Token.ERROR;
 
+    // agrega caso para DOUBLEDOT
     case '.':
       takeIt();
-      return Token.DOT;
+      if(currentChar == '.'){
+          takeIt();
+          return Token.RANGE;
+      }else{
+        return Token.DOT;
+      }
 
     case ':':
       takeIt();
@@ -151,6 +157,15 @@ public final class Scanner {
     case '~':
       takeIt();
       return Token.IS;
+      
+    // agrega case PIPE, DOLLAR
+    case '|':
+        takeIt();
+        return Token.PIPE;
+        
+    case '$':
+        takeIt();
+        return Token.DOLLAR;
 
     case '(':
       takeIt();
