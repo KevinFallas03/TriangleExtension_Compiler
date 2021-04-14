@@ -106,8 +106,8 @@ final class Token extends Object {
     
     // NEW ONES
     PIPE        = 38, // se agrega el token PIPE |
-    DOLLAR      = 39,   // se agrega el token $
-    DOUBLEDOT   = 40, //
+    DOLLAR      = 39,   // se agrega el token DOLLAR $
+    RANGE   = 40, // se agrega el token RANGE ..
 
     // brackets..
     LPAREN	= 41,
