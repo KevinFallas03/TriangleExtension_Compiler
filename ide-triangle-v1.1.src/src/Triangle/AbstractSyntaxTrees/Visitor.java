@@ -25,7 +25,9 @@ public interface Visitor {
   public abstract Object visitSequentialCommand(SequentialCommand ast, Object o);
   public abstract Object visitWhileCommand(WhileCommand ast, Object o);
 
-
+  // LOOPS
+  //public abstract Object visitFactorizedLoopCommand(FactorizedLoopCommand ast, Object o);
+  
   // Expressions
   public abstract Object visitArrayExpression(ArrayExpression ast, Object o);
   public abstract Object visitBinaryExpression(BinaryExpression ast, Object o);

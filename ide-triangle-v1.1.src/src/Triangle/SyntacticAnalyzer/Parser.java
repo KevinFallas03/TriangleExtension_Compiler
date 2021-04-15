@@ -49,6 +49,7 @@ import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
 import Triangle.AbstractSyntaxTrees.LetExpression;
+import Triangle.AbstractSyntaxTrees.LoopCommand;
 import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
@@ -300,6 +301,14 @@ public class Parser {
         }
       }
       break;
+    
+    // Factorizacion de los casos para el loop
+    case Token.LOOP:
+      { 
+        acceptIt();
+        LoopCommand lpAST = parseLoopCommand();
+        
+      }
 
     case Token.LET:
       {
@@ -951,4 +960,48 @@ public class Parser {
     }
     return fieldAST;
   }
+
+    LoopCommand parseLoopCommand() throws SyntaxError{
+        LoopCommand commandAST = null;
+        
+        SourcePosition commandPos = new SourcePosition();
+        start(commandPos);
+        
+        switch (currentToken.kind) {
+            case Token.WHILE:
+            case Token.UNTIL:
+            {
+                acceptIt();
+                finish(commandPos);
+                accept(Token.DO);
+                commandAST = parseWhileOrUntil();
+            }
+            break;
+            case Token.DO:
+            {
+                commandAST = parseDoCommand();
+            }
+            break;
+            case Token.FOR:
+            {
+                commandAST = parseForCommand();
+            }
+            break;
+        }
+        return commandAST;
+    }
+
+    LoopCommand parseForCommand() {
+        
+    }
+
+    LoopCommand parseDoCommand() {
+        
+    }
+
+    LoopCommand parseWhileOrUntil() {
+        
+    }
+
+    
 }
