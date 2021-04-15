@@ -80,6 +80,7 @@ import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
+import Triangle.AbstractSyntaxTrees.WhileDoCommand;
 
 public class LayoutVisitor implements Visitor {
 
@@ -542,5 +543,10 @@ public class LayoutVisitor implements Visitor {
 
     return r;
   }
+
+    @Override
+    public Object visitWhileDoCommand(WhileDoCommand aThis, Object o) {
+        return layoutBinary("DoWhileCom.", aThis.E, aThis.C);
+    }
 
 }

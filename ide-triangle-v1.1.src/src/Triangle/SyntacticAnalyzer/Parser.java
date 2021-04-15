@@ -49,7 +49,7 @@ import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
 import Triangle.AbstractSyntaxTrees.LetExpression;
-import Triangle.AbstractSyntaxTrees.LoopCommand;
+import Triangle.AbstractSyntaxTrees.LoopCase;
 import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
@@ -76,12 +76,14 @@ import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.TypeDenoter;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
+import Triangle.AbstractSyntaxTrees.UntilDoCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Vname;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
+import Triangle.AbstractSyntaxTrees.WhileDoCommand;
 
 public class Parser {
 
@@ -95,7 +97,9 @@ public class Parser {
     errorReporter = reporter;
     previousTokenPosition = new SourcePosition();
   }
-
+  
+// <editor-fold defaultstate="collapsed" desc=" General Methods ">
+  
 // accept checks whether the current token matches tokenExpected.
 // If so, fetches the next token.
 // If not, reports a syntactic error.
@@ -135,7 +139,9 @@ public class Parser {
     errorReporter.reportError(messageTemplate, tokenQuoted, pos);
     throw(new SyntaxError());
   }
-
+  // </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" Programs Methods ">
 ///////////////////////////////////////////////////////////////////////////////
 //
 // PROGRAMS
@@ -161,7 +167,9 @@ public class Parser {
     catch (SyntaxError s) { return null; }
     return programAST;
   }
-
+// </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" Lietarls Methods ">  
 ///////////////////////////////////////////////////////////////////////////////
 //
 // LITERALS
@@ -239,7 +247,9 @@ public class Parser {
     }
     return O;
   }
-
+// </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" Commands Methods ">
 ///////////////////////////////////////////////////////////////////////////////
 //
 // COMMANDS
@@ -305,11 +315,12 @@ public class Parser {
     // Factorizacion de los casos para el loop
     case Token.LOOP:
       { 
+        System.out.println("Entre a loop");
         acceptIt();
-        LoopCommand lpAST = parseLoopCommand();
-        
+        commandAST = parseLoopCase();
       }
-
+      break;
+      
     case Token.LET:
       {
         acceptIt();
@@ -355,7 +366,9 @@ public class Parser {
 
     return commandAST;
   }
-
+// </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" Expressions Methods ">
 ///////////////////////////////////////////////////////////////////////////////
 //
 // EXPRESSIONS
@@ -544,7 +557,9 @@ public class Parser {
     }
     return aggregateAST;
   }
-
+// </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" VALUE-OR-VARIABLE NAMES Methods ">
 ///////////////////////////////////////////////////////////////////////////////
 //
 // VALUE-OR-VARIABLE NAMES
@@ -580,7 +595,9 @@ public class Parser {
     }
     return vAST;
   }
-
+// </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" Declarations Methods ">
 ///////////////////////////////////////////////////////////////////////////////
 //
 // DECLARATIONS
@@ -683,7 +700,9 @@ public class Parser {
     }
     return declarationAST;
   }
-
+// </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" Parameters Methods ">
 ///////////////////////////////////////////////////////////////////////////////
 //
 // PARAMETERS
@@ -790,7 +809,6 @@ public class Parser {
     return formalAST;
   }
 
-
   ActualParameterSequence parseActualParameterSequence() throws SyntaxError {
     ActualParameterSequence actualsAST;
 
@@ -887,7 +905,9 @@ public class Parser {
     }
     return actualAST;
   }
-
+// </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc="Type-Denoters Methods ">
 ///////////////////////////////////////////////////////////////////////////////
 //
 // TYPE-DENOTERS
@@ -960,48 +980,96 @@ public class Parser {
     }
     return fieldAST;
   }
+// </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" Loops Methods ">
+///////////////////////////////////////////////////////////////////////////////
+//
+// LOOPS
+//
+///////////////////////////////////////////////////////////////////////////////
 
-    LoopCommand parseLoopCommand() throws SyntaxError{
-        LoopCommand commandAST = null;
+  Command parseLoopCase() throws SyntaxError{
+        Command commandAST = null; // in case there's a syntactic error
         
         SourcePosition commandPos = new SourcePosition();
         start(commandPos);
         
         switch (currentToken.kind) {
             case Token.WHILE:
-            case Token.UNTIL:
-            {
+            {   
                 acceptIt();
-                finish(commandPos);
+                Expression eAST = parseExpression();
                 accept(Token.DO);
-                commandAST = parseWhileOrUntil();
+                Command cAST = parseCommand();
+                accept(Token.END);
+                finish(commandPos);
+                commandAST = new WhileDoCommand(cAST, eAST, commandPos);
             }
             break;
-            case Token.DO:
-            {
-                commandAST = parseDoCommand();
+            case Token.UNTIL:
+            {   
+                acceptIt();
+                Expression eAST = parseExpression();
+                accept(Token.DO);
+                Command cAST = parseCommand();
+                accept(Token.END);
+                finish(commandPos);
+                commandAST = new UntilDoCommand(cAST, eAST, commandPos);
             }
             break;
-            case Token.FOR:
-            {
-                commandAST = parseForCommand();
-            }
-            break;
+            
+//            case Token.DO:
+//            {   
+//                acceptIt();
+//                Command cAST = parseCommand();
+//                LoopExpression eAST = parseLoopExpression();
+//                finish(commandPos);
+//                commandAST = new DoCommand(eAST, cAST, commandPos);
+//            }
+//            break;
+//            case Token.FOR:
+//            {   
+//                acceptIt();
+//                Identifier iAST = parseIdentifier();
+//                accept(Token.FROM);
+//                Expression eAST = parseExpression();
+//                accept(Token.TO);
+//                loopCommand lcAST = parseLoopCommand();
+//        
+//            }
+//            break;
         }
         return commandAST;
     }
 
-    LoopCommand parseForCommand() {
-        
-    }
-
-    LoopCommand parseDoCommand() {
-        
-    }
-
-    LoopCommand parseWhileOrUntil() {
-        
-    }
-
-    
+//    LoopCommand parseLoopCommand() throws SyntaxError{
+//        
+//    }
+//
+//    LoopCommand parseDoCommand() throws SyntaxError{
+//        
+//    }
+//
+//    LoopExpression parseLoopExpression() throws SyntaxError {
+//        Command commandAST = null; // in case there's a syntactic error
+//        switch (currentToken.kind){
+//            case Token.WHILE:
+//            {
+//                acceptIt();
+//                Expression eAST = parseExpression();
+//                finish(commandPos);
+//                commandAST = new WhileCommand(eAST, cAST, commandPos);
+//            }
+//            case Token.UNTIL:
+//            {
+//                acceptIt();
+//                Expression eAST = parseExpression();
+//                finish(commandPos);
+//                commandAST = new UntilCommand(eAST, cAST, commandPos);
+//            }
+//            break;
+//        }
+//    }
+  // </editor-fold>
 }

@@ -26,7 +26,8 @@ public interface Visitor {
   public abstract Object visitWhileCommand(WhileCommand ast, Object o);
 
   // LOOPS
-  //public abstract Object visitFactorizedLoopCommand(FactorizedLoopCommand ast, Object o);
+  public Object visitWhileDoCommand(WhileDoCommand aThis, Object o);
+  public Object visitUntilDoCommand(UntilDoCommand aThis, Object o);
   
   // Expressions
   public abstract Object visitArrayExpression(ArrayExpression ast, Object o);

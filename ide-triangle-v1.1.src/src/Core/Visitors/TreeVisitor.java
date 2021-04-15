@@ -62,12 +62,14 @@ import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
+import Triangle.AbstractSyntaxTrees.UntilDoCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
+import Triangle.AbstractSyntaxTrees.WhileDoCommand;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -435,6 +437,18 @@ public class TreeVisitor implements Visitor {
         t.add((DefaultMutableTreeNode)child4.visit(this, null));
         
         return(t);             
+    }
+    // </editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc=" Tree Loops Methods ">
+    @Override
+    public Object visitWhileDoCommand(WhileDoCommand ast, Object o) {
+        return(createBinary("While Do Command", ast.E, ast.C));
+    }
+
+    @Override
+    public Object visitUntilDoCommand(UntilDoCommand aThis, Object o) {
+        return(createBinary("Until Do Command", aThis.E, aThis.C));
     }
     // </editor-fold>
 }

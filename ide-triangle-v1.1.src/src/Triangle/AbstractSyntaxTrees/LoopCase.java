@@ -11,9 +11,9 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
  *
  * @author Kevin
  */
-public abstract class LoopCommand extends Command {
+public abstract class LoopCase extends Command {
     
-    public LoopCommand(SourcePosition thePosition) {
+    public LoopCase(SourcePosition thePosition) {
         super(thePosition);
     }
     
