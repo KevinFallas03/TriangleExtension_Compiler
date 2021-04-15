@@ -1,0 +1,106 @@
+----------------------------Cambios lexicos-------------------------------------
+
+AGREGAR PALABRAS RESERVADAS: 
+	choose, for, from, loop, par, pass, private, recursive, to, until, when  en TOKEN.java
+
+AGREGAR ALTERNATIVAS: | ::= $  en TOKEN.java
+
+QUITAR begin
+
+
+---------------------------Cambios sintacticos-----------------------------------
+
+
+-Command: Se elimina recursividad izquierda
+
+	Antes:
+		Command ::= single-Command | Command ";" single-Command
+
+	Ahora:
+		Command ::= single-Command (";" Commnand)*
+
+-Single-Commmand: se factorizan las reglas
+
+	Antes:
+		single-Command 		::=		
+							|		V-name ":=" Expression
+							|		Identifier ( Actual-Parameter-Sequence )
+							|		"loop" "while" Expression "do" Commnand "end"
+							|		"loop" "until" Expression "do" Commnand "end"
+							|		"loop" "do" Commnand "while" Expression "end"
+							|		"loop" "do" Commnand "until" Expression "end"
+							|		"loop" "for" Identifier "from" Expression "to" Expression 
+										"do" Commnand "end"
+							|		"loop" "for" Identifier "from" Expression "to" Expression
+										"while" Expression "do" Commnand "end"
+							|		"loop for" Identifier "from" Expression "to" Expression
+										"until" Expression "do" Commnand "end"
+							|		"let" Declaration "in" Commnand "end"
+							|		"if" Expression "then" Command ("elsif" Expression "then" Command)*
+									"else" Command "end"
+							|		"choose" Expression "from" Cases "end"
+
+	Después:
+
+		single-Command 		::=		"nothing"
+							|		V-name ":=" Expression
+							|		Long-Identifier ( Actual-Parameter-Sequence )
+							|		FactorizedLoopExpression
+							|		"let" Declaration "in" Commnand "end"
+							|		"if" Expression "then" Commnand "else" Commnand "end"
+							|		"choose" Expression "from" Cases "end"
+
+		FactorizedLoopCommand	::= 		"loop" (ForCommand | LoopCommand) "end" 
+
+		ForCommand 		::=		"for" Identifier "from" Expression "to" Expression [ WhileOrUntil Expression ] DoCommand
+
+		DoCommand		::= 		"do" Command
+
+		LoopCommand 			::= 		WhileOrUntil "Expression" DoCommand
+							|		DoCommand While-OR-Until Expression
+
+		WhileOrUntil		::= 		"while" 
+							| "until"
+
+-Declaration: Se elimina recursividad izquierda
+
+	Antes:
+		Declaration 		::= 		compound-Declaration
+							|		Declaration ";" compound-Declaration
+
+	Despues:
+		Declaration 		::=		compound-Declaration (";" Declaration)*		
+
+-Func-Procs: Se asume las 2 funciones
+	Antes:
+		Proc-Funcs		::= 		Proc-Func ("|" Proc-Func)+
+
+	Despues:
+		Proc-Funcs		::= 		Proc-Func "|" Proc-Func (Proc-Func)*
+
+
+-single-Declaration: se factorizan reglas
+	Antes:
+		single-Declaration	::= 		"const" Identifier "~" Expression
+							|		"var" Identifier ":" Type-denoter
+							|		"var" Identifier "::=" Expression
+							|		"proc" Identifier "(" Formal-Parameter-Sequence ")" 
+										"~" Commnand "end"
+							|		"func" Identifier "(" Formal-Parameter-Sequence  ")"
+										":" Type-denoter "~" Expression
+							|		"type" Identifier "~" Type-denoter
+
+	Despues:
+		single-Declaration	::= 		"const" Identifier "~" Expression
+							|		"var" Identifier (":" Type-denoter | "::=" Expression)
+							|		"proc" Identifier "(" Formal-Parameter-Sequence ")" 
+										"~" Commnand "end"
+							|		"func" Identifier "(" Formal-Parameter-Sequence  ")"
+										":" Type-denoter "~" Expression
+							|		"type" Identifier "~" Type-denoter
+
+
+-Reglas agruegadas:
+
+----------------------------------------------------------------------------------------------------------
+
