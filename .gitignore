@@ -31,3 +31,4 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+#ide-triangle-v1.1.src/nbproject/project.properties
