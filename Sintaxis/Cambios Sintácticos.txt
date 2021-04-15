@@ -39,7 +39,8 @@ QUITAR begin
 							|		"if" Expression "then" Command ("elsif" Expression "then" Command)*
 									"else" Command "end"
 							|		"choose" Expression "from" Cases "end"
-
+		
+		** Factorizacion aplicada **
 		A 	::= 	"do" Commnand "end" 
 				|	"while" Expression "do" Commnand "end" 
 				|	"until" Expression "do" Commnand "end"
@@ -51,8 +52,35 @@ QUITAR begin
 				|	"for" Identifier "from" Expression "to" Expression A1
 				|	"until" Expression "do" Commnand "end"
 				|	"while" Expression "do" Commnand "end"
+	
 
-	Después1:
+	Después 3:
+		
+
+		single-Command ::=					"nothing"
+							|		V-name ":=" Expression
+							|		Identifier ( Actual-Parameter-Sequence )
+							|		"loop" loop-Cases'''
+							|		"let" Declaration "in" Commnand "end"
+							|		"if" Expression "then" Command ("elsif" Expression "then" Command)* "else" Command "end"
+							|		"choose" Expression "from" Cases "end"
+  		
+		
+		loop-Command' ::= 			"do" Command "end"
+                   					| "while" Expression "do" Command "end"
+                   					| "until" Expression "do" Command "end"
+
+ 		loop-Expression'' ::= 			"while" Expression "end"
+                   					| "until" Expression "end"
+		
+		loop-Cases''' ::= 			"do" Command single-Command''
+                   					| "for" Identifier "from" Expression "to" Expression single-Command'
+                   					| "while" Expression "do" Command "end"
+                   					| "until" Expression "do" Command "end"
+
+
+		
+	Despues 2
 
 		single-Command 		::=		
 							|		V-name ":=" Expression
@@ -72,7 +100,7 @@ QUITAR begin
 		whileOrUntilCommand 		:= 		"while" Expression 
 										| 	"until" Expression
 
-	Despues2:
+	Despues1:
 		single-Command 		::=		
 							|		V-name ":=" Expression
 							|		Identifier ( Actual-Parameter-Sequence )
