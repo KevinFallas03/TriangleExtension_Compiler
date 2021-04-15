@@ -40,25 +40,60 @@ QUITAR begin
 									"else" Command "end"
 							|		"choose" Expression "from" Cases "end"
 
-	Después:
+		A 	::= 	"do" Commnand "end" 
+				|	"while" Expression "do" Commnand "end" 
+				|	"until" Expression "do" Commnand "end"
 
-		single-Command 			::=			"nothing"
-									|		V-name ":=" Expression
-									|		Long-Identifier ( Actual-Parameter-Sequence )
-									|		"loop" ( LoopCommand )  "end" 
-									|		"let" Declaration "in" Commnand "end"
-									|		"if" Expression "then" Commnand "else" Commnand "end"
-									|		"choose" Expression "from" Cases "end"	
+		A2 	::=		"while" Expression "end"
+				|	"until" Expression "end"
 
-		LoopCommand 			::= 		WhileOrUntil 
-									| 		ForCommand 
+		A3  ::=		"do" A2 
+				|	"for" Identifier "from" Expression "to" Expression A1
+				|	"until" Expression "do" Commnand "end"
+				|	"while" Expression "do" Commnand "end"
 
-		ForCommand 				::=			"for" Identifier "from" Expression "to" Expression [ WhileOrUntil ] DoCommand
+	Después1:
 
-		DoCommand				::= 		"do" Command 
+		single-Command 		::=		
+							|		V-name ":=" Expression
+							|		Identifier ( Actual-Parameter-Sequence )
+							|		"loop" loopCommand "end" 
+							|		"let" Declaration "in" Commnand "end"
+							|		"if" Expression "then" Command ("elsif" Expression "then" Command)* "else" Command "end"
+							|		"choose" Expression "from" Cases "end"
 
-		WhileOrUntilDo			::= 		("while" | "until") Expression DoCommand
-									|       DoCommand ("while" | "until") Expression
+		loopCommand 	:=		whileOrUntilCommand "do" Commnand
+							|	"do" Commnand whileOrUntilCommand  
+							|	"for" Identifier "from" Expression "to" Expression ForComplementCommand
+
+		ForComplementCommand 		:= 		 "do" Commnand 
+										|	 whileOrUntilCommand "do" Commnand
+
+		whileOrUntilCommand 		:= 		"while" Expression 
+										| 	"until" Expression
+
+	Despues2:
+		single-Command 		::=		
+							|		V-name ":=" Expression
+							|		Identifier ( Actual-Parameter-Sequence )
+							|		"loop" loopCommand
+							|		"let" Declaration "in" Commnand "end"
+							|		"if" Expression "then" Command ("elsif" Expression "then" Command)*
+									"else" Command "end"
+							|		"choose" Expression "from" Cases "end"
+
+		loopComplementCommand 	::= 	"do" Commnand "end" 
+									|	"while" Expression "do" Commnand "end" 
+									|	"until" Expression "do" Commnand "end"
+
+		doUntilWhile 	::=		"while" Expression "end"
+							|	"until" Expression "end"
+
+		loopCommand  ::=		"do" doUntilWhile 
+							|	"for" Identifier "from" Expression "to" Expression loopComplementCommand
+							|	"until" Expression "do" Commnand "end"
+							|	"while" Expression "do" Commnand "end"
+
 
 -Declaration: Se elimina recursividad izquierda
 
