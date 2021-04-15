@@ -45,23 +45,20 @@ QUITAR begin
 		single-Command 			::=			"nothing"
 									|		V-name ":=" Expression
 									|		Long-Identifier ( Actual-Parameter-Sequence )
-									|		FactorizedLoopCommand
+									|		"loop" ( LoopCommand )  "end" 
 									|		"let" Declaration "in" Commnand "end"
 									|		"if" Expression "then" Commnand "else" Commnand "end"
-									|		"choose" Expression "from" Cases "end"
+									|		"choose" Expression "from" Cases "end"	
 
-		FactorizedLoopCommand	::= 		"loop" ( LoopCommand) "end" 
-
-		LoopCommand 			::= 		WhileOrUntil DoCommand 
-									|		DoCommand WhileOrUntil 
-									| 		ForCommand
+		LoopCommand 			::= 		WhileOrUntil 
+									| 		ForCommand 
 
 		ForCommand 				::=			"for" Identifier "from" Expression "to" Expression [ WhileOrUntil ] DoCommand
 
-		DoCommand				::= 		"do" Command
+		DoCommand				::= 		"do" Command 
 
-		WhileOrUntil			::= 		"while" Expression
-									| 		"until" Expression
+		WhileOrUntilDo			::= 		("while" | "until") Expression DoCommand
+									|       DoCommand ("while" | "until") Expression
 
 -Declaration: Se elimina recursividad izquierda
 
