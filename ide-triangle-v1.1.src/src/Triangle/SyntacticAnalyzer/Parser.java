@@ -40,6 +40,9 @@ import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.Expression;
 import Triangle.AbstractSyntaxTrees.FieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.ForDoCommand;
+import Triangle.AbstractSyntaxTrees.ForIdentifierExpression;
+import Triangle.AbstractSyntaxTrees.ForUntilCommand;
+import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FormalParameter;
 import Triangle.AbstractSyntaxTrees.FormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
@@ -617,8 +620,7 @@ public class Parser {
       acceptIt();
       Declaration d2AST = parseSingleDeclaration();
       finish(declarationPos);
-      declarationAST = new SequentialDeclaration(declarationAST, d2AST,
-        declarationPos);
+      declarationAST = new SequentialDeclaration(declarationAST, d2AST, declarationPos);
     }
     return declarationAST;
   }
@@ -1038,7 +1040,8 @@ public class Parser {
                 accept(Token.TO);
                 Expression e2AST = parseExpression();
                 finish(commandPos);
-                commandAST = parseLoopCommand(iAST, e1AST, e2AST);
+                Declaration dAST = new ForIdentifierExpression(iAST,e1AST,commandPos);
+                commandAST = parseLoopCommand(dAST, e2AST);
             }
             break;
         }
@@ -1074,7 +1077,7 @@ public class Parser {
         return commandAST;
     }
   
-  Command parseLoopCommand(Identifier iAST, Expression e1AST, Expression e2AST ) throws SyntaxError{
+  Command parseLoopCommand(Declaration dAST, Expression e2AST ) throws SyntaxError{
         Command commandAST = null; // in case there's a syntactic error
         
         SourcePosition commandPos = new SourcePosition();
@@ -1087,33 +1090,33 @@ public class Parser {
                 Command cAST = parseCommand();
                 accept(Token.END);
                 finish(commandPos);
-                commandAST = new ForDoCommand(iAST, cAST, e1AST, e2AST, commandPos);
+                commandAST = new ForDoCommand(cAST, dAST, e2AST, commandPos);
             }
             break;
-//            case Token.WHILE:
-//            {   
-//                acceptIt();
-//                Expression eAST = parseExpression();
-//                accept(Token.DO);
-//                Command cAST = parseCommand();
-//                accept(Token.END);
-//                finish(commandPos);
-//                Command c2AST = new WhileDoCommand(cAST, eAST, commandPos);
-//                commandAST = new ForWhileCommand(cAST, eAST, commandPos);
-//            }
-//            break;
-//            case Token.UNTIL:
-//            {   
-//                acceptIt();
-//                Expression eAST = parseExpression();
-//                accept(Token.DO);
-//                Command cAST = parseCommand();
-//                accept(Token.END);
-//                finish(commandPos);
-//                Command c2AST = new UntilDoCommand(cAST, eAST, commandPos);
-//                commandAST = new ForUntilCommand(cAST, eAST, commandPos);
-//            }
-//            break;
+            case Token.WHILE:
+            {   
+                acceptIt();
+                Expression eAST = parseExpression();
+                accept(Token.DO);
+                Command cAST = parseCommand();
+                accept(Token.END);
+                finish(commandPos);
+                Command c2AST = new WhileDoCommand(cAST, eAST, commandPos);
+                commandAST = new ForWhileCommand(dAST,c2AST,e2AST,commandPos);
+            }
+            break;
+            case Token.UNTIL:
+            {   
+                acceptIt();
+                Expression eAST = parseExpression();
+                accept(Token.DO);
+                Command cAST = parseCommand();
+                accept(Token.END);
+                finish(commandPos);
+                Command c2AST = new UntilDoCommand(cAST, eAST, commandPos);
+                commandAST = new ForUntilCommand(dAST,c2AST,e2AST,commandPos);
+            }
+            break;
         }
         return commandAST;
     }

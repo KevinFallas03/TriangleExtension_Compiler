@@ -29,6 +29,9 @@ import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
 import Triangle.AbstractSyntaxTrees.ForDoCommand;
+import Triangle.AbstractSyntaxTrees.ForIdentifierExpression;
+import Triangle.AbstractSyntaxTrees.ForUntilCommand;
+import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -465,9 +468,27 @@ public class TreeVisitor implements Visitor {
     }
     @Override
     public Object visitForDoCommand(ForDoCommand aThis, Object o) {
-        return(createQuaternary("Do Until Command", aThis.I, aThis.C,aThis.E1,aThis.E2));
+        return(createTernary("For Do Command", aThis.IE, aThis.C,aThis.E2));
+    }
+    @Override
+    public Object visitForIdentifierExpression(ForIdentifierExpression aThis, Object o) {
+        return(createBinary("For Declaration", aThis.I, aThis.E1));
+    }
+    @Override
+    public Object visitForWhileCommand(ForWhileCommand aThis, Object o) {
+        return(createTernary("For While Command", aThis.IE, aThis.loop,aThis.E2));
+    }
+    @Override
+    public Object visitForUntilCommand(ForUntilCommand aThis, Object o) {
+        return(createTernary("For Until Command", aThis.IE, aThis.loop,aThis.E2));
     }
     // </editor-fold>
+
+    
+
+    
+
+    
 
     
 }

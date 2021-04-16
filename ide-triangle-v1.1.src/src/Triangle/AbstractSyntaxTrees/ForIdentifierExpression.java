@@ -10,19 +10,17 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
  *
  * @author emema
  */
-public class ForDoCommand extends Command{
-    public ForDoCommand (Command cAST, Declaration ie, Expression e2AST,SourcePosition thePosition) {
+public class ForIdentifierExpression extends Declaration{
+    public ForIdentifierExpression (Identifier iAST, Expression e1AST, SourcePosition thePosition) {
         super (thePosition);
-        E2 = e2AST;
-        C = cAST;
-        IE = ie;
+        E1 = e1AST;
+        I = iAST;
     }
 
     @Override
     public Object visit(Visitor v, Object o) {
-        return v.visitForDoCommand(this, o);
+        return v.visitForIdentifierExpression(this, o);
     }
-    public Declaration IE;
-    public Expression E2;
-    public Command C;
+    public Identifier I;
+    public Expression E1;
 }

@@ -30,7 +30,11 @@ public interface Visitor {
   public Object visitUntilDoCommand(UntilDoCommand aThis, Object o);
   public Object visitDoWhileCommand(DoWhileCommand aThis, Object o);
   public Object visitDoUntilCommand(DoUntilCommand aThis, Object o);
+  public Object visitForIdentifierExpression(ForIdentifierExpression aThis, Object o);
   public Object visitForDoCommand(ForDoCommand aThis, Object o);
+  public Object visitForWhileCommand(ForWhileCommand aThis, Object o);
+  public Object visitForUntilCommand(ForUntilCommand aThis, Object o);
+  
 //  public Object visitForWhileCommand(ForWhileCommand aThis, Object o);
 //  public Object visitForUntilCommand(ForUntilCommand aThis, Object o);
   

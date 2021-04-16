@@ -10,19 +10,19 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
  *
  * @author emema
  */
-public class ForDoCommand extends Command{
-    public ForDoCommand (Command cAST, Declaration ie, Expression e2AST,SourcePosition thePosition) {
+public class ForWhileCommand extends Command{
+    public ForWhileCommand (Declaration ie, Command cAST, Expression e2AST,SourcePosition thePosition) {
         super (thePosition);
         E2 = e2AST;
-        C = cAST;
+        loop = cAST;
         IE = ie;
     }
 
     @Override
     public Object visit(Visitor v, Object o) {
-        return v.visitForDoCommand(this, o);
+        return v.visitForWhileCommand(this, o);
     }
     public Declaration IE;
     public Expression E2;
-    public Command C;
+    public Command loop;
 }
