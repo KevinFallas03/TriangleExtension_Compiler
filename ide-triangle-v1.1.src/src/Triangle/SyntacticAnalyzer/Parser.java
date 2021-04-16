@@ -373,6 +373,38 @@ public class Parser {
 
     return commandAST;
   }
+   Command parseRestOfIf() throws SyntaxError{
+        Command commandAST = null; // in case there's a syntactic error
+        
+        SourcePosition commandPos = new SourcePosition();
+        start(commandPos);
+      
+        switch(currentToken.kind){
+            case Token.ELSIF:
+            {
+                acceptIt();
+                Expression eAST = parseExpression();
+                accept(Token.THEN);
+                Command cAST = parseCommand();
+                Command commandRestOfIfAST = parseRestOfIf();
+                commandAST = new IfCommand(eAST, cAST, commandRestOfIfAST,commandPos);
+                return commandAST;//por ser recursivo -- verificar esto
+            }
+            case Token.ELSE:
+            {
+                acceptIt();
+                Command cAST = parseCommand();
+                accept(Token.END);
+                commandAST = cAST; //devolver el AST de los arboles normales
+            }
+            break;
+            default:
+                syntacticError("\"%\" not expected after if expression",currentToken.spelling);
+                break;
+        }
+        
+        return commandAST;
+    }
 // </editor-fold>
   
 // <editor-fold defaultstate="collapsed" desc=" Expressions Methods ">
@@ -1175,38 +1207,7 @@ public class Parser {
     }
   // </editor-fold>
   
-    Command parseRestOfIf() throws SyntaxError{
-        Command commandAST = null; // in case there's a syntactic error
-        
-        SourcePosition commandPos = new SourcePosition();
-        start(commandPos);
-      
-        switch(currentToken.kind){
-            case Token.ELSIF:
-            {
-                acceptIt();
-                Expression eAST = parseExpression();
-                accept(Token.THEN);
-                Command cAST = parseCommand();
-                Command commandRestOfIfAST = parseRestOfIf();
-                commandAST = new IfCommand(eAST, cAST, commandRestOfIfAST,commandPos);
-                return commandAST;//por ser recursivo -- verificar esto
-            }
-            case Token.ELSE:
-            {
-                acceptIt();
-                Command cAST = parseCommand();
-                accept(Token.END);
-                commandAST = cAST; //devolver el AST de los arboles normales
-            }
-            break;
-            default:
-                syntacticError("\"%\" not expected after if expression",currentToken.spelling);
-                break;
-        }
-        
-        return commandAST;
-    }
+   
     
 // <editor-fold defaultstate="collapsed" desc="Proc-Func Methods ">
 ///////////////////////////////////////////////////////////////////////////////
