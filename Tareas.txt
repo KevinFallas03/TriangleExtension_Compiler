@@ -13,7 +13,7 @@ Nothing ya está implementado en singleCommand * Kevin lo implemento *
 
 Let ya está implementado en singleCommand * Kevin lo implemento * 
 
-If then elsif then else end en singleCommand *** FALTA ***
+If then elsif then else end en singleCommand ** Kevin lo esta implementando **
 
 Factorizar loop en singleCommand  * Madri lo implemento *
 

@@ -57,20 +57,23 @@ QUITAR begin
 	Después 3:
 		
 
-		single-Command ::=					"nothing"
-							|		V-name ":=" Expression
-							|		Identifier ( Actual-Parameter-Sequence )
-							|		"loop" loop-Cases'''
-							|		"let" Declaration "in" Commnand "end"
-							|		"if" Expression "then" Command ("elsif" Expression "then" Command)* "else" Command "end"
-							|		"choose" Expression "from" Cases "end"
+		single-Command 		::=			"nothing"
+							|	V-name ":=" Expression
+							|	Identifier ( Actual-Parameter-Sequence )
+							|	"loop" loop-Cases'''
+							|	"let" Declaration "in" Commnand "end"
+							|	"if" Expression "then" Command RestOfIf
+							|	"choose" Expression "from" Cases "end"
+
   		
+		RestOfIf      		::			"elsif" Expression "then" Command RestOfIf
+							| 	"else" Command "end"
 		
-		loop-Command' ::= 			"do" Command "end"
+		loop-Command' 		::= 			"do" Command "end"
                    					| "while" Expression "do" Command "end"
                    					| "until" Expression "do" Command "end"
 
- 		loop-Expression'' ::= 			"while" Expression "end"
+ 		loop-Expression'' 	::= 			"while" Expression "end"
                    					| "until" Expression "end"
 		
 		loop-Cases''' ::= 			"do" Command single-Command''
