@@ -15,9 +15,9 @@ Let ya está implementado en singleCommand * Kevin lo implemento *
 
 If then elsif then else end en singleCommand *** FALTA ***
 
-Factorizar loop en singleCommand  ** - Madri lo esta intentando ** *** FALTA ***
+Factorizar loop en singleCommand  * Madri lo implemento *
 
-Modificar Declaration en el código (en el Word se cambió) *** FALTA ***
+Modificar Declaration en el código (en el Word se cambió) **EN PROCESO MADRI**
 
 Añadir compound-Declaration *** FALTA ***
 (declaración de funciones y procedimientos mutuamente recursivos, declaraciones locales)
