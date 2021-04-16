@@ -616,10 +616,10 @@ public class Parser {
 
     SourcePosition declarationPos = new SourcePosition();
     start(declarationPos);
-    declarationAST = parseSingleDeclaration();
+    declarationAST = parseCompoundDeclaration(); //Cambio
     while (currentToken.kind == Token.SEMICOLON) {
       acceptIt();
-      Declaration d2AST = parseSingleDeclaration();
+      Declaration d2AST = parseCompoundDeclaration();//Cambio
       finish(declarationPos);
       declarationAST = new SequentialDeclaration(declarationAST, d2AST, declarationPos);
     }
@@ -1032,7 +1032,7 @@ public class Parser {
 // <editor-fold defaultstate="collapsed" desc=" Loops Methods ">
 ///////////////////////////////////////////////////////////////////////////////
 //
-// LOOPS
+// Loops NUEVO
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -1086,6 +1086,10 @@ public class Parser {
                 commandAST = parseLoopCommand(dAST, e2AST);
             }
             break;
+            default:
+                syntacticError("\"%\" cannot start a loop",
+                currentToken.spelling);
+                break;
         }
         return commandAST;
     }
@@ -1115,6 +1119,10 @@ public class Parser {
                 commandAST = new DoUntilCommand(cAST, eAST, commandPos);
             }
             break;
+            default:
+                syntacticError("\"%\" not expected after do expression",currentToken.spelling);
+                break;
+
         }
         return commandAST;
     }
@@ -1159,6 +1167,9 @@ public class Parser {
                 commandAST = new ForUntilCommand(dAST,c2AST,e2AST,commandPos);
             }
             break;
+            default:
+                syntacticError("\"%\" not expected after for expression",currentToken.spelling);
+                break;
         }
         return commandAST;
     }
@@ -1192,4 +1203,58 @@ public class Parser {
         
         return commandAST;
     }
+    
+// <editor-fold defaultstate="collapsed" desc="Proc-Func Methods ">
+///////////////////////////////////////////////////////////////////////////////
+//
+// Proc-Func/funcs NUEVO
+//
+///////////////////////////////////////////////////////////////////////////////
+    Declaration parseProcFunc() throws SyntaxError{
+      Declaration declarationAST = null; // in case there's a syntactic error
+      
+      SourcePosition declarationPos = new SourcePosition(); 
+      start(declarationPos);
+      
+      switch(currentToken.kind) {
+          // Puede ser proc o func
+          case Token.PROC:
+          {
+              acceptIt(); //lo acepta
+              Identifier iAST = parseIdentifier(); //Tienen un identificador
+              accept(Token.LPAREN); //acepta un (
+              FormalParameterSequence fpsAST = parseFormalParameterSequence(); //Tiene un FPS
+              accept(Token.RPAREN); //Acepta un )
+              accept(Token.IS); //Acepta un ~
+              Command cmdAST = parseCommand(); //Tiene un comando
+              accept(Token.END); // Acepta un end
+              finish(declarationPos);
+              declarationAST = new ProcDeclaration(iAST, fpsAST, cmdAST, declarationPos);
+          }
+          break;  
+          case Token.FUNC:
+          {
+              acceptIt(); //lo acepta
+              Identifier iAST = parseIdentifier(); //Tiene un identificador
+              accept(Token.LPAREN); //Acepta un (
+              FormalParameterSequence fpsAST = parseFormalParameterSequence(); //tiene un FPS
+              accept(Token.RPAREN); //Acepta un )
+              accept(Token.COLON); //Acepta un :
+              TypeDenoter tAST = parseTypeDenoter(); //Tiene un tipo
+              accept(Token.IS); //Acepta un ~
+              Expression eAST = parseExpression(); //Tiene una expresion
+              finish(declarationPos);
+              declarationAST = new FuncDeclaration(iAST, fpsAST, tAST, eAST, declarationPos);
+          }
+          break;        
+          default:
+              syntacticError("\"%\" not expected parsing porc-func expression",currentToken.spelling);
+              break;
+      
+      }
+      return declarationAST;
+  }
+    
+    
+// </editor-fold>
 }

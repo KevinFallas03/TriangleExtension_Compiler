@@ -76,8 +76,8 @@ QUITAR begin
  		loop-Expression'' 	::= 			"while" Expression "end"
                    					| "until" Expression "end"
 		
-		loop-Cases''' ::= 			"do" Command single-Command''
-                   					| "for" Identifier "from" Expression "to" Expression single-Command'
+		loop-Cases''' ::= 			"do" Command loop-Expression''
+                   					| "for" Identifier "from" Expression "to" Expression loop-Command'
                    					| "while" Expression "do" Command "end"
                    					| "until" Expression "do" Command "end"
 
