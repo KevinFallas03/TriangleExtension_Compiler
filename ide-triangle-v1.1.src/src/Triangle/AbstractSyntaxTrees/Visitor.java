@@ -25,7 +25,7 @@ public interface Visitor {
   public abstract Object visitSequentialCommand(SequentialCommand ast, Object o);
   public abstract Object visitWhileCommand(WhileCommand ast, Object o);
 
-  // LOOPS
+  // LOOPS NUEVO
   public Object visitWhileDoCommand(WhileDoCommand aThis, Object o);
   public Object visitUntilDoCommand(UntilDoCommand aThis, Object o);
   public Object visitDoWhileCommand(DoWhileCommand aThis, Object o);
@@ -35,8 +35,9 @@ public interface Visitor {
   public Object visitForWhileCommand(ForWhileCommand aThis, Object o);
   public Object visitForUntilCommand(ForUntilCommand aThis, Object o);
   
-//  public Object visitForWhileCommand(ForWhileCommand aThis, Object o);
-//  public Object visitForUntilCommand(ForUntilCommand aThis, Object o);
+  //RECURSIVE AND PRIVATE
+  public Object visitRecursiveDeclaration(RecursiveDeclaration aThis, Object o);
+  public Object visitPrivateDeclaration(PrivateDeclaration aThis, Object o);
   
   // Expressions
   public abstract Object visitArrayExpression(ArrayExpression ast, Object o);

@@ -62,6 +62,7 @@ import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
+import Triangle.AbstractSyntaxTrees.PrivateDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
@@ -69,6 +70,7 @@ import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordAggregate;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -352,16 +354,16 @@ public class Parser {
       }
       break;
 
-    case Token.WHILE:
-      {
-        acceptIt();
-        Expression eAST = parseExpression();
-        accept(Token.DO);
-        Command cAST = parseSingleCommand();
-        finish(commandPos);
-        commandAST = new WhileCommand(eAST, cAST, commandPos);
-      }
-      break;
+//    case Token.WHILE:
+//      {
+//        acceptIt();
+//        Expression eAST = parseExpression();
+//        accept(Token.DO);
+//        Command cAST = parseSingleCommand();
+//        finish(commandPos);
+//        commandAST = new WhileCommand(eAST, cAST, commandPos);
+//      }
+//      break;
 
     default:
       syntacticError("\"%\" cannot start a command",
@@ -701,6 +703,47 @@ public class Parser {
       syntacticError("\"%\" cannot start a declaration",
         currentToken.spelling);
       break;
+
+    }
+    return declarationAST;
+  }
+  
+  Declaration parseCompoundDeclaration() throws SyntaxError{
+      Declaration declarationAST = null; // in case there's a syntactic error
+
+      SourcePosition declarationPos = new SourcePosition();
+      start(declarationPos);
+
+      switch (currentToken.kind) {
+          case Token.RECURSIVE:{
+              acceptIt();
+              //declarationAST = parseProcFuncs(); FALTA
+              accept(Token.END);
+              finish(declarationPos);
+              declarationAST = new RecursiveDeclaration(declarationAST, declarationPos);
+          }
+          break;
+          case Token.PRIVATE:{
+              acceptIt();
+              Declaration dlAST1 = parseDeclaration();
+              accept(Token.IN);
+              Declaration dlAST2 = parseDeclaration();
+              accept(Token.END);
+              finish(declarationPos);
+              declarationAST = new PrivateDeclaration(dlAST1, dlAST2, declarationPos);
+          }
+          break;
+          case Token.CONST:
+          case Token.VAR:
+          case Token.FUNC:
+          case Token.PROC:
+          case Token.TYPE:{
+              declarationAST = parseSingleDeclaration();
+          }
+          break;
+          default:
+              syntacticError("\"%\" cannot start a declaration", currentToken.spelling);
+              break;
 
     }
     return declarationAST;
