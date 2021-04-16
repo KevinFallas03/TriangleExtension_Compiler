@@ -347,8 +347,7 @@ public class Parser {
         Expression eAST = parseExpression();
         accept(Token.THEN);
         Command c1AST = parseSingleCommand();
-        accept(Token.ELSE);
-        Command c2AST = parseSingleCommand();
+        Command c2AST = parseRestOfIf();
         finish(commandPos);
         commandAST = new IfCommand(eAST, c1AST, c2AST, commandPos);
       }
@@ -1164,4 +1163,33 @@ public class Parser {
         return commandAST;
     }
   // </editor-fold>
+  
+    Command parseRestOfIf() throws SyntaxError{
+        Command commandAST = null; // in case there's a syntactic error
+        
+        SourcePosition commandPos = new SourcePosition();
+        start(commandPos);
+      
+        switch(currentToken.kind){
+            case Token.ELSIF:
+            {
+                acceptIt();
+                Expression eAST = parseExpression();
+                accept(Token.THEN);
+                Command cAST = parseCommand();
+                Command commandRestOfIfAST = parseRestOfIf();
+            }
+            return commandAST;//por ser recursivo -- verificar esto
+            case Token.ELSE:
+            {
+                acceptIt();
+                Command cAST = parseCommand();
+                accept(Token.END);
+                //commandAST = newIfCommand(); devolver el AST de los arboles normales
+            }
+            break; // afecta al return??
+        }
+        
+        return commandAST;
+    }
 }
