@@ -1189,16 +1189,20 @@ public class Parser {
                 accept(Token.THEN);
                 Command cAST = parseCommand();
                 Command commandRestOfIfAST = parseRestOfIf();
+                commandAST = new IfCommand(eAST, cAST, commandRestOfIfAST,commandPos);
+                return commandAST;//por ser recursivo -- verificar esto
             }
-            return commandAST;//por ser recursivo -- verificar esto
             case Token.ELSE:
             {
                 acceptIt();
                 Command cAST = parseCommand();
                 accept(Token.END);
-                //commandAST = newIfCommand(); devolver el AST de los arboles normales
+                commandAST = cAST; //devolver el AST de los arboles normales
             }
-            break; // afecta al return??
+            break;
+            default:
+                syntacticError("\"%\" not expected after if expression",currentToken.spelling);
+                break;
         }
         
         return commandAST;
@@ -1226,10 +1230,10 @@ public class Parser {
               FormalParameterSequence fpsAST = parseFormalParameterSequence(); //Tiene un FPS
               accept(Token.RPAREN); //Acepta un )
               accept(Token.IS); //Acepta un ~
-              Command cmdAST = parseCommand(); //Tiene un comando
+              Command cAST = parseCommand(); //Tiene un comando
               accept(Token.END); // Acepta un end
               finish(declarationPos);
-              declarationAST = new ProcDeclaration(iAST, fpsAST, cmdAST, declarationPos);
+              declarationAST = new ProcDeclaration(iAST, fpsAST, cAST, declarationPos);
           }
           break;  
           case Token.FUNC:

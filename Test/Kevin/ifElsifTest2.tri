@@ -1,0 +1,9 @@
+if 1=1 then 
+	nothing 
+elsif 2=2 then
+	nothing
+elsif 3=3 then
+	nothing
+else 
+	nothing
+end
