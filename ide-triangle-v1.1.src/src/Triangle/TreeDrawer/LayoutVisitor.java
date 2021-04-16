@@ -32,12 +32,15 @@ import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
+import Triangle.AbstractSyntaxTrees.DoUntilCommand;
+import Triangle.AbstractSyntaxTrees.DoWhileCommand;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForDoCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -74,6 +77,7 @@ import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
+import Triangle.AbstractSyntaxTrees.UntilDoCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
@@ -546,7 +550,27 @@ public class LayoutVisitor implements Visitor {
 
     @Override
     public Object visitWhileDoCommand(WhileDoCommand aThis, Object o) {
+        return layoutBinary("WhileDoCom.", aThis.E, aThis.C);
+    }
+
+    @Override
+    public Object visitUntilDoCommand(UntilDoCommand aThis, Object o) {
+        return layoutBinary("UntilDoCom.", aThis.E, aThis.C);
+    }
+
+    @Override
+    public Object visitDoWhileCommand(DoWhileCommand aThis, Object o) {
         return layoutBinary("DoWhileCom.", aThis.E, aThis.C);
+    }
+
+    @Override
+    public Object visitDoUntilCommand(DoUntilCommand aThis, Object o) {
+        return layoutBinary("DoUntilCom.", aThis.E, aThis.C);    
+    }
+
+    @Override
+    public Object visitForDoCommand(ForDoCommand aThis, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -28,6 +28,11 @@ public interface Visitor {
   // LOOPS
   public Object visitWhileDoCommand(WhileDoCommand aThis, Object o);
   public Object visitUntilDoCommand(UntilDoCommand aThis, Object o);
+  public Object visitDoWhileCommand(DoWhileCommand aThis, Object o);
+  public Object visitDoUntilCommand(DoUntilCommand aThis, Object o);
+  public Object visitForDoCommand(ForDoCommand aThis, Object o);
+//  public Object visitForWhileCommand(ForWhileCommand aThis, Object o);
+//  public Object visitForUntilCommand(ForUntilCommand aThis, Object o);
   
   // Expressions
   public abstract Object visitArrayExpression(ArrayExpression ast, Object o);

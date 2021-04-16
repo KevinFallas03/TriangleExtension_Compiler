@@ -20,12 +20,15 @@ import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
+import Triangle.AbstractSyntaxTrees.DoUntilCommand;
+import Triangle.AbstractSyntaxTrees.DoWhileCommand;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForDoCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -450,5 +453,21 @@ public class TreeVisitor implements Visitor {
     public Object visitUntilDoCommand(UntilDoCommand aThis, Object o) {
         return(createBinary("Until Do Command", aThis.E, aThis.C));
     }
+    
+     @Override
+    public Object visitDoWhileCommand(DoWhileCommand aThis, Object o) {
+        return(createBinary("Do While Command", aThis.E, aThis.C));
+    }
+
+    @Override
+    public Object visitDoUntilCommand(DoUntilCommand aThis, Object o) {
+        return(createBinary("Do Until Command", aThis.E, aThis.C));
+    }
+    @Override
+    public Object visitForDoCommand(ForDoCommand aThis, Object o) {
+        return(createQuaternary("Do Until Command", aThis.I, aThis.C,aThis.E1,aThis.E2));
+    }
     // </editor-fold>
+
+    
 }

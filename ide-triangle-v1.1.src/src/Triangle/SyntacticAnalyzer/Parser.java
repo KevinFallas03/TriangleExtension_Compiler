@@ -31,12 +31,15 @@ import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
 import Triangle.AbstractSyntaxTrees.Declaration;
+import Triangle.AbstractSyntaxTrees.DoUntilCommand;
+import Triangle.AbstractSyntaxTrees.DoWhileCommand;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.Expression;
 import Triangle.AbstractSyntaxTrees.FieldTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForDoCommand;
 import Triangle.AbstractSyntaxTrees.FormalParameter;
 import Triangle.AbstractSyntaxTrees.FormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
@@ -1018,58 +1021,101 @@ public class Parser {
                 commandAST = new UntilDoCommand(cAST, eAST, commandPos);
             }
             break;
-            
-//            case Token.DO:
+            case Token.DO:
+            {   
+                acceptIt();
+                Command cAST = parseCommand();
+                finish(commandPos);
+                commandAST = parseLoopExpression(cAST);
+            }
+            break;
+            case Token.FOR:
+            {   
+                acceptIt();
+                Identifier iAST = parseIdentifier();
+                accept(Token.FROM);
+                Expression e1AST = parseExpression();
+                accept(Token.TO);
+                Expression e2AST = parseExpression();
+                finish(commandPos);
+                commandAST = parseLoopCommand(iAST, e1AST, e2AST);
+            }
+            break;
+        }
+        return commandAST;
+    }
+  
+  Command parseLoopExpression(Command cAST) throws SyntaxError{
+        Command commandAST = null; // in case there's a syntactic error
+        
+        SourcePosition commandPos = new SourcePosition();
+        start(commandPos);
+        
+        switch (currentToken.kind) {
+            case Token.WHILE:
+            {   
+                acceptIt();
+                Expression eAST = parseExpression();
+                accept(Token.END);
+                finish(commandPos);
+                commandAST = new DoWhileCommand(cAST, eAST, commandPos);
+            }
+            break;
+            case Token.UNTIL:
+            {   
+                acceptIt();
+                Expression eAST = parseExpression();
+                accept(Token.END);
+                finish(commandPos);
+                commandAST = new DoUntilCommand(cAST, eAST, commandPos);
+            }
+            break;
+        }
+        return commandAST;
+    }
+  
+  Command parseLoopCommand(Identifier iAST, Expression e1AST, Expression e2AST ) throws SyntaxError{
+        Command commandAST = null; // in case there's a syntactic error
+        
+        SourcePosition commandPos = new SourcePosition();
+        start(commandPos);
+        
+        switch (currentToken.kind) {
+            case Token.DO:
+            {   
+                acceptIt();
+                Command cAST = parseCommand();
+                accept(Token.END);
+                finish(commandPos);
+                commandAST = new ForDoCommand(iAST, cAST, e1AST, e2AST, commandPos);
+            }
+            break;
+//            case Token.WHILE:
 //            {   
 //                acceptIt();
+//                Expression eAST = parseExpression();
+//                accept(Token.DO);
 //                Command cAST = parseCommand();
-//                LoopExpression eAST = parseLoopExpression();
+//                accept(Token.END);
 //                finish(commandPos);
-//                commandAST = new DoCommand(eAST, cAST, commandPos);
+//                Command c2AST = new WhileDoCommand(cAST, eAST, commandPos);
+//                commandAST = new ForWhileCommand(cAST, eAST, commandPos);
 //            }
 //            break;
-//            case Token.FOR:
+//            case Token.UNTIL:
 //            {   
 //                acceptIt();
-//                Identifier iAST = parseIdentifier();
-//                accept(Token.FROM);
 //                Expression eAST = parseExpression();
-//                accept(Token.TO);
-//                loopCommand lcAST = parseLoopCommand();
-//        
+//                accept(Token.DO);
+//                Command cAST = parseCommand();
+//                accept(Token.END);
+//                finish(commandPos);
+//                Command c2AST = new UntilDoCommand(cAST, eAST, commandPos);
+//                commandAST = new ForUntilCommand(cAST, eAST, commandPos);
 //            }
 //            break;
         }
         return commandAST;
     }
-
-//    LoopCommand parseLoopCommand() throws SyntaxError{
-//        
-//    }
-//
-//    LoopCommand parseDoCommand() throws SyntaxError{
-//        
-//    }
-//
-//    LoopExpression parseLoopExpression() throws SyntaxError {
-//        Command commandAST = null; // in case there's a syntactic error
-//        switch (currentToken.kind){
-//            case Token.WHILE:
-//            {
-//                acceptIt();
-//                Expression eAST = parseExpression();
-//                finish(commandPos);
-//                commandAST = new WhileCommand(eAST, cAST, commandPos);
-//            }
-//            case Token.UNTIL:
-//            {
-//                acceptIt();
-//                Expression eAST = parseExpression();
-//                finish(commandPos);
-//                commandAST = new UntilCommand(eAST, cAST, commandPos);
-//            }
-//            break;
-//        }
-//    }
   // </editor-fold>
 }

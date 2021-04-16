@@ -1,0 +1,7 @@
+let
+  var a : Integer;
+in
+begin
+  getint (var a)
+  loop for i from 0 to 5 do nothing end
+end
