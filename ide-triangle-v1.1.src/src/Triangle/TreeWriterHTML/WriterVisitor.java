@@ -67,7 +67,7 @@ import Triangle.AbstractSyntaxTrees.WhileCommand;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class WriterVisitor implements Visitor {
+public abstract class WriterVisitor implements Visitor {
 
   private FileWriter fileWriter;
 
