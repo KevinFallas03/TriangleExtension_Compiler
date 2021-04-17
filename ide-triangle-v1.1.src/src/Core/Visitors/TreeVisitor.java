@@ -43,6 +43,7 @@ import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
 import Triangle.AbstractSyntaxTrees.LetExpression;
+import Triangle.AbstractSyntaxTrees.LongIdentifier;
 import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
@@ -360,6 +361,10 @@ public class TreeVisitor implements Visitor {
         return(createNullary(ast.spelling));
     }
     @Override
+    public Object visitLongIdentifier(LongIdentifier ast, Object o) {
+        return(createNullary(ast.spelling));
+    }
+    @Override
     public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
         return(createNullary("Package "+ast.spelling));
     }
@@ -519,6 +524,8 @@ public class TreeVisitor implements Visitor {
         return(createBinary("PrivateDeclaration", aThis.dcl1,aThis.dcl2));
     }
 // </editor-fold>
+
+    
 
     
 
