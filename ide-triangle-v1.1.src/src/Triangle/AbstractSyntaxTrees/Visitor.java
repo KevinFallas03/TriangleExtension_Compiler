@@ -35,7 +35,7 @@ public interface Visitor {
   public Object visitForWhileCommand(ForWhileCommand aThis, Object o);
   public Object visitForUntilCommand(ForUntilCommand aThis, Object o);
   
-  //RECURSIVE AND PRIVATE
+  //RECURSIVE AND PRIVATE NUEVO
   public Object visitRecursiveDeclaration(RecursiveDeclaration aThis, Object o);
   public Object visitPrivateDeclaration(PrivateDeclaration aThis, Object o);
   
@@ -61,6 +61,8 @@ public interface Visitor {
   public abstract Object visitTypeDeclaration(TypeDeclaration ast, Object o);
   public abstract Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object o);
   public abstract Object visitVarDeclaration(VarDeclaration ast, Object o);
+  public abstract Object visitVarDeclarationBecomes(VarDeclarationBecomes ast, Object o);
+
 
   // Array Aggregates
   public abstract Object visitMultipleArrayAggregate(MultipleArrayAggregate ast, Object o);

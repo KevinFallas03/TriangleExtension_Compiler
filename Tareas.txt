@@ -7,6 +7,7 @@ Intentar que en cada cambio que se realize en Parser intentar que se haga para e
 
 Cambiar sintaxis con recursión a la izquierda *** FALTA ***
 
+
 Agregar tokens y simbolos * Kevin lo implementó *
 
 Nothing ya está implementado en singleCommand * Kevin lo implemento *
@@ -16,8 +17,6 @@ Let ya está implementado en singleCommand * Kevin lo implemento *
 If then elsif then else end en singleCommand ** Kevin lo esta implementando **
 
 Factorizar loop en singleCommand  * Madri lo implemento *
-
-
 
 Modificar Declaration en el código (en el Word se cambió) *MADRI lo implemento*
 
@@ -31,7 +30,7 @@ Añadir reglas*MADRI lo implemento*
 
 Modificar single-Command por Command en single-Declaration *MADRI lo implemento*
 
-Agregar "var" Identifier ":=" Expression en single-Declaration *** FALTA ***
+Agregar "var" Identifier ":=" Expression en single-Declaration *MADRI lo implemento*
 
 
 

@@ -73,6 +73,7 @@ import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
 import Triangle.AbstractSyntaxTrees.UntilDoCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
+import Triangle.AbstractSyntaxTrees.VarDeclarationBecomes;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
@@ -206,6 +207,10 @@ public class TreeVisitor implements Visitor {
     
     public Object visitVarDeclaration(VarDeclaration ast, Object obj) {
         return(createBinary("Variable Declaration", ast.I, ast.T));
+    }
+    @Override
+    public Object visitVarDeclarationBecomes(VarDeclarationBecomes ast, Object o) {
+        return(createBinary("Variable Declaration Becomes", ast.I, ast.E));
     }
     // </editor-fold>
     
@@ -497,4 +502,6 @@ public class TreeVisitor implements Visitor {
         return(createBinary("PrivateDeclaration", aThis.dcl1,aThis.dcl2));
     }
 // </editor-fold>
+
+    
 }
