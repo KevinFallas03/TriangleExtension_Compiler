@@ -36,13 +36,15 @@ Agregar "var" Identifier ":=" Expression en single-Declaration *MADRI lo impleme
 
 Adición de paquetes (packages)
 
-Modificar Program con Program ::= (Package-Declaration ";")* Command *** FALTA ***
+Modificar Program con Program ::= (Package-Declaration ";")* Command *MADRI lo implemento*
 
 Añadir
   Package-Declaration ::= "package" Package-Identifier "~"
- 				    Declaration "end"      *** FALTA *** 
+ 				    Declaration "end"      *MADRI lo implemento*
 
-  Package-Identifier ::= Identifier *** FALTA ***
+  Package-Identifier ::= Identifier *MADRI lo implemento*
+
+  
 
   Long-Identifier ::= [ Package-Identifier "$" ] Identifier *** FALTA ***
 

@@ -19,6 +19,7 @@ public class PackageDeclaration extends Declaration{
         this.dAST = dAST;
   }
   
+    @Override
   public Object visit(Visitor v, Object o) {
     return v.visitPackageDeclaration(this, o);
   }

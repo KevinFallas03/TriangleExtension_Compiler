@@ -1,0 +1,10 @@
+package myP ~ 
+    var a:=5
+end;
+let
+    var b: Integer
+in
+    b:= myP $ a;
+    putint(b)
+
+end

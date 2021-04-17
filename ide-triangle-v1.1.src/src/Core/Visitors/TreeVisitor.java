@@ -50,6 +50,7 @@ import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.PackageDeclaration;
+import Triangle.AbstractSyntaxTrees.PackageIdentifier;
 import Triangle.AbstractSyntaxTrees.PrivateDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
@@ -358,6 +359,10 @@ public class TreeVisitor implements Visitor {
     public Object visitIdentifier(Identifier ast, Object obj) {
         return(createNullary(ast.spelling));
     }
+    @Override
+    public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
+        return(createNullary("Package "+ast.spelling));
+    }
     
     public Object visitIntegerLiteral(IntegerLiteral ast, Object obj) {
         return(createNullary(ast.spelling));
@@ -514,6 +519,8 @@ public class TreeVisitor implements Visitor {
         return(createBinary("PrivateDeclaration", aThis.dcl1,aThis.dcl2));
     }
 // </editor-fold>
+
+    
 
     
 

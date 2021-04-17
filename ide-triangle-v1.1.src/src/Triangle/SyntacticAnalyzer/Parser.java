@@ -55,6 +55,7 @@ import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
 import Triangle.AbstractSyntaxTrees.LetExpression;
+import Triangle.AbstractSyntaxTrees.LongIdentifier;
 import Triangle.AbstractSyntaxTrees.LoopCase;
 import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
@@ -95,6 +96,7 @@ import Triangle.AbstractSyntaxTrees.Vname;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
 import Triangle.AbstractSyntaxTrees.WhileDoCommand;
+import Triangle.AbstractSyntaxTrees.PackageIdentifier;
 
 public class Parser {
 
@@ -237,7 +239,44 @@ public class Parser {
 
 // parseIdentifier parses an identifier, and constructs a leaf AST to
 // represent it.
+  
+  Identifier parseLongIdentifier() throws SyntaxError {
+    Identifier I = null;
+    SourcePosition positionLong = new SourcePosition();
+    start(positionLong);
+    if(currentToken.kind == Token.IDENTIFIER){
+        Identifier piAST = parsePackageIdentifier();
+        if(currentToken.kind == Token.DOLLAR){
+            acceptIt();
+            Identifier iAST = parseIdentifier();
+            finish(positionLong);          
+            I = new LongIdentifier(piAST, iAST, positionLong,currentToken.spelling);
+        }
+        else{
+            finish(positionLong);
+            I = new Identifier(piAST.spelling,positionLong);
+          }          
+    }
+    else{
+      syntacticError("\"%\" not expected as Identifier expression",currentToken.spelling);
+    }
+    return I;
+  }
+  Identifier parsePackageIdentifier() throws SyntaxError {
+      Identifier I = null;
 
+      if (currentToken.kind == Token.IDENTIFIER) {
+        previousTokenPosition = currentToken.position;
+        String spelling = currentToken.spelling;
+        I = new PackageIdentifier(spelling, previousTokenPosition);
+        currentToken = lexicalAnalyser.scan();
+      } else {
+        I = null;
+        syntacticError("identifier expected here", "");
+      }
+    return I;
+//    return parseIdentifier();
+  }
   Identifier parseIdentifier() throws SyntaxError {
     Identifier I = null;
 
@@ -812,7 +851,7 @@ public class Parser {
       SourcePosition declarationPos = new SourcePosition();
       start(declarationPos);
       acceptIt();
-      Identifier iAST = parseIdentifier(); 
+      Identifier iAST = parsePackageIdentifier(); 
       accept(Token.IS);
       Declaration dAST = parseDeclaration();
       accept(Token.END);
