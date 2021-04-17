@@ -12,16 +12,16 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
  * @author emema
  */
 public class PrivateDeclaration extends Declaration{
-    public PrivateDeclaration (Declaration dcl1, Declaration dcl2, SourcePosition thePosition) {
+    public PrivateDeclaration (Declaration d1AST, Declaration d2AST, SourcePosition thePosition) {
     super (thePosition);
-    this.dcl1 = dcl1;
-    this.dcl2 = dcl2;
+    this.d1AST = d1AST;
+    this.d2AST = d2AST;
   }
   
   public Object visit(Visitor v, Object o) {
     return v.visitPrivateDeclaration(this, o);
   }
 
-  public Declaration dcl1;
-  public Declaration dcl2;
+  public Declaration d1AST;
+  public Declaration d2AST;
 }
