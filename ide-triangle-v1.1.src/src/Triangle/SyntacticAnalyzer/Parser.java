@@ -355,7 +355,7 @@ public class Parser {
 
     case Token.IDENTIFIER:
       {
-        Identifier iAST = parseIdentifier();
+        Identifier iAST = parseLongIdentifier(); //Nuevo
         if (currentToken.kind == Token.LPAREN) {
           acceptIt();
           ActualParameterSequence apsAST = parseActualParameterSequence();
@@ -570,7 +570,7 @@ public class Parser {
 
     case Token.IDENTIFIER:
       {
-        Identifier iAST= parseIdentifier();
+        Identifier iAST= parseLongIdentifier();
         if (currentToken.kind == Token.LPAREN) {
           acceptIt();
           ActualParameterSequence apsAST = parseActualParameterSequence();
@@ -1083,7 +1083,7 @@ public class Parser {
 
     case Token.IDENTIFIER:
       {
-        Identifier iAST = parseIdentifier();
+        Identifier iAST = parseLongIdentifier(); //Nuevo
         finish(typePos);
         typeAST = new SimpleTypeDenoter(iAST, typePos);
       }
