@@ -667,60 +667,43 @@ public class Parser {
     switch (currentToken.kind) {
 
     case Token.CONST:
-    {
+      {
         acceptIt();
         Identifier iAST = parseIdentifier();
         accept(Token.IS);
         Expression eAST = parseExpression();
         finish(declarationPos);
         declarationAST = new ConstDeclaration(iAST, eAST, declarationPos);
-    }
-    break;
+      }
+      break;
 
     case Token.VAR:
-    {
+      {
         acceptIt();
         Identifier iAST = parseIdentifier();
-        switch (currentToken.kind){
-            case Token.COLON:{
-                acceptIt();
-                TypeDenoter tAST = parseTypeDenoter();
-                finish(declarationPos);
-                declarationAST = new VarDeclaration(iAST, tAST, declarationPos);
-            }
-            break;
-            case Token.BECOMES:{
-                acceptIt();
-                Expression eAST = parseExpression();
-                finish(declarationPos);
-                declarationAST = new VarDeclarationBecomes(iAST, eAST, declarationPos);
-            }
-            break;
-            default:
-                syntacticError("\"%\" cannot start a declaration, expected : or :=", currentToken.spelling);
-                break;
-            }
-        }
-        
-    }
-    break;
+        accept(Token.COLON);
+        TypeDenoter tAST = parseTypeDenoter();
+        finish(declarationPos);
+        declarationAST = new VarDeclaration(iAST, tAST, declarationPos);
+      }
+      break;
 
     case Token.PROC:
-    {
+      {
         acceptIt();
         Identifier iAST = parseIdentifier();
         accept(Token.LPAREN);
         FormalParameterSequence fpsAST = parseFormalParameterSequence();
         accept(Token.RPAREN);
         accept(Token.IS);
-        Command cAST = parseCommand();
+        Command cAST = parseSingleCommand();
         finish(declarationPos);
         declarationAST = new ProcDeclaration(iAST, fpsAST, cAST, declarationPos);
-    }
-    break;
+      }
+      break;
 
     case Token.FUNC:
-    {
+      {
         acceptIt();
         Identifier iAST = parseIdentifier();
         accept(Token.LPAREN);
@@ -733,26 +716,29 @@ public class Parser {
         finish(declarationPos);
         declarationAST = new FuncDeclaration(iAST, fpsAST, tAST, eAST,
           declarationPos);
-    }
-    break;
+      }
+      break;
 
     case Token.TYPE:
-    {
+      {
         acceptIt();
         Identifier iAST = parseIdentifier();
         accept(Token.IS);
         TypeDenoter tAST = parseTypeDenoter();
         finish(declarationPos);
         declarationAST = new TypeDeclaration(iAST, tAST, declarationPos);
-    }
-    break;
+      }
+      break;
 
     default:
-      syntacticError("\"%\" cannot start a declaration", currentToken.spelling);
+      syntacticError("\"%\" cannot start a declaration",
+        currentToken.spelling);
       break;
+
     }
     return declarationAST;
   }
+  
   Declaration parseCompoundDeclaration() throws SyntaxError{
       Declaration declarationAST = null; // in case there's a syntactic error
 
