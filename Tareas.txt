@@ -44,9 +44,10 @@ Añadir
 
   Package-Identifier ::= Identifier *MADRI lo implemento*
 
-  
 
-  Long-Identifier ::= [ Package-Identifier "$" ] Identifier *** FALTA ***
+
+
+  Long-Identifier ::= [ Package-Identifier "$" ] Identifier *MADRI lo implemento*
 
 Modificar V-name con:
 
@@ -56,10 +57,16 @@ Modificar V-name con:
            | 	Var-name "." Identifier
            | 	Var-name "[" Expression "]"    *** FALTA ***
 
+
+
+
 Modificar Type-denoter con:
 Type-denoter ::= Long-Identifier
   | "array" Integer-Literal "of" Type-denoter
-  | "record" Record-Type-denoter "end"       *** FALTA ***
+  | "record" Record-Type-denoter "end"      *MADRI lo implemento*
+
+
+
 
 
 PROCESOS Y SALIDAS
