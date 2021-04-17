@@ -49,6 +49,7 @@ import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
+import Triangle.AbstractSyntaxTrees.PackageDeclaration;
 import Triangle.AbstractSyntaxTrees.PrivateDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
@@ -57,6 +58,7 @@ import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
+import Triangle.AbstractSyntaxTrees.SeqPackageDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -208,9 +210,19 @@ public class TreeVisitor implements Visitor {
     public Object visitVarDeclaration(VarDeclaration ast, Object obj) {
         return(createBinary("Variable Declaration", ast.I, ast.T));
     }
+    //NUEVOS
     @Override
     public Object visitVarDeclarationBecomes(VarDeclarationBecomes ast, Object o) {
         return(createBinary("Variable Declaration Becomes", ast.I, ast.E));
+    }
+    @Override
+    public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
+        return(createBinary("Declaration Package", ast.iAST, ast.dAST));
+    }
+
+    @Override
+    public Object visitSeqPackageDeclaration(SeqPackageDeclaration ast, Object o) {
+        return(createBinary("Declaration Packages", ast.d1AST, ast.d2AST));
     }
     // </editor-fold>
     
@@ -371,7 +383,7 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitProgram(Program ast, Object obj) {
-        return(createUnary("Program", ast.C));
+        return(createBinary("Program", ast.C, ast.D));
     }
     // </editor-fold>
 
@@ -502,6 +514,8 @@ public class TreeVisitor implements Visitor {
         return(createBinary("PrivateDeclaration", aThis.dcl1,aThis.dcl2));
     }
 // </editor-fold>
+
+    
 
     
 }

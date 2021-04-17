@@ -18,9 +18,10 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public class Program extends AST {
 
-  public Program (Command cAST, SourcePosition thePosition) {
+  public Program (Declaration dAST, Command cAST, SourcePosition thePosition) {
     super (thePosition);
     C = cAST;
+    D = dAST;
   }
 
   public Object visit(Visitor v, Object o) {
@@ -28,4 +29,5 @@ public class Program extends AST {
   }
 
   public Command C;
+  public Declaration D;
 }

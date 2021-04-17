@@ -62,6 +62,7 @@ import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
+import Triangle.AbstractSyntaxTrees.PackageDeclaration;
 import Triangle.AbstractSyntaxTrees.PrivateDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
@@ -71,6 +72,7 @@ import Triangle.AbstractSyntaxTrees.RecordAggregate;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
+import Triangle.AbstractSyntaxTrees.SeqPackageDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -164,17 +166,29 @@ public class Parser {
     previousTokenPosition.start = 0;
     previousTokenPosition.finish = 0;
     currentToken = lexicalAnalyser.scan();
-
+    
+    SourcePosition programPos = new SourcePosition();
+    start(programPos);
+    
     try {
-      Command cAST = parseCommand();
-      programAST = new Program(cAST, previousTokenPosition);
-      if (currentToken.kind != Token.EOT) {
-        syntacticError("\"%\" not expected after end of program",
-          currentToken.spelling);
+        Declaration dAST = null;
+        if(currentToken.kind == Token.PACKAGE){
+            dAST = parsePackageDeclaration();
+            accept(Token.SEMICOLON);
+            while(currentToken.kind == Token.PACKAGE){
+                Declaration d2AST = parsePackageDeclaration();
+                accept(Token.SEMICOLON);
+                dAST = new SeqPackageDeclaration(dAST, d2AST, programPos);
+            }
+        }
+        Command cAST = parseCommand();
+        programAST = new Program(dAST, cAST, previousTokenPosition);
+        if (currentToken.kind != Token.EOT) {
+          syntacticError("\"%\" not expected after end of program", currentToken.spelling);
+        }
       }
-    }
-    catch (SyntaxError s) { return null; }
-    return programAST;
+      catch (SyntaxError s) { return null; }
+      return programAST;
   }
 // </editor-fold>
   
@@ -791,6 +805,20 @@ public class Parser {
 
     }
     return declarationAST;
+  }
+  Declaration parsePackageDeclaration() throws SyntaxError{
+      Declaration declarationAST = null; // in case there's a syntactic error
+
+      SourcePosition declarationPos = new SourcePosition();
+      start(declarationPos);
+      acceptIt();
+      Identifier iAST = parseIdentifier(); 
+      accept(Token.IS);
+      Declaration dAST = parseDeclaration();
+      accept(Token.END);
+      finish(declarationPos);
+      declarationAST = new PackageDeclaration(iAST,dAST,declarationPos);
+      return declarationAST;
   }
 // </editor-fold>
   
