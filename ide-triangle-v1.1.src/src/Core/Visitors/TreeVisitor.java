@@ -489,12 +489,12 @@ public class TreeVisitor implements Visitor {
     // <editor-fold defaultstate="collapsed" desc="Recursive and declaration ">
     @Override
     public Object visitRecursiveDeclaration(RecursiveDeclaration aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return(createUnary("RecursiveDeclaration", aThis.pfAST));
     }
 
     @Override
     public Object visitPrivateDeclaration(PrivateDeclaration aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return(createBinary("PrivateDeclaration", aThis.dcl1,aThis.dcl2));
     }
 // </editor-fold>
 }

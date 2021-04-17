@@ -1,0 +1,12 @@
+let
+  recursive
+    func uno(var i : Integer) : Integer ~
+      dos(i)/3*2
+        |
+    proc dos(var i : Integer) ~
+      i := i + uno(i)
+    end
+  end
+in
+ nothing
+end

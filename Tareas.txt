@@ -17,25 +17,27 @@ If then elsif then else end en singleCommand ** Kevin lo esta implementando **
 
 Factorizar loop en singleCommand  * Madri lo implemento *
 
-Modificar Declaration en el código (en el Word se cambió) **EN PROCESO MADRI**
 
-Añadir compound-Declaration *** FALTA ***
+
+Modificar Declaration en el código (en el Word se cambió) *MADRI lo implemento*
+
+Añadir compound-Declaration *MADRI lo implemento*
 (declaración de funciones y procedimientos mutuamente recursivos, declaraciones locales)
 
-Añadir reglas
-  Proc-Func  *** FALTA ***
+Añadir reglas*MADRI lo implemento*
+  Proc-Func  *MADRI lo implemento*
 
-  Proc-Func  *** FALTA ***
+  Proc-Funcs  *MADRI lo implemento*
 
-Modificar single-Command por Command en single-Declaration *** FALTA ***
+Modificar single-Command por Command en single-Declaration *MADRI lo implemento*
 
 Agregar "var" Identifier ":=" Expression en single-Declaration *** FALTA ***
 
+
+
 Adición de paquetes (packages)
 
-
 Modificar Program con Program ::= (Package-Declaration ";")* Command *** FALTA ***
-
 
 Añadir
   Package-Declaration ::= "package" Package-Identifier "~"

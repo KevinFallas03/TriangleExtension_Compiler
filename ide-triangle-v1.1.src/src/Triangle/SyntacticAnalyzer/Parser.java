@@ -748,7 +748,7 @@ public class Parser {
       switch (currentToken.kind) {
           case Token.RECURSIVE:{
               acceptIt();
-              //declarationAST = parseProcFuncs(); FALTA
+              declarationAST = parseProcFuncs();
               accept(Token.END);
               finish(declarationPos);
               declarationAST = new RecursiveDeclaration(declarationAST, declarationPos);
@@ -1207,8 +1207,6 @@ public class Parser {
     }
   // </editor-fold>
   
-   
-    
 // <editor-fold defaultstate="collapsed" desc="Proc-Func Methods ">
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -1253,11 +1251,41 @@ public class Parser {
           }
           break;        
           default:
-              syntacticError("\"%\" not expected parsing porc-func expression",currentToken.spelling);
+              syntacticError("\"%\" not expected parsing proc-func expression",currentToken.spelling);
               break;
       
       }
       return declarationAST;
+    }
+    SequentialDeclaration parseProcFuncs() throws SyntaxError{
+        SequentialDeclaration declarationAST = null; // in case there's a syntactic error
+        
+        SourcePosition declarationPos = new SourcePosition(); 
+        start(declarationPos);
+      
+        Declaration dAST1 = null; // in case there's a syntactic error
+      
+        if(currentToken.kind == Token.PROC || currentToken.kind == Token.FUNC) {
+            dAST1 = parseProcFunc();
+            finish(declarationPos);
+        } else {
+            syntacticError("\"%\" error parsing proc-funcs, unexpected token", currentToken.spelling);
+        }
+        //Tiene que haber por lo menos una declaracion
+        if(currentToken.kind == Token.PIPE){
+            //Procesa la primera declaracion
+            do{
+                acceptIt(); //Acepta el |
+                start(declarationPos); //Empieza la primera declaracion
+                Declaration dAST2 = parseProcFunc(); 
+                finish(declarationPos);
+                declarationAST = new SequentialDeclaration(dAST1, dAST2, declarationPos);
+            }while(currentToken.kind == Token.PIPE); //Si hay mas declaraciones vuelve al do
+        }else {
+            syntacticError("\"%\" not expected parsing proc-func expression, expected |", currentToken.spelling);
+        }
+                
+        return declarationAST;
   }
     
     
