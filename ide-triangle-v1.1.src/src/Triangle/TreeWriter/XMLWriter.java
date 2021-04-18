@@ -37,82 +37,8 @@ public class XMLWriter {
       //XML header
       fileWriter.write("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
 
-      XMLWriterVisitor layout = new XMLWriterVisitor(fileWriter) {
-          @Override
-          public Object visitWhileDoCommand(WhileDoCommand aThis, Object o) {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-          }
-
-          @Override
-          public Object visitUntilDoCommand(UntilDoCommand aThis, Object o) {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-          }
-
-          @Override
-          public Object visitDoWhileCommand(DoWhileCommand aThis, Object o) {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-          }
-
-          @Override
-          public Object visitDoUntilCommand(DoUntilCommand aThis, Object o) {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-          }
-
-          @Override
-          public Object visitForIdentifierExpression(ForIdentifierExpression aThis, Object o) {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-          }
-
-          @Override
-          public Object visitForDoCommand(ForDoCommand aThis, Object o) {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-          }
-
-          @Override
-          public Object visitForWhileCommand(ForWhileCommand aThis, Object o) {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-          }
-
-          @Override
-          public Object visitForUntilCommand(ForUntilCommand aThis, Object o) {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-          }
-
-          @Override
-          public Object visitRecursiveDeclaration(RecursiveDeclaration aThis, Object o) {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-          }
-
-          @Override
-          public Object visitPrivateDeclaration(PrivateDeclaration aThis, Object o) {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-          }
-
-          @Override
-          public Object visitVarDeclarationBecomes(VarDeclarationBecomes ast, Object o) {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-          }
-
-          @Override
-          public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-          }
-
-          @Override
-          public Object visitSeqPackageDeclaration(SeqPackageDeclaration ast, Object o) {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-          }
-
-          @Override
-          public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-          }
-
-          @Override
-          public Object visitLongIdentifier(LongIdentifier ast, Object o) {
-              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-          }
-      };
+      XMLWriterVisitor layout = new XMLWriterVisitor(fileWriter); 
+    
       ast.visit(layout, null);
 
       fileWriter.close();
