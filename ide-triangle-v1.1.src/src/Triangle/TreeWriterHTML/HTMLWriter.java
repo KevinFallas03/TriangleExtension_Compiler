@@ -6,6 +6,7 @@ import Triangle.AbstractSyntaxTrees.ForDoCommand;
 import Triangle.AbstractSyntaxTrees.ForIdentifierExpression;
 import Triangle.AbstractSyntaxTrees.ForUntilCommand;
 import Triangle.AbstractSyntaxTrees.ForWhileCommand;
+import Triangle.AbstractSyntaxTrees.LongIdentifier;
 import Triangle.AbstractSyntaxTrees.PackageDeclaration;
 import Triangle.AbstractSyntaxTrees.PackageIdentifier;
 import Triangle.AbstractSyntaxTrees.PrivateDeclaration;
@@ -19,11 +20,11 @@ import Triangle.AbstractSyntaxTrees.WhileDoCommand;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class Writer {
+public class HTMLWriter {
 
   private String fileName;
 
-  public Writer(String fileName) {
+  public HTMLWriter(String fileName) {
     this.fileName = fileName;
   }
 
@@ -104,6 +105,11 @@ public class Writer {
 
           @Override
           public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
+              throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+          }
+
+          @Override
+          public Object visitLongIdentifier(LongIdentifier ast, Object o) {
               throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
           }
       };
