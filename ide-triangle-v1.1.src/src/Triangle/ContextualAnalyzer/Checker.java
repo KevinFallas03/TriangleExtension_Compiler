@@ -713,9 +713,9 @@ public final class Checker implements Visitor {
   public Object visitSimpleVname(SimpleVname ast, Object o) {
     ast.variable = false;
     ast.type = StdEnvironment.errorType;
-    Declaration binding = (Declaration) ast.I.visit(this, null);
+    Declaration binding = (Declaration) ast.iAST.visit(this, null);
     if (binding == null)
-      reportUndeclared(ast.I);
+      reportUndeclared(ast.iAST);
     else
       if (binding instanceof ConstDeclaration) {
         ast.type = ((ConstDeclaration) binding).E.type;
@@ -731,7 +731,7 @@ public final class Checker implements Visitor {
         ast.variable = true;
       } else
         reporter.reportError ("\"%\" is not a const or var identifier",
-                              ast.I.spelling, ast.I.position);
+                              ast.iAST.spelling, ast.iAST.position);
     return ast.type;
   }
 

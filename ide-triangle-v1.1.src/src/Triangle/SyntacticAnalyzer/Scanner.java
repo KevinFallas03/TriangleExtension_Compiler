@@ -18,6 +18,7 @@ package Triangle.SyntacticAnalyzer;
 public final class Scanner {
 
   private SourceFile sourceFile;
+  public boolean lexicalError = false;
   private boolean debug;
 
   private char currentChar;
@@ -196,6 +197,7 @@ public final class Scanner {
 
     default:
       takeIt();
+      this.lexicalError = true;
       return Token.ERROR;
     }
   }

@@ -366,7 +366,7 @@ public class LayoutVisitor implements Visitor {
   }
 
   public Object visitSimpleVname(SimpleVname ast, Object obj) {
-    return layoutUnary("Sim.Vname", ast.I);
+    return layoutUnary("Sim.Vname", ast.iAST);
   }
 
   public Object visitSubscriptVname(SubscriptVname ast, Object obj) {

@@ -385,7 +385,11 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitSimpleVname(SimpleVname ast, Object obj) {
-        return(createUnary("Simple Vname", ast.I));
+        if (ast.piAST == null){
+            return(createUnary("Simple Vname", ast.iAST));
+        }else{
+            return(createBinary("Program", ast.piAST, ast.iAST));    
+        }
     }
     
     public Object visitSubscriptVname(SubscriptVname ast, Object obj) {

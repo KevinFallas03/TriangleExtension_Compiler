@@ -251,8 +251,7 @@ public class Parser {
             Identifier iAST = parseIdentifier();
             finish(positionLong);          
             I = new LongIdentifier(piAST, iAST, positionLong,currentToken.spelling);
-        }
-        else{
+        }else{
             finish(positionLong);
             I = new Identifier(piAST.spelling,positionLong);
           }          
@@ -663,16 +662,13 @@ public class Parser {
     Vname vnameAST = null; // in case there's a syntactic error
     SourcePosition vnamePos = new SourcePosition();
     start(vnamePos);
-    if (currentToken.kind == Token.PACKAGE){ // nuevo
-        Identifier piAST = parsePackageIdentifier();
+    Identifier iAST = null;
+    if (currentToken.kind == Token.IDENTIFIER){ // nuevo
+        iAST = parsePackageIdentifier();
         accept(Token.DOLLAR);
-        vnameAST = parseRestOfVname(piAST);
-        return vnameAST;
-    } else{
-        Identifier iAST = parseIdentifier();
-        vnameAST = parseRestOfVname(iAST);
-        return vnameAST;
     }
+    vnameAST = parseVarName(iAST);
+    return vnameAST;
     
   }
 
@@ -681,8 +677,7 @@ public class Parser {
     vnamePos = identifierAST.position;
     Vname vAST = new SimpleVname(identifierAST, vnamePos);
 
-    while (currentToken.kind == Token.DOT ||
-           currentToken.kind == Token.LBRACKET) {
+    while (currentToken.kind == Token.DOT || currentToken.kind == Token.LBRACKET) {
 
       if (currentToken.kind == Token.DOT) {
         acceptIt();
@@ -698,12 +693,39 @@ public class Parser {
     }
     return vAST;
   }
-  
-  Vname parseVarName() throws SyntaxError{
+  Vname parseRestOfVarName(Identifier pidentifierAST,Identifier identifierAST) throws SyntaxError {
+    SourcePosition varNamePos = new SourcePosition();
+    varNamePos = identifierAST.position;
+    Vname vAST = new SimpleVname(identifierAST, pidentifierAST, varNamePos);
+    
+    while (currentToken.kind == Token.DOT || currentToken.kind == Token.LBRACKET) {
+      if (currentToken.kind == Token.DOT) {
+        acceptIt();
+        Identifier iAST = parseIdentifier();
+        finish(varNamePos);
+        vAST = new DotVname(vAST, iAST, varNamePos);
+      } else {
+        acceptIt();
+        Expression eAST = parseExpression();
+        accept(Token.RBRACKET);
+        finish(varNamePos);
+        vAST = new SubscriptVname(vAST, eAST, varNamePos);
+      }
+    }
+    return vAST;
+  }
+  Vname parseVarName(Identifier piAST) throws SyntaxError{
+      SourcePosition vnamePos = new SourcePosition();
+      Vname vAST = null;
       
-      
-      
-      return null;
+      if (currentToken.kind == Token.IDENTIFIER) {
+          acceptIt();
+          Identifier iAST = parseIdentifier();
+          vAST = parseRestOfVarName(piAST,iAST);
+      } else {
+          syntacticError("Expected identifier not \"%\"",currentToken.spelling);
+      }
+    return vAST;     
   }
 // </editor-fold>
   

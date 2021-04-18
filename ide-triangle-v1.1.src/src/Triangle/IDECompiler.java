@@ -46,13 +46,17 @@ public class IDECompiler {
                            " **********");
         
         System.out.println("Syntactic Analysis ...");
-        System.out.println("Prueba");
         SourceFile source = new SourceFile(sourceName);
+        String htmlDestination = sourceName.substring(0, sourceName.length() - 3)+"html";
         Scanner scanner = new Scanner(source);
         report = new IDEReporter();
         Parser parser = new Parser(scanner, report);
         boolean success = false;
-        
+        if (!scanner.lexicalError){
+//            System.out.println("Html file destination: "+htmlDestination);
+//            HTMLWriter writerHTML = new HTMLWriter(htmlDestination);
+//            writerHTML.write(rootAST);
+        }
         rootAST = parser.parseProgram();
         if (report.numErrors == 0) {
             //System.out.println("Contextual Analysis ...");
@@ -68,8 +72,6 @@ public class IDECompiler {
                     success = true;
                 }
             }
-            HTMLWriter writerHTML = new HTMLWriter(sourceName);
-            writerHTML.write(rootAST);
         }
 
         if (success)

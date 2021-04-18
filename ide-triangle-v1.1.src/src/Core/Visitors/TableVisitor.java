@@ -580,7 +580,7 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitSimpleVname(SimpleVname ast, Object o) { 
-      ast.I.visit(this, null);
+      ast.iAST.visit(this, null);
   
       return(null);
   }

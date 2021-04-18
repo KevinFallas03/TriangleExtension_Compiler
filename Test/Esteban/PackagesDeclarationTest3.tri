@@ -6,5 +6,4 @@ let
 in
     b:= myP $ a;
     putint(b)
-
 end

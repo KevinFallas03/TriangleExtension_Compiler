@@ -694,7 +694,7 @@ public final class Encoder implements Visitor {
   public Object visitSimpleVname(SimpleVname ast, Object o) {
     ast.offset = 0;
     ast.indexed = false;
-    return ast.I.decl.entity;
+    return ast.iAST.decl.entity;
   }
 
   public Object visitSubscriptVname(SubscriptVname ast, Object o) {
