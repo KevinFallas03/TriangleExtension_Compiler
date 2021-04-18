@@ -180,9 +180,10 @@ QUITAR begin
 	Despues:
 		V-name	 		::= 		[ Package-Identifier "$" ] Var-Name
 
-		Var-name 		::= 		  Identifier
-							| Var-name "." Identifier
-							| Var-name "[" Expression "]"
+		Var-name 		::= 		Identifier RestOfVarName
+
+		RestOfVarName 		::= 	"." Identifier RestOfVarName
+           							| "[" Expression "]" RestOfVarName
 
 -Reglas agruegadas:
 
