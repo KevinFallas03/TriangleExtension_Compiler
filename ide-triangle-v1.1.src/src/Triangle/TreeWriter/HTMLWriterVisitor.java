@@ -340,19 +340,19 @@ public class HTMLWriterVisitor implements Visitor {
         return null;
     }
 
-    public Object visitBoolTypeDenoter(BoolTypeDenoter ast, Object obj) {
+    public Object visitBoolTypeDenoter(BoolTypeDenoter ast, Object obj) { // FALTA
         writeLineHTML("<div class=\"BoolTypeDenoter\">");
         writeLineHTML("</div>");
         return null;
     }
 
-    public Object visitCharTypeDenoter(CharTypeDenoter ast, Object obj) {
+    public Object visitCharTypeDenoter(CharTypeDenoter ast, Object obj) { // FALTA 
         writeLineHTML("<div class=\"CharTypeDenoter\">");
         writeLineHTML("</div>");
         return null;
     }
 
-    public Object visitErrorTypeDenoter(ErrorTypeDenoter ast, Object obj) {
+    public Object visitErrorTypeDenoter(ErrorTypeDenoter ast, Object obj) { // FALTA 
         writeLineHTML("<div class=\"ErrorTypeDenoter\">");
         writeLineHTML("</div>");
         return null;
@@ -365,7 +365,7 @@ public class HTMLWriterVisitor implements Visitor {
         return null;
     }
 
-    public Object visitIntTypeDenoter(IntTypeDenoter ast, Object obj) {
+    public Object visitIntTypeDenoter(IntTypeDenoter ast, Object obj) { // FALTA 
         writeLineHTML("<div class=\"IntTypeDenoter\">");
         writeLineHTML("</div>");
         return null;
@@ -396,20 +396,20 @@ public class HTMLWriterVisitor implements Visitor {
     }
 
     // Literals
-    public Object visitCharacterLiteral(CharacterLiteral ast, Object obj) {
+    public Object visitCharacterLiteral(CharacterLiteral ast, Object obj) { // FALTA 
         writeLineHTML("<div class=\"CharacterLiteral\">");
         writeLineHTML("</div>");
         return null;
     }
 
-    public Object visitIntegerLiteral(IntegerLiteral ast, Object obj) {
+    public Object visitIntegerLiteral(IntegerLiteral ast, Object obj) { // FALTA 
         writeLineHTML("<div class=\"IntegerLiteral\">");
         writeLineHTML("</div>");
         return null;
     }
     
     //Identifiers and Operators
-    public Object visitIdentifier(Identifier ast, Object obj) {
+    public Object visitIdentifier(Identifier ast, Object obj) { 
         writeLineHTML("<div class=\"Identifier\">");
         writeLineHTML("\t<p style=\"color: #000000;"
                                     + "\">&ensp;" 
@@ -447,7 +447,7 @@ public class HTMLWriterVisitor implements Visitor {
     }
 
     // Programs
-    public Object visitProgram(Program ast, Object obj) {
+    public Object visitProgram(Program ast, Object obj) { // FALTA 
         writeLineHTML("<div class=\"Program\">");
         // TERMINAR PROGRAM
         writeLineHTML("</div>");
@@ -478,97 +478,97 @@ public class HTMLWriterVisitor implements Visitor {
     }
 
     @Override
-    public Object visitWhileDoCommand(WhileDoCommand aThis, Object o) {
+    public Object visitWhileDoCommand(WhileDoCommand ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitUntilDoCommand(UntilDoCommand aThis, Object o) {
+    public Object visitUntilDoCommand(UntilDoCommand ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitForIdentifierExpression(ForIdentifierExpression aThis, Object o) {
+    public Object visitForIdentifierExpression(ForIdentifierExpression ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitVarDeclarationBecomes(VarDeclarationBecomes ast, Object o) {
+    public Object visitVarDeclarationBecomes(VarDeclarationBecomes ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitSeqPackageDeclaration(SeqPackageDeclaration ast, Object o) {
+    public Object visitSeqPackageDeclaration(SeqPackageDeclaration ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
+    public Object visitPackageIdentifier(PackageIdentifier ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitLongIdentifier(LongIdentifier ast, Object o) {
+    public Object visitLongIdentifier(LongIdentifier ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitIfCommand(IfCommand ast, Object o) {
+    public Object visitIfCommand(IfCommand ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitLetCommand(LetCommand ast, Object o) {
+    public Object visitLetCommand(LetCommand ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitSequentialCommand(SequentialCommand ast, Object o) {
+    public Object visitSequentialCommand(SequentialCommand ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitWhileCommand(WhileCommand ast, Object o) {
+    public Object visitWhileCommand(WhileCommand ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitDoWhileCommand(DoWhileCommand aThis, Object o) {
+    public Object visitDoWhileCommand(DoWhileCommand aThis, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitDoUntilCommand(DoUntilCommand aThis, Object o) {
+    public Object visitDoUntilCommand(DoUntilCommand aThis, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitForDoCommand(ForDoCommand aThis, Object o) {
+    public Object visitForDoCommand(ForDoCommand aThis, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitForWhileCommand(ForWhileCommand aThis, Object o) {
+    public Object visitForWhileCommand(ForWhileCommand aThis, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitForUntilCommand(ForUntilCommand aThis, Object o) {
+    public Object visitForUntilCommand(ForUntilCommand aThis, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitRecursiveDeclaration(RecursiveDeclaration aThis, Object o) {
+    public Object visitRecursiveDeclaration(RecursiveDeclaration aThis, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitPrivateDeclaration(PrivateDeclaration aThis, Object o) {
+    public Object visitPrivateDeclaration(PrivateDeclaration aThis, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitIfExpression(IfExpression ast, Object o) {
+    public Object visitIfExpression(IfExpression ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -578,72 +578,72 @@ public class HTMLWriterVisitor implements Visitor {
     }
 
     @Override
-    public Object visitLetExpression(LetExpression ast, Object o) {
+    public Object visitLetExpression(LetExpression ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitRecordExpression(RecordExpression ast, Object o) {
+    public Object visitRecordExpression(RecordExpression ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitUnaryExpression(UnaryExpression ast, Object o) {
+    public Object visitUnaryExpression(UnaryExpression ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitVnameExpression(VnameExpression ast, Object o) {
+    public Object visitVnameExpression(VnameExpression ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitBinaryOperatorDeclaration(BinaryOperatorDeclaration ast, Object o) {
+    public Object visitBinaryOperatorDeclaration(BinaryOperatorDeclaration ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitConstDeclaration(ConstDeclaration ast, Object o) {
+    public Object visitConstDeclaration(ConstDeclaration ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitFuncDeclaration(FuncDeclaration ast, Object o) {
+    public Object visitFuncDeclaration(FuncDeclaration ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitProcDeclaration(ProcDeclaration ast, Object o) {
+    public Object visitProcDeclaration(ProcDeclaration ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitSequentialDeclaration(SequentialDeclaration ast, Object o) {
+    public Object visitSequentialDeclaration(SequentialDeclaration ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitTypeDeclaration(TypeDeclaration ast, Object o) {
+    public Object visitTypeDeclaration(TypeDeclaration ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object o) {
+    public Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitVarDeclaration(VarDeclaration ast, Object o) {
+    public Object visitVarDeclaration(VarDeclaration ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
+    public Object visitPackageDeclaration(PackageDeclaration ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitSimpleVname(SimpleVname ast, Object o) {
+    public Object visitSimpleVname(SimpleVname ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
