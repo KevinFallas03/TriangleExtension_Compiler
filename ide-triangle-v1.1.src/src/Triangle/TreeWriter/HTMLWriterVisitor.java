@@ -543,107 +543,228 @@ public class HTMLWriterVisitor implements Visitor {
     }
 
     @Override
-    public Object visitForDoCommand(ForDoCommand aThis, Object o) { // FALTA 
+    public Object visitForDoCommand(ForDoCommand ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitForWhileCommand(ForWhileCommand aThis, Object o) { // FALTA 
+    public Object visitForWhileCommand(ForWhileCommand ast, Object o) { // FALTA 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitForUntilCommand(ForUntilCommand aThis, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitForUntilCommand(ForUntilCommand ast, Object o) { // listo 
+        writeLineHTML("<div class=\"ForUntilCommand\">");
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>loop</strong></p>");
+        writeLineHTML("\t<p style=\"color: #000000; \"></br><strong>for</strong></br></p>" );
+        ast.IE.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>to</strong></br></p>");
+        ast.loop.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>do</strong></br></p>");
+        ast.E2.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>end</strong></br></p>");
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitRecursiveDeclaration(RecursiveDeclaration aThis, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) { // listo 
+        writeLineHTML("<div class=\"RecursiveDeclaration\">");
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>recursive</strong></br></p>");
+        ast.pfAST.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>end</strong></br></p>");
+        writeLineHTML("</div>");
+        return(null);
     }
 
     @Override
-    public Object visitPrivateDeclaration(PrivateDeclaration aThis, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitPrivateDeclaration(PrivateDeclaration ast, Object o) { // listo 
+        writeLineHTML("<div class=\"PrivateDeclaration\">");
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>private</strong></br></p>");
+        ast.d1AST.visit(this, null);
+        ast.d2AST.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>end</strong></br></p>");
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitIfExpression(IfExpression ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitIfExpression(IfExpression ast, Object o) { // listo 
+        writeLineHTML("<div class=\"IfExpression\"");
+        writeLineHTML("<p style=\"color: #000000; \"></br></br><strong>if</strong></p>");
+        ast.E1.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>then</strong></p>");
+        ast.E2.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000;\"></br><strong>else</strong></p></p>");
+        ast.E3.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
     public Object visitIntegerExpression(IntegerExpression ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<div class=\"IntegerExpression\"");
+        writeLineHTML("<p style=\"color: #2E64FE;\">"+ ast.IL.spelling + "</p>");
+        ast.IL.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitLetExpression(LetExpression ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitLetExpression(LetExpression ast, Object o) { // listo 
+        writeLineHTML("<div class=\"LetExpression\"");
+        writeLineHTML("<p style=\"color: #000000;\"></br><strong>let</strong></p>");
+        ast.D.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000;\"></br><strong>in</strong></p>");
+        ast.E.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitRecordExpression(RecordExpression ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitRecordExpression(RecordExpression ast, Object o) { // listo 
+        writeLineHTML("<div class=\"RecordExpression\"");
+        writeLineHTML("<p style=\"color: #000000;\"> {</p>");
+        ast.RA.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000;\"> }</p>");
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitUnaryExpression(UnaryExpression ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitUnaryExpression(UnaryExpression ast, Object o) { // listo 
+        writeLineHTML("<div class=\"UnaryExpression\"");
+        writeLineHTML("<p style=\"color: #000000;\">" + ast.O.spelling + "</p>");
+        ast.O.visit(this, null);
+        ast.E.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitVnameExpression(VnameExpression ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitVnameExpression(VnameExpression ast, Object o) { // listo 
+        writeLineHTML("<div class=\"VnameExpression\"");
+        ast.V.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitBinaryOperatorDeclaration(BinaryOperatorDeclaration ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitBinaryOperatorDeclaration(BinaryOperatorDeclaration ast, Object o) { // listo 
+        writeLineHTML("<div class=\"BinaryOperatorDeclaration\"");
+        ast.O.visit(this, null);
+        ast.ARG1.visit(this, null);
+        ast.ARG2.visit(this, null);
+        ast.RES.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitConstDeclaration(ConstDeclaration ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitConstDeclaration(ConstDeclaration ast, Object o) { // listo 
+        writeLineHTML("<div class=\"ConstDeclaration\"");
+        writeLineHTML("<p style=\"color: #000000;\"></br><strong>&ensp;const</strong></p>");
+        ast.I.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000;\"><strong>~</strong></p>");
+        ast.E.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitFuncDeclaration(FuncDeclaration ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitFuncDeclaration(FuncDeclaration ast, Object o) { // listo 
+        writeLineHTML("<div class=\"FuncDeclaration\"");
+        writeLineHTML("<p style=\"color: #000000;\"></br><strong>func</strong></p>");
+        ast.I.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000;\"> ( </p>");
+        ast.FPS.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000;\"> ) </p>");
+        writeLineHTML("<p style=\"color: #000000;\"> : </p>");
+        ast.T.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000;\">~</p>");
+        ast.E.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitProcDeclaration(ProcDeclaration ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitProcDeclaration(ProcDeclaration ast, Object o) { // listo 
+        writeLineHTML("<div class=\"ProcDeclaration\"");
+        writeLineHTML("<p style=\"color: #000000;\"></br><strong>proc</strong> </p>");
+        ast.I.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000;\"> (</p>");
+        ast.FPS.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000;\"> )</p>");
+        writeLineHTML("<p style=\"color: #000000;\">~</p>");
+        ast.C.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000;\"></br><strong>end</strong>   </p>");
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitSequentialDeclaration(SequentialDeclaration ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitSequentialDeclaration(SequentialDeclaration ast, Object o) { // listo 
+        writeLineHTML("<div class=\"SequentialDeclaration\"");
+        writeLineHTML("<p class=\"SequentialDeclaration\"style=\"color: #000000;\"></p>");
+        ast.D1.visit(this, null);
+        writeLineHTML("<p class=\"SequentialDeclaration\"style=\"color: #000000;\">;</p>");
+        ast.D2.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitTypeDeclaration(TypeDeclaration ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitTypeDeclaration(TypeDeclaration ast, Object o) { // listo 
+       
+        return null;
     }
 
     @Override
-    public Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object o) { // listo 
+        writeLineHTML("<div class=\"UnaryExpression\"");
+        writeLineHTML("<p style=\"color: #000000;\">" + ast.O.spelling + "</p>");
+        ast.O.visit(this, null);
+        ast.ARG.visit(this, null);
+        ast.RES.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitVarDeclaration(VarDeclaration ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitVarDeclaration(VarDeclaration ast, Object o) { // listo 
+        writeLineHTML("<div class=\"VarDeclaration\"");
+        writeLineHTML("<p style=\"color: #000000;\"></br><strong>&ensp;var</strong> </p>");
+        ast.I.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000;\"> : </p>");
+        ast.T.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitPackageDeclaration(PackageDeclaration ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitPackageDeclaration(PackageDeclaration ast, Object o) { // listo
+        writeLineHTML("<div class=\"PackageDeclaration\">");
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>package</strong></p>");
+        ast.iAST.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"><strong>~</strong></br></p>");
+        ast.dAST.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>end</strong>;</br></p>");
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitSimpleVname(SimpleVname ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitSimpleVname(SimpleVname ast, Object o) { // listo
+        if (ast.piAST == null){
+            writeLineHTML("<div class=\"SimpleVname\">");
+            ast.iAST.visit(this, null);
+            writeLineHTML("</div>");
+        }else{
+            writeLineHTML("<div class=\"SimpleVname\">");
+            ast.piAST.visit(this, null);
+            ast.iAST.visit(this, null);
+            writeLineHTML("</div>");
+        }
+        return null;
     }
 }
