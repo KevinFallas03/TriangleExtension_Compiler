@@ -13,6 +13,7 @@ import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.SyntacticAnalyzer.Parser;
 import Triangle.ContextualAnalyzer.Checker;
 import Triangle.CodeGenerator.Encoder;
+import Triangle.TreeWriterHTML.HTMLWriter;
 
 
 
@@ -67,6 +68,8 @@ public class IDECompiler {
                     success = true;
                 }
             }
+            HTMLWriter writerHTML = new HTMLWriter(sourceName);
+            writerHTML.write(rootAST);
         }
 
         if (success)
