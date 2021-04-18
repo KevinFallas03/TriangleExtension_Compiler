@@ -449,7 +449,12 @@ public class HTMLWriterVisitor implements Visitor {
     // Programs
     public Object visitProgram(Program ast, Object obj) { // FALTA 
         writeLineHTML("<div class=\"Program\">");
-        // TERMINAR PROGRAM
+        if(ast.D != null){
+            ast.D.visit(this, null);
+            ast.C.visit(this, null);
+        }else{
+            ast.C.visit(this, null);
+        }
         writeLineHTML("</div>");
         return null;
     }
@@ -479,52 +484,116 @@ public class HTMLWriterVisitor implements Visitor {
 
     @Override
     public Object visitWhileDoCommand(WhileDoCommand ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<div class=\"WhileDoCommand\">");
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>loop</strong> </p>");
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>while</strong> </p>");
+        ast.E.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>do</strong> </p>");
+        ast.C.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
     public Object visitUntilDoCommand(UntilDoCommand ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<div class=\"UntilDoCommand\">");
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>loop</strong> </p>");
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>until</strong> </p>");
+        ast.E.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>do</strong> </p>");
+        ast.C.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
-
     @Override
     public Object visitForIdentifierExpression(ForIdentifierExpression ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<div class=\"ForIdentifier\">");
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>loop</strong> </p>");
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>for</strong> </p>");
+        ast.I.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>from</strong> </p>");
+        ast.E1.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
     public Object visitVarDeclarationBecomes(VarDeclarationBecomes ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<div class=\"VarDeclarationBecomes\"");
+        writeLineHTML("<p style=\"color: #000000;\"></br><strong>&ensp;var</strong> </p>");
+        ast.I.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000;\"> := </p>");
+        ast.E.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
     public Object visitSeqPackageDeclaration(SeqPackageDeclaration ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<div class=\"SequentialPackageDeclaration\">");
+        ast.d1AST.visit(this, null);
+        ast.d2AST.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
     public Object visitPackageIdentifier(PackageIdentifier ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<div class=\"PackageIdentifier\">");
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>package</strong></p>");
+        ast.decl.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
     public Object visitLongIdentifier(LongIdentifier ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<div class=\"LongIdentifier\">");
+        writeLineHTML("<p style=\"color: #000000; \"></p>");
+        if(ast.piAST == null){
+            ast.iAST.visit(this, null);
+        }else{
+            ast.piAST.visit(this, null);
+            ast.iAST.visit(this, null);
+        }
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
     public Object visitIfCommand(IfCommand ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<div class=\"IfCommand\"");
+        writeLineHTML("\t<p style=\"color: #000000;\"></br></br><strong>if</strong><p style=\"color: #000000;\">(</p>" );
+        ast.E.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \">)</br><strong>then</strong></br></p>");
+        ast.C1.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>else</strong></br></p>");
+        ast.C2.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>end</strong></br></p>");
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
     public Object visitLetCommand(LetCommand ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<div class=\"LetCommand\"");
+        writeLineHTML("<p style=\"color: #000000; \"> </br><strong>let</strong></p>");
+        ast.D.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"> </br><strong>in</strong> </br></p>");
+        ast.C.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"> </br><strong>end</strong></br></p>");
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
     public Object visitSequentialCommand(SequentialCommand ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<div class=\"SequentialCommand\"");
+        ast.C1.visit(this, null);
+        writeLineHTML("<p class=\"SequentialDeclaration\"style=\"color: #000000;\">;</br></p>");
+        ast.C2.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
@@ -533,36 +602,61 @@ public class HTMLWriterVisitor implements Visitor {
     }
 
     @Override
-    public Object visitDoWhileCommand(DoWhileCommand aThis, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitDoWhileCommand(DoWhileCommand ast, Object o) { // FALTA 
+        writeLineHTML("<div class=\"DoWhileCommand\">");
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>loop</strong> </p>");
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>do</strong> </p>");
+        ast.C.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>while</strong> </p>");
+        ast.E.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
-    public Object visitDoUntilCommand(DoUntilCommand aThis, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitDoUntilCommand(DoUntilCommand ast, Object o) { // FALTA 
+        writeLineHTML("<div class=\"DoUntilCommand\">");
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>loop</strong> </p>");
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>do</strong> </p>");
+        ast.C.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>until</strong> </p>");
+        ast.E.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
     public Object visitForDoCommand(ForDoCommand ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        writeLineHTML("<div class=\"ForDoCommand\">");
+        ast.IE.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>to</strong></br></p>");
+        ast.E2.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>do</strong></br></p>");
+        ast.C.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>end</strong></br></p>");
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
     public Object visitForWhileCommand(ForWhileCommand ast, Object o) { // FALTA 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<div class=\"ForWhileCommand\">");
+        ast.IE.visit(this, null);
+        writeLineHTML("<p style=\"color: #000000; \"></br><strong>to</strong></br></p>");
+        ast.E2.visit(this, null);
+        ast.loop.visit(this, null);
+        writeLineHTML("</div>");
+        return null;
     }
 
     @Override
     public Object visitForUntilCommand(ForUntilCommand ast, Object o) { // listo 
         writeLineHTML("<div class=\"ForUntilCommand\">");
-        writeLineHTML("<p style=\"color: #000000; \"></br><strong>loop</strong></p>");
-        writeLineHTML("\t<p style=\"color: #000000; \"></br><strong>for</strong></br></p>" );
         ast.IE.visit(this, null);
         writeLineHTML("<p style=\"color: #000000; \"></br><strong>to</strong></br></p>");
-        ast.loop.visit(this, null);
-        writeLineHTML("<p style=\"color: #000000; \"></br><strong>do</strong></br></p>");
         ast.E2.visit(this, null);
-        writeLineHTML("<p style=\"color: #000000; \"></br><strong>end</strong></br></p>");
+        ast.loop.visit(this, null);
         writeLineHTML("</div>");
         return null;
     }
