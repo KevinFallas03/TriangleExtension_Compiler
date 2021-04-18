@@ -591,77 +591,77 @@ public class WriterVisitor implements Visitor {
       return operator;
   }
 
-    @Override
-    public Object visitWhileDoCommand(WhileDoCommand aThis, Object o) {
+    @Override // new
+    public Object visitWhileDoCommand(WhileDoCommand ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public Object visitUntilDoCommand(UntilDoCommand aThis, Object o) {
+    @Override // new
+    public Object visitUntilDoCommand(UntilDoCommand ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public Object visitDoWhileCommand(DoWhileCommand aThis, Object o) {
+    @Override // new
+    public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public Object visitDoUntilCommand(DoUntilCommand aThis, Object o) {
+    @Override // new
+    public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public Object visitForIdentifierExpression(ForIdentifierExpression aThis, Object o) {
+    @Override // new
+    public Object visitForIdentifierExpression(ForIdentifierExpression ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public Object visitForDoCommand(ForDoCommand aThis, Object o) {
+    @Override // new
+    public Object visitForDoCommand(ForDoCommand ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public Object visitForWhileCommand(ForWhileCommand aThis, Object o) {
+    @Override // new
+    public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public Object visitForUntilCommand(ForUntilCommand aThis, Object o) {
+    @Override // new
+    public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public Object visitRecursiveDeclaration(RecursiveDeclaration aThis, Object o) {
+    @Override // new
+    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public Object visitPrivateDeclaration(PrivateDeclaration aThis, Object o) {
+    @Override // new
+    public Object visitPrivateDeclaration(PrivateDeclaration ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
+    @Override // new
     public Object visitVarDeclarationBecomes(VarDeclarationBecomes ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
+    @Override // new
     public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
+    @Override // new
     public Object visitSeqPackageDeclaration(SeqPackageDeclaration ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
+    @Override // new
     public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
+    @Override // new
     public Object visitLongIdentifier(LongIdentifier ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
