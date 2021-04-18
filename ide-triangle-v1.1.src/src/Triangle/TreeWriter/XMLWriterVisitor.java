@@ -592,76 +592,76 @@ public class XMLWriterVisitor implements Visitor {
   }
 
     @Override
-    public Object visitWhileDoCommand(WhileDoCommand aThis, Object o) {
+    public Object visitWhileDoCommand(WhileDoCommand ast, Object o) {
         writeLineHTML("<WhileDoCommand>");
-        aThis.E.visit(this, null);
-        aThis.C.visit(this, null);
+        ast.E.visit(this, null);
+        ast.C.visit(this, null);
         writeLineHTML("</WhileDoCommand>");
         return null;
     }
 
     @Override
-    public Object visitUntilDoCommand(UntilDoCommand aThis, Object o) {
+    public Object visitUntilDoCommand(UntilDoCommand ast, Object o) {
         writeLineHTML("<UntilDoCommand>");
-        aThis.E.visit(this, null);
-        aThis.C.visit(this, null);
+        ast.E.visit(this, null);
+        ast.C.visit(this, null);
         writeLineHTML("</UntilDoCommand>");
         return null;    
     }
 
     @Override
-    public Object visitDoWhileCommand(DoWhileCommand aThis, Object o) {
+    public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {
         writeLineHTML("<DoWhileCommand>");
-        aThis.C.visit(this, null);
-        aThis.E.visit(this, null);
+        ast.C.visit(this, null);
+        ast.E.visit(this, null);
         writeLineHTML("</DoWhileCommand>");
         return null;      
     }
 
     @Override
-    public Object visitDoUntilCommand(DoUntilCommand aThis, Object o) {
+    public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {
         writeLineHTML("<DoUntilCommand>");
-        aThis.C.visit(this, null);
-        aThis.E.visit(this, null);
+        ast.C.visit(this, null);
+        ast.E.visit(this, null);
         writeLineHTML("</DoUntilCommand>");
         return null;    
     }
 
     @Override
-    public Object visitForIdentifierExpression(ForIdentifierExpression aThis, Object o) {
+    public Object visitForIdentifierExpression(ForIdentifierExpression ast, Object o) {
         writeLineHTML("<ForIdentifier>");
-        aThis.I.visit(this, null);
-        aThis.E1.visit(this, null);
+        ast.I.visit(this, null);
+        ast.E1.visit(this, null);
         writeLineHTML("</ForIdentifier>");
         return null;  
     }
 
     @Override
-    public Object visitForDoCommand(ForDoCommand aThis, Object o) {
+    public Object visitForDoCommand(ForDoCommand ast, Object o) {
         writeLineHTML("<ForDoCommand>");
-        aThis.IE.visit(this, null);
-        aThis.E2.visit(this, null);
-        aThis.C.visit(this, null);
+        ast.IE.visit(this, null);
+        ast.E2.visit(this, null);
+        ast.C.visit(this, null);
         writeLineHTML("</ForDoCommand>");
         return null; 
     }
 
     @Override
-    public Object visitForWhileCommand(ForWhileCommand aThis, Object o) {
+    public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
         writeLineHTML("<ForWhileCommand>");
-        aThis.IE.visit(this, null);
-        aThis.E2.visit(this, null);
-        aThis.loop.visit(this, null);
+        ast.IE.visit(this, null);
+        ast.E2.visit(this, null);
+        ast.loop.visit(this, null);
         writeLineHTML("</ForWhileCommand>");
         return null; 
     }
 
     @Override
-    public Object visitForUntilCommand(ForUntilCommand aThis, Object o) {
+    public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
         writeLineHTML("<ForUntilCommand>");
-        aThis.IE.visit(this, null);
-        aThis.E2.visit(this, null);
-        aThis.loop.visit(this, null);
+        ast.IE.visit(this, null);
+        ast.E2.visit(this, null);
+        ast.loop.visit(this, null);
         writeLineHTML("</ForUntiCommand>");
         return null; 
     }
@@ -698,8 +698,8 @@ public class XMLWriterVisitor implements Visitor {
 
     @Override // new
     public Object visitLongIdentifier(LongIdentifier ast, Object o) {
-        writeLineHTML("<SubscriptVname>");
-        writeLineHTML("</SubscriptVname>");
+        writeLineHTML("<LongIdentifier>");
+        writeLineHTML("</LongIdentifier>");
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
     }
