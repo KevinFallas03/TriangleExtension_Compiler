@@ -1,4 +1,4 @@
-package Triangle.TreeWriterHTML;
+package Triangle.TreeWriter;
 
 import Triangle.AbstractSyntaxTrees.DoUntilCommand;
 import Triangle.AbstractSyntaxTrees.DoWhileCommand;
@@ -20,11 +20,11 @@ import Triangle.AbstractSyntaxTrees.WhileDoCommand;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class HTMLWriter {
+public class XMLWriter {
 
   private String fileName;
 
-  public HTMLWriter(String fileName) {
+  public XMLWriter(String fileName) {
     this.fileName = fileName;
   }
 
@@ -34,10 +34,10 @@ public class HTMLWriter {
     try {
       FileWriter fileWriter = new FileWriter(fileName);
 
-      //HTML header
+      //XML header
       fileWriter.write("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
 
-      WriterVisitor layout = new WriterVisitor(fileWriter) {
+      XMLWriterVisitor layout = new XMLWriterVisitor(fileWriter) {
           @Override
           public Object visitWhileDoCommand(WhileDoCommand aThis, Object o) {
               throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

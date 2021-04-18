@@ -1,4 +1,4 @@
-package Triangle.TreeWriterHTML;
+package Triangle.TreeWriter;
 
 import Triangle.AbstractSyntaxTrees.AnyTypeDenoter;
 import Triangle.AbstractSyntaxTrees.ArrayExpression;
@@ -82,11 +82,11 @@ import Triangle.AbstractSyntaxTrees.WhileDoCommand;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class WriterVisitor implements Visitor {
+public class XMLWriterVisitor implements Visitor {
 
   private FileWriter fileWriter;
 
-  WriterVisitor(FileWriter fileWriter) {
+  XMLWriterVisitor(FileWriter fileWriter) {
     this.fileWriter = fileWriter;
   }
 
@@ -698,7 +698,10 @@ public class WriterVisitor implements Visitor {
 
     @Override // new
     public Object visitLongIdentifier(LongIdentifier ast, Object o) {
+        writeLineHTML("<SubscriptVname>");
+        writeLineHTML("</SubscriptVname>");
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
+    }
+   
 }

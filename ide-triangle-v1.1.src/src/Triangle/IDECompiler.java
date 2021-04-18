@@ -13,7 +13,7 @@ import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.SyntacticAnalyzer.Parser;
 import Triangle.ContextualAnalyzer.Checker;
 import Triangle.CodeGenerator.Encoder;
-import Triangle.TreeWriterHTML.HTMLWriter;
+import Triangle.TreeWriter.XMLWriter;
 
 
 
@@ -54,7 +54,7 @@ public class IDECompiler {
         boolean success = false;
         if (!scanner.lexicalError){
 //            System.out.println("Html file destination: "+htmlDestination);
-//            HTMLWriter writerHTML = new HTMLWriter(htmlDestination);
+//            XMLWriter writerHTML = new XMLWriter(htmlDestination);
 //            writerHTML.write(rootAST);
         }
         rootAST = parser.parseProgram();
