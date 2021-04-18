@@ -593,42 +593,77 @@ public class WriterVisitor implements Visitor {
 
     @Override
     public Object visitWhileDoCommand(WhileDoCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<WhileDoCommand>");
+        aThis.E.visit(this, null);
+        aThis.C.visit(this, null);
+        writeLineHTML("</WhileDoCommand>");
+        return null;
     }
 
     @Override
     public Object visitUntilDoCommand(UntilDoCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<UntilDoCommand>");
+        aThis.E.visit(this, null);
+        aThis.C.visit(this, null);
+        writeLineHTML("</UntilDoCommand>");
+        return null;    
     }
 
     @Override
     public Object visitDoWhileCommand(DoWhileCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<DoWhileCommand>");
+        aThis.C.visit(this, null);
+        aThis.E.visit(this, null);
+        writeLineHTML("</DoWhileCommand>");
+        return null;      
     }
 
     @Override
     public Object visitDoUntilCommand(DoUntilCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<DoUntilCommand>");
+        aThis.C.visit(this, null);
+        aThis.E.visit(this, null);
+        writeLineHTML("</DoUntilCommand>");
+        return null;    
     }
 
     @Override
     public Object visitForIdentifierExpression(ForIdentifierExpression aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<ForIdentifier>");
+        aThis.I.visit(this, null);
+        aThis.E1.visit(this, null);
+        writeLineHTML("</ForIdentifier>");
+        return null;  
     }
 
     @Override
     public Object visitForDoCommand(ForDoCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<ForDoCommand>");
+        aThis.IE.visit(this, null);
+        aThis.E2.visit(this, null);
+        aThis.C.visit(this, null);
+        writeLineHTML("</ForDoCommand>");
+        return null; 
     }
 
     @Override
     public Object visitForWhileCommand(ForWhileCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<ForWhileCommand>");
+        aThis.IE.visit(this, null);
+        aThis.E2.visit(this, null);
+        aThis.loop.visit(this, null);
+        writeLineHTML("</ForWhileCommand>");
+        return null; 
     }
 
     @Override
     public Object visitForUntilCommand(ForUntilCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<ForUntilCommand>");
+        aThis.IE.visit(this, null);
+        aThis.E2.visit(this, null);
+        aThis.loop.visit(this, null);
+        writeLineHTML("</ForUntiCommand>");
+        return null; 
     }
 
     @Override
