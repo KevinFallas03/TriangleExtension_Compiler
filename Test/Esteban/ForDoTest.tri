@@ -1,6 +1,6 @@
 let
   var a : Integer
 in
-  a:=1;
+  a:=1; !jajaja
   loop for a from 0 to 5 do nothing end
 end

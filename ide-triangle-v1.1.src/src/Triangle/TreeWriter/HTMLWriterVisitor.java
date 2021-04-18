@@ -122,7 +122,7 @@ public class HTMLWriterVisitor implements Visitor {
     }
     
     public Object visitEmptyCommand(EmptyCommand ast, Object obj) {
-        writeLineHTML("<div class=\"EmptyCommand\">\n<p style=\"color: #000000; \"><strong>&ensp;pass</strong> </p>\n</div>");
+        writeLineHTML("<div class=\"EmptyCommand\">\n<p style=\"color: #000000; \"><strong>&ensp;nothing</strong> </p>\n</div>");
         return null;
     }
    
@@ -624,7 +624,7 @@ public class HTMLWriterVisitor implements Visitor {
         writeLineHTML("</div>");
         return null;
     }
-
+    
     @Override
     public Object visitForDoCommand(ForDoCommand ast, Object o) { // FALTA 
 

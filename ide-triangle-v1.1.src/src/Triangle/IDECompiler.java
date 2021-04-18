@@ -13,6 +13,7 @@ import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.SyntacticAnalyzer.Parser;
 import Triangle.ContextualAnalyzer.Checker;
 import Triangle.CodeGenerator.Encoder;
+import Triangle.TreeWriter.HTMLWriter;
 import Triangle.TreeWriter.XMLWriter;
 
 
@@ -48,17 +49,22 @@ public class IDECompiler {
         System.out.println("Syntactic Analysis ...");
         SourceFile source = new SourceFile(sourceName);
         String htmlDestination = sourceName.substring(0, sourceName.length() - 3)+"html";
+        String xmlDestination = sourceName.substring(0, sourceName.length() - 3)+"xml";
         Scanner scanner = new Scanner(source);
         report = new IDEReporter();
         Parser parser = new Parser(scanner, report);
         boolean success = false;
-        if (!scanner.lexicalError){
-//            System.out.println("Html file destination: "+htmlDestination);
-//            XMLWriter writerHTML = new XMLWriter(htmlDestination);
-//            writerHTML.write(rootAST);
-        }
+//        if (!scanner.lexicalError){
+//         
+//        }
         rootAST = parser.parseProgram();
         if (report.numErrors == 0) {
+            System.out.println("Html file destination: "+htmlDestination);
+            HTMLWriter writerHTML = new HTMLWriter(htmlDestination);
+            writerHTML.write(rootAST);
+            System.out.println("Xml file destination: "+xmlDestination);
+            XMLWriter writerXML = new XMLWriter(xmlDestination);
+            writerXML.write(rootAST);
             //System.out.println("Contextual Analysis ...");
             //Checker checker = new Checker(report);
             //checker.check(rootAST);

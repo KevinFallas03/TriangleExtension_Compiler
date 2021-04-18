@@ -38,7 +38,6 @@ public class XMLWriter {
       fileWriter.write("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
 
       XMLWriterVisitor layout = new XMLWriterVisitor(fileWriter); 
-    
       ast.visit(layout, null);
 
       fileWriter.close();

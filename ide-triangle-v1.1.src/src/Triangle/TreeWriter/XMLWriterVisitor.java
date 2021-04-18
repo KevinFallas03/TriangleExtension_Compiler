@@ -564,7 +564,12 @@ public class XMLWriterVisitor implements Visitor {
   // Programs
   public Object visitProgram(Program ast, Object obj) {
     writeLineXML("<Program>");
-    ast.C.visit(this, null);
+    if(ast.D == null){
+        ast.C.visit(this, null);
+    }else{
+        ast.C.visit(this, null);
+        ast.D.visit(this, null);
+    }
     writeLineXML("</Program>");
     return null;
   }
