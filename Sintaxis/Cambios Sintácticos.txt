@@ -163,6 +163,26 @@ QUITAR begin
 										":" Type-denoter "~" Expression
 							|		"type" Identifier "~" Type-denoter
 
+-V-name y Var-name: --descripcion
+	Original: 
+		V-name	 		::= 		  Identifier
+			 				| V-name "." Identifier
+			 				| V-name "[" Expression "]"
+	
+	
+	Implementado en Java:
+		V-name	 		::= 		Identifier RestOfVname
+			 				
+		
+		RestOfVname		::= 		   V-name  "." Identifier 
+							|  V-name "[" Expression "]"
+	
+	Despues:
+		V-name	 		::= 		[ Package-Identifier "$" ] Var-Name
+
+		Var-name 		::= 		  Identifier
+							| Var-name "." Identifier
+							| Var-name "[" Expression "]"
 
 -Reglas agruegadas:
 

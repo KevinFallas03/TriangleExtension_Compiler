@@ -661,9 +661,19 @@ public class Parser {
 
   Vname parseVname () throws SyntaxError {
     Vname vnameAST = null; // in case there's a syntactic error
-    Identifier iAST = parseIdentifier();
-    vnameAST = parseRestOfVname(iAST);
-    return vnameAST;
+    SourcePosition vnamePos = new SourcePosition();
+    start(vnamePos);
+    if (currentToken.kind == Token.PACKAGE){ // nuevo
+        Identifier piAST = parsePackageIdentifier();
+        accept(Token.DOLLAR);
+        vnameAST = parseRestOfVname(piAST);
+        return vnameAST;
+    } else{
+        Identifier iAST = parseIdentifier();
+        vnameAST = parseRestOfVname(iAST);
+        return vnameAST;
+    }
+    
   }
 
   Vname parseRestOfVname(Identifier identifierAST) throws SyntaxError {
@@ -687,6 +697,13 @@ public class Parser {
       }
     }
     return vAST;
+  }
+  
+  Vname parseVarName() throws SyntaxError{
+      
+      
+      
+      return null;
   }
 // </editor-fold>
   

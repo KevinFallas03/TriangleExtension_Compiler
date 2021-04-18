@@ -65,6 +65,21 @@ Proc-Func		::= "proc" Identifier "(" Formal-Parameter-Sequence ")" "~" Command	"
 
 Proc-Funcs		::= Proc-Func ("|" Proc-Func)+
 
+
+Package-Declaration 	::= "package" Package-Identifier "~" Declaration "end"
+
+Package-Identifier 	::= Identifier
+
+Long-Identifier 	::= [ Package-Identifier "$" ] Identifier
+
+
+V-name 			::= [ Package-Identifier "$" ] Var-Name
+
+Var-name 		::= Identifier
+			| Var-name "." Identifier
+			| Var-name "[" Expression "]"
+
+
 Formal-Parameter-Sequence ::= 
 			 | proper-Formal-Parameter-Sequence
 
