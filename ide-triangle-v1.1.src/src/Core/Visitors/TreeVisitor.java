@@ -393,7 +393,11 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitProgram(Program ast, Object obj) {
-        return(createBinary("Program", ast.C, ast.D));
+        if (ast.D == null){
+            return(createUnary("Program", ast.C));
+        }else{
+            return(createBinary("Program", ast.C, ast.D));    
+        }
     }
     // </editor-fold>
 
@@ -521,7 +525,7 @@ public class TreeVisitor implements Visitor {
 
     @Override
     public Object visitPrivateDeclaration(PrivateDeclaration aThis, Object o) {
-        return(createBinary("PrivateDeclaration", aThis.dcl1,aThis.dcl2));
+        return(createBinary("PrivateDeclaration", aThis.d1AST,aThis.d2AST));
     }
 // </editor-fold>
 
