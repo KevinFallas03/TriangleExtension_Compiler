@@ -668,40 +668,58 @@ public class XMLWriterVisitor implements Visitor {
 
     @Override // new
     public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<RecursiveDeclaration>");
+        ast.pfAST.visit(this, null);
+        writeLineHTML("</RecursiveDeclaration>");
+        return null;    
     }
 
     @Override // new
     public Object visitPrivateDeclaration(PrivateDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<PrivateDeclaration>");
+        ast.d1AST.visit(this, null);
+        ast.d2AST.visit(this, null);
+        writeLineHTML("</PrivateDeclaration>");
+        return null;    
     }
 
     @Override // new
     public Object visitVarDeclarationBecomes(VarDeclarationBecomes ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<VarDeclarationBecomes>");
+        ast.E.visit(this, null);
+        ast.I.visit(this, null);
+        writeLineHTML("</VarDeclarationBecomes>");
+        return null;    
     }
 
     @Override // new
     public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<PackageDeclaration>");
+        ast.iAST.visit(this, null);
+        ast.dAST.visit(this, null);
+        writeLineHTML("</PackageDeclaration>");
+        return null;    
     }
 
     @Override // new
     public Object visitSeqPackageDeclaration(SeqPackageDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<SeqPackageDeclaration>");
+        ast.d1AST.visit(this, null);
+        ast.d2AST.visit(this, null);
+        writeLineHTML("</SeqPackageDeclaration>");
+        return null;    
     }
 
     @Override // new
     public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        writeLineHTML("<Package value=\"" + ast.spelling + "\"/>");
+        return null;
     }
 
     @Override // new
     public Object visitLongIdentifier(LongIdentifier ast, Object o) {
-        writeLineHTML("<LongIdentifier>");
-        writeLineHTML("</LongIdentifier>");
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
+        writeLineHTML("<LongIdentifier value=\"" + ast.spelling + "\"/>");
+        return null;
     }
    
 }
