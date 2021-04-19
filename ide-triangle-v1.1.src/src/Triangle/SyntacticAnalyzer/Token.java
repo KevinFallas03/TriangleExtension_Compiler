@@ -121,7 +121,7 @@ final class Token extends Object {
     EOT         = 47,
     ERROR	= 48;
 
-  private static String[] tokenTable = new String[] {
+  static String[] tokenTable = new String[] {
     "<int>",
     "<char>",
     "<identifier>",
@@ -173,7 +173,7 @@ final class Token extends Object {
     "<error>"
   };
 
-  private final static int	firstReservedWord = Token.ARRAY,
-  				lastReservedWord  = Token.WHILE;
+    static final int firstReservedWord = Token.ARRAY;
+    static final int lastReservedWord = Token.WHILE;
 
 }

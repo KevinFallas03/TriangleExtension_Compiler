@@ -1,5 +1,5 @@
 /*
- * @(#)Scanner.java                        2.1 2003/10/07
+ * @(#)HTMLGenerator.java                        2.1 2003/10/07
  *
  * Copyright (C) 1999, 2003 D.A. Watt and D.F. Brown
  * Dept. of Computing Science, University of Glasgow, Glasgow G12 8QQ Scotland
@@ -16,19 +16,22 @@ package Triangle.SyntacticAnalyzer;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import Triangle.SyntacticAnalyzer.SourceFile;
-
 
 public final class HTMLGenerator {
 
   private SourceFile sourceFile;
   public boolean isDone = false;
   private FileWriter fileWriter;
+  private String content = "";
 
   private char currentChar;
   private StringBuffer currentSpelling;
-  private int cont;
- 
+  
+  public HTMLGenerator(SourceFile source){
+      sourceFile = source;
+      currentChar = sourceFile.getSource();
+  }
+  
   private boolean isLetter(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
   }
@@ -43,13 +46,21 @@ public final class HTMLGenerator {
 	    c == '&' || c == '@' || c == '%' || c == '^' ||
 	    c == '?');
   }
-
-  public HTMLGenerator(SourceFile source,String fileName ) {
-    sourceFile = source;
-    currentChar = sourceFile.getSource();
+  public boolean isReserved(String word){
+      for(int currentRW = Token.firstReservedWord ; true ; currentRW++){
+          int comparison = Token.tokenTable[currentRW].compareTo(word);
+          if (comparison == 0) {
+              return true;
+          } else if (comparison > 0 || currentRW == Token.lastReservedWord) {
+              return false;
+          }
+      }
+  }
+  
+  public void generateHTML(String fileName) {
     try {
         fileWriter = new FileWriter(fileName + ".html");
-
+        
         fileWriter.write("<!DOCTYPE html>\n" +
                          "<head>\n" +
                          "  \t<meta charset=\"utf-8\">\n" +
@@ -67,7 +78,7 @@ public final class HTMLGenerator {
                          "\n" +
                          "</style>" +
                          "<body>");
-        this.generateHTML();
+        this.scan();
 
         fileWriter.write("</body>\n" +
                          "</html>");
@@ -79,7 +90,6 @@ public final class HTMLGenerator {
         e.printStackTrace();
     }
   }
-
 
   private void takeIt() {
     currentSpelling.append(currentChar);
@@ -105,9 +115,9 @@ public final class HTMLGenerator {
             while (isLetter(currentChar) || isDigit(currentChar))
                 takeIt();
             if (this.isReserved(this.currentSpelling.toString())){
-                writeBoldBlack(this.currentSpelling.toString());
+                writeLine(this.currentSpelling.toString(), HTMLGenerator.BOLD);
             }else{
-                writeSimpleBlack(this.currentSpelling.toString());
+                writeLine(this.currentSpelling.toString(), HTMLGenerator.SIMPLE);
             }
             break;
         case '0':  case '1':  case '2':  case '3':  case '4':
@@ -115,7 +125,7 @@ public final class HTMLGenerator {
             takeIt();
             while (isDigit(currentChar))
                 takeIt();
-            writeSimpleBlue(this.currentSpelling.toString());
+            writeLine(this.currentSpelling.toString(), HTMLGenerator.BLUE);
             break;
         case '+':  case '-':  case '*': case '/':  case '=':
         case '<':  case '>':  case '\\':  case '&':  case '@':
@@ -123,14 +133,14 @@ public final class HTMLGenerator {
             takeIt();
             while (isOperator(currentChar))
                 takeIt();
-            writeSimpleBlack(this.currentSpelling.toString());
+            writeLine(this.currentSpelling.toString(), HTMLGenerator.SIMPLE);
             break;
         case '\'':
             takeIt();
             takeIt(); // the quoted character
             if (currentChar == '\'') {
                 takeIt();
-            writeSimpleBlue(this.currentSpelling.toString());
+                writeLine(this.currentSpelling.toString(), HTMLGenerator.BLUE);
             }else
                 System.out.println("Error");
             break;
@@ -138,64 +148,21 @@ public final class HTMLGenerator {
             takeIt();
             if(currentChar == '.'){
                 takeIt();
-                writeSimpleBlack(this.currentSpelling.toString());
-            }else{
-                writeSimpleBlack(this.currentSpelling.toString());
             }
+            writeLine(this.currentSpelling.toString(), HTMLGenerator.SIMPLE);
             break;
         case ':':
             takeIt();
             if (currentChar == '=') {
                 takeIt();
-                writeSimpleBlack(this.currentSpelling.toString());
-            }else{
-                writeSimpleBlack(this.currentSpelling.toString());
             }
+            writeLine(this.currentSpelling.toString(), HTMLGenerator.SIMPLE);
             break;
-        case ';':
+        case ',': case '~': case '|': case '$': case '(': case ' ':
+        case ')': case '[': case ']': case '{': case '}': case ';':
             takeIt();
-            writeSimpleBlack(this.currentSpelling.toString());
-            break;
-        case ',':
-            takeIt();
-            writeSimpleBlack(this.currentSpelling.toString());
-            break;
-        case '~':
-            takeIt();
-            writeSimpleBlack(this.currentSpelling.toString());
-            break;      
-        case '|':
-            takeIt();
-            writeSimpleBlack(this.currentSpelling.toString());
-            break;        
-        case '$':
-            takeIt();
-            writeSimpleBlack(this.currentSpelling.toString());
-            break;
-        case '(':
-            takeIt();
-            writeSimpleBlack(this.currentSpelling.toString());
-            break;
-        case ')':
-            takeIt();
-            writeSimpleBlack(this.currentSpelling.toString());
-            break;
-        case '[':
-            takeIt();
-            writeSimpleBlack(this.currentSpelling.toString());
-            break;
-        case ']':
-            takeIt();
-            writeSimpleBlack(this.currentSpelling.toString());
-            break;
-        case '{':
-            takeIt();
-            writeSimpleBlack(this.currentSpelling.toString());
-            break;
-        case '}':
-            takeIt();
-            writeSimpleBlack(this.currentSpelling.toString());
-            break;
+            writeLine(this.currentSpelling.toString(), HTMLGenerator.SIMPLE);
+            break;  
         case SourceFile.EOT:
             this.isDone = true;
             break;    
@@ -203,26 +170,16 @@ public final class HTMLGenerator {
             takeIt();
             while ((currentChar != SourceFile.EOL) && (currentChar != SourceFile.EOT))
                 takeIt();
-            writeSimpleGreen(this.currentSpelling.toString());
+            writeLine(this.currentSpelling.toString(), HTMLGenerator.GREEN);
             break;
         }  
-        case ' ':
+        case '\n': case '\r': 
             takeIt();
-            writeSimpleBlack(this.currentSpelling.toString());
-        break;
-        case '\n':
-        case '\r': 
-            takeIt();
-            try {
-                fileWriter.write("<br>");
-            } catch (IOException e) {
-                System.err.println("Error while writing HTML file for print the AST");
-                e.printStackTrace();
-            }
+            writeLine("<br>",HTMLGenerator.EMPTY);
             break;
         case '\t':
             takeIt();
-            writeSimpleBlack("&emsp;");
+            writeLine("&emsp;",HTMLGenerator.SIMPLE);
             break;
         default:
             takeIt();
@@ -231,67 +188,35 @@ public final class HTMLGenerator {
     }
   }
   
-  public void generateHTML(){
+  public void scan(){
       while(!this.isDone){
           currentSpelling = new StringBuffer("");
-        this.scanToken();
+          this.scanToken();
       }
   }
   
-  public boolean isReserved(String word){
-      for(String rw : this.reservedWords){
-          if(rw.equals(word)){
-              return true;
+  public void writeLine(String line, int kind){
+      try {
+          switch(kind){
+              case HTMLGenerator.SIMPLE: fileWriter.write("<p>"+line+"</p>");
+              break;
+              case HTMLGenerator.BOLD: fileWriter.write("<strong>"+line+"</strong>");
+              break;
+              case HTMLGenerator.GREEN: fileWriter.write("<span style = \"color:#00b300;\">"+line+"</span>");
+              break;
+              case HTMLGenerator.BLUE: fileWriter.write("<span style = \"color:#0000cd;\">"+line+"</span>");
+              break;
+              case HTMLGenerator.EMPTY: fileWriter.write(line);
+              break;
           }
-      }
-      return false;
-  }
-  private static String[] reservedWords = new String[] {
-    "array","choose",   // Se agrega el caracter de la palabra reservada choose
-    "const","do",
-    "else","elsif",     // Se agrega el caracter de la palabra reservada elsif
-    "end","for",        // Se agrega el caracter de la palabra reservada for
-    "from","func",      // Se agrega el caracter de la palabra reservada from
-    "if","in",
-    "let","loop",       // Se agrega el caracter de la palabra reservada loop
-    "nothing","of",
-    "package","private",// Se agrega el caracter de la palabra reservada private
-    "proc","record",
-    "recursive","then",
-    "to","type",
-    "until","var",
-    "when","while"
-  };
-  public void writeSimpleBlack(String word){
-    try {
-        fileWriter.write("<p>"+word+"</p>");
     } catch (IOException e) {
         System.err.println("Error while writing HTML file for print the AST");
         e.printStackTrace();
     }
   }
-  public void writeBoldBlack(String word){
-    try {
-        fileWriter.write("<strong>"+word+"</strong>");
-    } catch (IOException e) {
-        System.err.println("Error while writing HTML file for print the AST");
-        e.printStackTrace();
-    }
-  }
-  public void writeSimpleGreen(String word){
-    try {
-        fileWriter.write("<span style = \"color:#00b300;\">"+word+"</span>");
-    } catch (IOException e) {
-        System.err.println("Error while writing HTML file for print the AST");
-        e.printStackTrace();
-    }
-  }
-  public void writeSimpleBlue(String word){
-    try {
-        fileWriter.write("<span style = \"color:#0000cd;\">"+word+"</span>");
-    } catch (IOException e) {
-        System.err.println("Error while writing HTML file for print the AST");
-        e.printStackTrace();
-    }
-  }
+  
+  public static final int
+    SIMPLE  = 0,BOLD    = 1,
+    GREEN   = 2,BLUE    = 3,
+    EMPTY   = 4;
 }
