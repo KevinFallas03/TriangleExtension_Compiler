@@ -162,11 +162,15 @@ public final class HTMLGenerator {
             }
             writeLine(this.currentSpelling.toString(), HTMLGenerator.SIMPLE);
             break;
-        case ',': case '~': case '|': case '$': case '(': case ' ':
+        case ',': case '~': case '|': case '$': case '(': 
         case ')': case '[': case ']': case '{': case '}': case ';':
             takeIt();
             writeLine(this.currentSpelling.toString(), HTMLGenerator.SIMPLE);
             break;  
+        case ' ':
+            takeIt();
+            writeLine("&nbsp;", HTMLGenerator.SIMPLE);
+            break;
         case SourceFile.EOT:
             this.isDone = true;
             break;    

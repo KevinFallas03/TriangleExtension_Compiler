@@ -77,7 +77,6 @@ public final class Scanner {
           takeIt();
         if (currentChar == SourceFile.EOL)
           takeIt();
-        System.out.println(this.currentSpelling);
       }
       break;
     case ' ': case '\n': case '\r': case '\t':
