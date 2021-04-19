@@ -20,7 +20,7 @@ import java.io.IOException;
 public final class HTMLGenerator {
 
   private SourceFile sourceFile;
-  public boolean isDone = false;
+  public boolean isDone,error = false;
   private FileWriter fileWriter;
   private String content = "";
 
@@ -58,37 +58,36 @@ public final class HTMLGenerator {
   }
   
   public void generateHTML(String fileName) {
-    try {
-        fileWriter = new FileWriter(fileName + ".html");
-        
-        fileWriter.write("<!DOCTYPE html>\n" +
-                         "<head>\n" +
-                         "  \t<meta charset=\"utf-8\">\n" +
-                         "  \t<title>FileHTML</title>\n" +
-                         "</head>\n"+
-                         "<style type=\"text/css\">\n"
-                + "div {display: inline;" +
-                         "      font-family: courier;" +
-                         "      font-size:1em;" +
-                         "    }"
-                + "p {display: inline;" +
-                         "      font-family: courier;" +
-                         "      font-size:1em;" +
-                         "    }" +
-                         "\n" +
-                         "</style>" +
-                         "<body>");
-        this.scan();
-
-        fileWriter.write("</body>\n" +
-                         "</html>");
-
-        fileWriter.close();
-
-    } catch (IOException e) {
-        System.err.println("Error while creating file for print the AST");
-        e.printStackTrace();
-    }
+      this.content+=("<!DOCTYPE html>\n" +
+                        "<head>\n" +
+                        "  \t<meta charset=\"utf-8\">\n" +
+                        "  \t<title>FileHTML</title>\n" +
+                        "</head>\n"+
+                        "<style type=\"text/css\">\n"
+               + "div {display: inline;" +
+                        "      font-family: courier;" +
+                        "      font-size:1em;" +
+                        "    }"
+               + "p {display: inline;" +
+                        "      font-family: courier;" +
+                        "      font-size:1em;" +
+                        "    }" +
+                        "\n" +
+                        "</style>" +
+                        "<body>");
+      this.scan();
+      this.content+=("</body>\n" +
+                  "</html>");
+      try {
+          if (!this.error){
+              fileWriter = new FileWriter(fileName + ".html");
+              fileWriter.write(this.content);
+              fileWriter.close();
+          }
+      }catch (IOException e) {
+          System.err.println("Error while writing HTML file for print the AST");
+          e.printStackTrace();
+      }
   }
 
   private void takeIt() {
@@ -137,12 +136,15 @@ public final class HTMLGenerator {
             break;
         case '\'':
             takeIt();
-            takeIt(); // the quoted character
+            takeIt(); // the quoted character'
+            //PREGUNTA
             if (currentChar == '\'') {
                 takeIt();
                 writeLine(this.currentSpelling.toString(), HTMLGenerator.BLUE);
-            }else
-                System.out.println("Error");
+            }else{
+                this.error = true;
+                System.out.println("Error while writing HTML file for print the AST");
+            }
             break;
         case '.':
             takeIt();
@@ -183,36 +185,32 @@ public final class HTMLGenerator {
             break;
         default:
             takeIt();
-            System.out.println("Error");
+            this.error = true;
+            System.out.println("Error while writing HTML file for print the AST");
             break;
     }
   }
   
   public void scan(){
-      while(!this.isDone){
+      while(!this.isDone && !this.error){
           currentSpelling = new StringBuffer("");
           this.scanToken();
       }
   }
   
   public void writeLine(String line, int kind){
-      try {
-          switch(kind){
-              case HTMLGenerator.SIMPLE: fileWriter.write("<p>"+line+"</p>");
-              break;
-              case HTMLGenerator.BOLD: fileWriter.write("<strong>"+line+"</strong>");
-              break;
-              case HTMLGenerator.GREEN: fileWriter.write("<span style = \"color:#00b300;\">"+line+"</span>");
-              break;
-              case HTMLGenerator.BLUE: fileWriter.write("<span style = \"color:#0000cd;\">"+line+"</span>");
-              break;
-              case HTMLGenerator.EMPTY: fileWriter.write(line);
-              break;
-          }
-    } catch (IOException e) {
-        System.err.println("Error while writing HTML file for print the AST");
-        e.printStackTrace();
-    }
+      switch(kind){
+          case HTMLGenerator.SIMPLE: this.content+=("<p>"+line+"</p>");
+          break;
+          case HTMLGenerator.BOLD: this.content+=("<strong>"+line+"</strong>");
+          break;
+          case HTMLGenerator.GREEN: this.content+=("<span style = \"color:#00b300;\">"+line+"</span>");
+          break;
+          case HTMLGenerator.BLUE: this.content+=("<span style = \"color:#0000cd;\">"+line+"</span>");
+          break;
+          case HTMLGenerator.EMPTY: this.content+=(line);
+          break;
+      }
   }
   
   public static final int

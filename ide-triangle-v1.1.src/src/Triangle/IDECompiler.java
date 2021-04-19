@@ -58,10 +58,11 @@ public class IDECompiler {
         boolean success = false;
         
         rootAST = parser.parseProgram();
+        System.out.println("Html file destination: "+filesDestination);
+        HTMLGenerator writerHTML = new HTMLGenerator(source2);
+        writerHTML.generateHTML(filesDestination);
         if (report.numErrors == 0) {
-            System.out.println("Html file destination: "+filesDestination);
-            HTMLGenerator g = new HTMLGenerator(source2);
-            g.generateHTML(filesDestination);
+           
             System.out.println("Xml file destination: "+filesDestination);
             XMLWriter writerXML = new XMLWriter(filesDestination);
             writerXML.write(rootAST);
