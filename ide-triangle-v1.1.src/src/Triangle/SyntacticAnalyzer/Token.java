@@ -15,7 +15,7 @@
 package Triangle.SyntacticAnalyzer;
 
 
-final class Token extends Object {
+public final class Token extends Object {
 
   protected int kind;
   protected String spelling;
@@ -121,7 +121,7 @@ final class Token extends Object {
     EOT         = 47,
     ERROR	= 48;
 
-  static String[] tokenTable = new String[] {
+ public static String[] tokenTable = new String[] {
     "<int>",
     "<char>",
     "<identifier>",
@@ -173,7 +173,7 @@ final class Token extends Object {
     "<error>"
   };
 
-    static final int firstReservedWord = Token.ARRAY;
-    static final int lastReservedWord = Token.WHILE;
+    public static final int firstReservedWord = Token.ARRAY;
+    public static final int lastReservedWord = Token.WHILE;
 
 }

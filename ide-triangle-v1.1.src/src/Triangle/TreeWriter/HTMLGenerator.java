@@ -12,8 +12,10 @@
  * of the authors.
  */
 
-package Triangle.SyntacticAnalyzer;
+package Triangle.TreeWriter;
 
+import Triangle.SyntacticAnalyzer.SourceFile;
+import Triangle.SyntacticAnalyzer.Token;
 import java.io.FileWriter;
 import java.io.IOException;
 
