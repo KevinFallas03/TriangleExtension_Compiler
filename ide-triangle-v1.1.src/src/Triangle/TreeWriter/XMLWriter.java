@@ -32,7 +32,7 @@ public class XMLWriter {
   public void write(Program ast) {
     // Prepare the file to write
     try {
-      FileWriter fileWriter = new FileWriter(fileName);
+      FileWriter fileWriter = new FileWriter(fileName+".xml");
 
       //XML header
       fileWriter.write("<?xml version=\"1.0\" standalone=\"yes\"?>\n");

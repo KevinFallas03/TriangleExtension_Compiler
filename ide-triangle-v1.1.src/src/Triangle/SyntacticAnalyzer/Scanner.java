@@ -24,7 +24,9 @@ public final class Scanner {
   private char currentChar;
   private StringBuffer currentSpelling;
   private boolean currentlyScanningToken;
-
+  public StringBuffer getCP(){
+      return this.currentSpelling;
+  }
   private boolean isLetter(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
   }
@@ -59,7 +61,7 @@ public final class Scanner {
   // the next character from the source program.
 
   private void takeIt() {
-    if (currentlyScanningToken)
+//    if (currentlyScanningToken)
       currentSpelling.append(currentChar);
     currentChar = sourceFile.getSource();
   }
@@ -75,9 +77,9 @@ public final class Scanner {
           takeIt();
         if (currentChar == SourceFile.EOL)
           takeIt();
+        System.out.println(this.currentSpelling);
       }
       break;
-
     case ' ': case '\n': case '\r': case '\t':
       takeIt();
       break;

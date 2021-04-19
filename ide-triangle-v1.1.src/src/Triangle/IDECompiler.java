@@ -13,7 +13,7 @@ import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.SyntacticAnalyzer.Parser;
 import Triangle.ContextualAnalyzer.Checker;
 import Triangle.CodeGenerator.Encoder;
-import Triangle.TreeWriter.HTMLWriter;
+import Triangle.SyntacticAnalyzer.HTMLGenerator;
 import Triangle.TreeWriter.XMLWriter;
 
 
@@ -48,22 +48,21 @@ public class IDECompiler {
         
         System.out.println("Syntactic Analysis ...");
         SourceFile source = new SourceFile(sourceName);
-        String htmlDestination = sourceName.substring(0, sourceName.length() - 3)+"html";
-        String xmlDestination = sourceName.substring(0, sourceName.length() - 3)+"xml";
+        SourceFile source2 = new SourceFile(sourceName);
+        
+        String filesDestination = sourceName.substring(0, sourceName.length() - 4);
+        
         Scanner scanner = new Scanner(source);
         report = new IDEReporter();
         Parser parser = new Parser(scanner, report);
         boolean success = false;
-//        if (!scanner.lexicalError){
-//         
-//        }
+        
         rootAST = parser.parseProgram();
         if (report.numErrors == 0) {
-            System.out.println("Html file destination: "+htmlDestination);
-            HTMLWriter writerHTML = new HTMLWriter(htmlDestination);
-            writerHTML.write(rootAST);
-            System.out.println("Xml file destination: "+xmlDestination);
-            XMLWriter writerXML = new XMLWriter(xmlDestination);
+            System.out.println("Html file destination: "+filesDestination);
+            HTMLGenerator g = new HTMLGenerator(source2,filesDestination);
+            System.out.println("Xml file destination: "+filesDestination);
+            XMLWriter writerXML = new XMLWriter(filesDestination);
             writerXML.write(rootAST);
             //System.out.println("Contextual Analysis ...");
             //Checker checker = new Checker(report);

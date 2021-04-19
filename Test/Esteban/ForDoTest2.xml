@@ -16,7 +16,7 @@
 <IntegerLiteral value="1"/>
 </IntegerExpression>
 </AssignCommand>
-<ForWhileCommand>
+<ForDoCommand>
 <ForIdentifier>
 <Identifier value="a"/>
 <IntegerExpression>
@@ -26,19 +26,23 @@
 <IntegerExpression>
 <IntegerLiteral value="5"/>
 </IntegerExpression>
-<WhileDoCommand>
+<AssignCommand>
+<SimpleVname>
+<Identifier value="a"/>
+</SimpleVname>
 <BinaryExpression>
-<IntegerExpression>
-<IntegerLiteral value="1"/>
-</IntegerExpression>
-<Operator value="="/>
+<VnameExpression>
+<SimpleVname>
+<Identifier value="a"/>
+</SimpleVname>
+</VnameExpression>
+<Operator value="+"/>
 <IntegerExpression>
 <IntegerLiteral value="1"/>
 </IntegerExpression>
 </BinaryExpression>
-<EmptyCommand/>
-</WhileDoCommand>
-</ForWhileCommand>
+</AssignCommand>
+</ForDoCommand>
 </SequentialCommand>
 </LetCommand>
 </Program>
