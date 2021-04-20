@@ -2,21 +2,12 @@ let
 	recursive
 		func doble(var i : Integer) : Integer ~
 			triplicar(i)/3*2
-		|
 		proc triplicar(var i : Integer) ~
 			i := i + doble(i)
-		end
-		|
-		proc duplicar(var i : Integer) ~
-			i := doble(i)
-		end
-		|
-		proc cuatriplicar(var i : Integer) ~
-			i := doble(i)
 		end
 	end
 in
 	nothing
 end
 
-! OK
+! Error: Falta el "|" que separe los proc-funcs

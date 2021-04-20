@@ -1,6 +1,15 @@
 package myP ~ 
 	var a: Integer
 end;
+package myE ~ 
+	var a: Integer
+end;
+package myL ~ 
+	var a: Integer
+end;
+package myT ~ 
+	var a: Integer
+end;
 let 
 	var b: Integer
 in

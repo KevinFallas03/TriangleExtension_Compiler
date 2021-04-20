@@ -262,19 +262,15 @@ public class Parser {
     return I;
   }
   Identifier parsePackageIdentifier() throws SyntaxError {
-      Identifier I = null;
+      Identifier iAST = null;
 
       if (currentToken.kind == Token.IDENTIFIER) {
-        previousTokenPosition = currentToken.position;
-        String spelling = currentToken.spelling;
-        I = new PackageIdentifier(spelling, previousTokenPosition);
-        currentToken = lexicalAnalyser.scan();
+          iAST = new PackageIdentifier(currentToken.spelling, previousTokenPosition);
+          acceptIt();
       } else {
-        I = null;
-        syntacticError("identifier expected here", "");
+          syntacticError("\"%\" cannot be a package identifier","");
       }
-    return I;
-//    return parseIdentifier();
+    return iAST;
   }
   Identifier parseIdentifier() throws SyntaxError {
     Identifier I = null;
@@ -376,7 +372,6 @@ public class Parser {
     // Factorizacion de los casos para el loop
     case Token.LOOP:
       { 
-        System.out.println("Entre a loop");
         acceptIt();
         commandAST = parseLoopCase();
       }
@@ -455,7 +450,6 @@ public class Parser {
                 syntacticError("\"%\" not expected after if expression",currentToken.spelling);
                 break;
         }
-        
         return commandAST;
     }
 // </editor-fold>
@@ -819,8 +813,7 @@ public class Parser {
         accept(Token.IS);
         Expression eAST = parseExpression();
         finish(declarationPos);
-        declarationAST = new FuncDeclaration(iAST, fpsAST, tAST, eAST,
-          declarationPos);
+        declarationAST = new FuncDeclaration(iAST, fpsAST, tAST, eAST,declarationPos);
       }
       break;
 
@@ -1383,29 +1376,31 @@ public class Parser {
         start(declarationPos);
       
         Declaration dAST1 = null; // in case there's a syntactic error
+        Declaration dAST2 = null; // in case there's a syntactic error
       
-        if(currentToken.kind == Token.PROC || currentToken.kind == Token.FUNC) {
-            dAST1 = parseProcFunc();
-            finish(declarationPos);
-        } else {
-            syntacticError("\"%\" error parsing proc-funcs, unexpected token", currentToken.spelling);
-        }
+        dAST1 = parseProcFunc();
+        finish(declarationPos);
+        
         //Tiene que haber por lo menos una declaracion
         if(currentToken.kind == Token.PIPE){
-            //Procesa la primera declaracion
-            do{
+            boolean firstTime = true;   
+            while(currentToken.kind == Token.PIPE){
                 acceptIt(); //Acepta el |
                 start(declarationPos); //Empieza la primera declaracion
-                Declaration dAST2 = parseProcFunc(); 
+                dAST2 = parseProcFunc(); 
                 finish(declarationPos);
-                declarationAST = new SequentialDeclaration(dAST1, dAST2, declarationPos);
-            }while(currentToken.kind == Token.PIPE); //Si hay mas declaraciones vuelve al do
+                if(firstTime){
+                    declarationAST = new SequentialDeclaration(dAST1, dAST2, declarationPos);
+                    firstTime = false;
+                }else{
+                    declarationAST = new SequentialDeclaration(declarationAST, dAST2, declarationPos);
+                }
+            }
         }else {
             syntacticError("\"%\" not expected parsing proc-func expression, expected |", currentToken.spelling);
         }
-                
         return declarationAST;
-  }
+    }
     
     
 // </editor-fold>

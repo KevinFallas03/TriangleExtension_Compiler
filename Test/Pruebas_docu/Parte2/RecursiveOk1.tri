@@ -10,10 +10,6 @@ let
 		proc duplicar(var i : Integer) ~
 			i := doble(i)
 		end
-		|
-		proc cuatriplicar(var i : Integer) ~
-			i := doble(i)
-		end
 	end
 in
 	nothing

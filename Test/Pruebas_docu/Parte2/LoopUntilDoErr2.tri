@@ -1,0 +1,3 @@
+loop until 2=2  nothing ; nothing end
+
+! Error: Falta el do
