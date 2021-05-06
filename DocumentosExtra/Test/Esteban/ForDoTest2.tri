@@ -1,6 +1,0 @@
-let
-  var a : Integer
-in
-  a:=1; !jajajaja
-  loop for a from 0 to 5 do a := a+1 end
-end

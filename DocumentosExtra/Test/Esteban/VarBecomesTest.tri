@@ -1,6 +1,0 @@
-let
-	var i := 3;
-	var g : Integer
-in 
-	nothing
-end

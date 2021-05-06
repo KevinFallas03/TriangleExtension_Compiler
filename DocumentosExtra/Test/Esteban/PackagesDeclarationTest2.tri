@@ -1,7 +1,0 @@
-package myP1 ~ 
-	var a:=5
-end;
-package myP2 ~ 
-	var b:=6
-end;
-	nothing

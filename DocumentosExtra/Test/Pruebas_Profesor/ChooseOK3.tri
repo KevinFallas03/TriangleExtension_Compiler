@@ -1,9 +1,0 @@
-choose 1 from
-
-  when 0 | 1 then putint (1) ! dos literales en una misma rama
-
-  when 2 then putint(2)
-
-end
-
-! OK

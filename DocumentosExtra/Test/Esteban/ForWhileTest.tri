@@ -1,6 +1,0 @@
-let
-  var a : Integer
-in
-  a:=1;
-  loop for a from 0 to 5 while 1=1 do nothing end
-end
