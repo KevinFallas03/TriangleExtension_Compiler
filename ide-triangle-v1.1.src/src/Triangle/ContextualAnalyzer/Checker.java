@@ -133,11 +133,13 @@ public final class Checker implements Visitor {
                            ast.I.spelling, ast.I.position);
     return null;
   }
-
+  
+  //REVISAR
   public Object visitEmptyCommand(EmptyCommand ast, Object o) {
     return null;
   }
-
+  
+  //REVISAR
   public Object visitIfCommand(IfCommand ast, Object o) {
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     if (! eType.equals(StdEnvironment.booleanType))
@@ -237,7 +239,8 @@ public final class Checker implements Visitor {
     ast.type = null;
     return ast.type;
   }
-
+  
+  //REVISAR
   public Object visitIfExpression(IfExpression ast, Object o) {
     TypeDenoter e1Type = (TypeDenoter) ast.E1.visit(this, null);
     if (! e1Type.equals(StdEnvironment.booleanType))
@@ -310,7 +313,8 @@ public final class Checker implements Visitor {
                             ast.I.spelling, ast.position);
     return null;
   }
-
+  
+  //REVISAR
   public Object visitFuncDeclaration(FuncDeclaration ast, Object o) {
     ast.T = (TypeDenoter) ast.T.visit(this, null);
     idTable.enter (ast.I.spelling, ast); // permits recursion
@@ -326,7 +330,8 @@ public final class Checker implements Visitor {
                             ast.I.spelling, ast.E.position);
     return null;
   }
-
+  
+  //REVISAR
   public Object visitProcDeclaration(ProcDeclaration ast, Object o) {
     idTable.enter (ast.I.spelling, ast); // permits recursion
     if (ast.duplicated)
@@ -338,7 +343,8 @@ public final class Checker implements Visitor {
     idTable.closeScope();
     return null;
   }
-
+  
+  //REVISAR
   public Object visitSequentialDeclaration(SequentialDeclaration ast, Object o) {
     ast.D1.visit(this, null);
     ast.D2.visit(this, null);
@@ -367,7 +373,7 @@ public final class Checker implements Visitor {
 
     return null;
   }
-
+  
   // Array Aggregates
 
   // Returns the TypeDenoter for the Array Aggregate. Does not use the
@@ -694,7 +700,8 @@ public final class Checker implements Visitor {
 
   // Returns the TypeDenoter of the Vname. Does not use the
   // given object.
-
+  
+  //REVISAR VNAME
   public Object visitDotVname(DotVname ast, Object o) {
     ast.type = null;
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
@@ -729,6 +736,10 @@ public final class Checker implements Visitor {
       } else if (binding instanceof VarFormalParameter) {
         ast.type = ((VarFormalParameter) binding).T;
         ast.variable = true;
+        //NUEVO
+      }else if(binding instanceof VarDeclarationBecomes){
+          ast.type = ((VarDeclarationBecomes) binding).E.type; 
+          ast.variable = true; 
       } else
         reporter.reportError ("\"%\" is not a const or var identifier",
                               ast.iAST.spelling, ast.iAST.position);
@@ -953,70 +964,150 @@ public final class Checker implements Visitor {
     StdEnvironment.unequalDecl = declareStdBinaryOp("\\=", StdEnvironment.anyType, StdEnvironment.anyType, StdEnvironment.booleanType);
 
   }
+    //Kevin
+    @Override
+    public Object visitWhileDoCommand(WhileDoCommand ast, Object o) {
+        TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+        if (! eType.equals(StdEnvironment.booleanType))
+          reporter.reportError("Boolean expression expected here", "", ast.E.position);
+        ast.C.visit(this, null);
+        return null;
+    }
 
     @Override
-    public Object visitWhileDoCommand(WhileDoCommand aThis, Object o) {
+    public Object visitUntilDoCommand(UntilDoCommand ast, Object o) {
+        TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+        if (! eType.equals(StdEnvironment.booleanType))
+          reporter.reportError("Boolean expression expected here", "", ast.E.position);
+        ast.C.visit(this, null);
+        return null;  
+    }
+
+    @Override
+    public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {
+        TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+        if (! eType.equals(StdEnvironment.booleanType))
+          reporter.reportError("Boolean expression expected here", "", ast.E.position);
+        ast.C.visit(this, null);
+        return null;
+    }
+
+    @Override
+    public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {
+        TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+        if (! eType.equals(StdEnvironment.booleanType))
+          reporter.reportError("Boolean expression expected here", "", ast.E.position);
+        ast.C.visit(this, null);
+        return null;
+    }
+
+    @Override
+    public Object visitForDoCommand(ForDoCommand ast, Object o) {
+        TypeDenoter eType = (TypeDenoter) ast.E2.visit(this, null);
+        if(!(eType instanceof IntTypeDenoter)){
+            reporter.reportError ("wrong expression type, must be an integer type","", ast.E2.position);
+        }
+        idTable.openScope();
+        ast.IE.visit(this, null);
+        ast.C.visit(this, null);
+        idTable.closeScope();
+        return null;
+    }
+    //Esteban
+    @Override
+    public Object visitForIdentifierExpression(ForIdentifierExpression ast, Object o) {
+        ConstDeclaration binding = new ConstDeclaration(ast.I, ast.E1, dummyPos);
+        idTable.enter(binding.I.spelling, binding);
+        if(binding.duplicated){
+            reporter.reportError ("identifier already declared",binding.I.spelling, binding.position);
+        }
+        TypeDenoter eType2 = (TypeDenoter) ast.E1.visit(this, null);
+        if(!(eType2 instanceof IntTypeDenoter)){
+            reporter.reportError ("wrong expression type, must be an integer type","", ast.E1.position);
+        }
+        return null;
+    }
+
+    @Override
+    public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
+        TypeDenoter eType = (TypeDenoter) ast.E2.visit(this, null);
+        if (! eType.equals(StdEnvironment.booleanType))
+          reporter.reportError("Boolean expression expected here", "", ast.E2.position);
+        idTable.openScope();
+        ast.IE.visit(this, null);
+        ast.loop.visit(this, null);
+        idTable.closeScope();
+        return null;
+    }
+
+    @Override
+    public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
+        TypeDenoter eType = (TypeDenoter) ast.E2.visit(this, null);
+        if (! eType.equals(StdEnvironment.booleanType))
+          reporter.reportError("Boolean expression expected here", "", ast.E2.position);
+        idTable.openScope();
+        ast.IE.visit(this, null);
+        ast.loop.visit(this, null);
+        idTable.closeScope();
+        return null;
+    }
+
+    @Override
+    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitUntilDoCommand(UntilDoCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitPrivateDeclaration(PrivateDeclaration ast, Object o) {
+        idTable.openPrivateScope();
+        if(ast.d1AST instanceof PrivateDeclaration){
+            PrivateDeclaration m = (PrivateDeclaration)ast.d1AST;
+            m.d1AST.visit(this, o);
+            m.d2AST.visit(this, o);
+        }
+        else
+            ast.d1AST.visit(this, o); 
+        idTable.closePrivateScope(); 
+        ast.d2AST.visit(this, o); 
+        idTable.clearPrivateScope(); 
+        if(ast.d1AST instanceof PrivateDeclaration)
+            idTable.clearPrivateScope();
+        return null;
     }
-
-    @Override
-    public Object visitDoWhileCommand(DoWhileCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitDoUntilCommand(DoUntilCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitForDoCommand(ForDoCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitForIdentifierExpression(ForIdentifierExpression aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitForWhileCommand(ForWhileCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitForUntilCommand(ForUntilCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitRecursiveDeclaration(RecursiveDeclaration aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitPrivateDeclaration(PrivateDeclaration aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
+    //Ulises
     @Override
     public Object visitVarDeclarationBecomes(VarDeclarationBecomes ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+        idTable.enter(ast.I.spelling, ast);
+        if (ast.duplicated)
+          reporter.reportError ("identifier \"%\" already declared",
+                                ast.I.spelling, ast.position);
+        return null;
     }
 
     @Override
     public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Declaration binding = idTable.retrieve(ast.iAST.spelling);
+        if (binding == null){
+            idTable.enter(ast.iAST.spelling, ast);
+            idTable.setPackageID(ast.iAST.spelling + ",");
+            ast.dAST.visit(this, null);
+            idTable.setPackageID("");
+            ast.dAST.visit(this, null);
+        }
+        else{
+            reporter.reportError ("packageIdentifier \"%\" already declared",
+                            ast.iAST.spelling, ast.position);
+        }
+        return null;
     }
 
     @Override
     public Object visitSeqPackageDeclaration(SeqPackageDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ast.d1AST.visit(this, null);
+        ast.d2AST.visit(this, null);
+        return null;
     }
 
     @Override
@@ -1026,6 +1117,31 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitLongIdentifier(LongIdentifier ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(ast.iAST != null){
+            Declaration optionalBinding = idTable.retrieve(ast.iAST.spelling);
+            if(optionalBinding != null){
+                ast.iAST.decl = optionalBinding;
+                Declaration packageVariableBinding = idTable.retrieve(ast.iAST.spelling + "," + ast.piAST.spelling);
+                if(packageVariableBinding == null){
+                    reporter.reportError ("variable " + ast.piAST.spelling + " doesnt belong to packageIdentifier \"%\" ",
+                            ast.iAST.spelling, ast.position);
+                }
+            }
+            else{
+                reporter.reportError ("packageIdentifier \"%\" not declared",
+                            ast.iAST.spelling, ast.position);
+            }
+        }
+        
+        Declaration binding = idTable.retrieve(ast.piAST.spelling);
+        if (binding != null){
+            ast.piAST.decl = binding;
+        }
+        else{
+                reporter.reportError ("variable name \"%\" not declared",
+                            ast.piAST.spelling, ast.position);
+            }
+        
+        return binding;
     }
 }
