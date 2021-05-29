@@ -22,13 +22,15 @@ public class IdEntry {
   protected Declaration attr;
   protected int level;
   protected IdEntry previous;
-  protected boolean privateLvl;//nuevo
+  protected boolean isPrivate;
 
-  IdEntry (String id, Declaration attr, int level, IdEntry previous) {
+  IdEntry (String id, Declaration attr, int level, IdEntry previous, boolean isPrivate) {
     this.id = id;
     this.attr = attr;
     this.level = level;
     this.previous = previous;
+    //Para saber si debe ser privado o no
+    this.isPrivate = isPrivate;
   }
 
 }

@@ -61,7 +61,7 @@ public final class Scanner {
   // the next character from the source program.
 
   private void takeIt() {
-//    if (currentlyScanningToken)
+    if (currentlyScanningToken)
       currentSpelling.append(currentChar);
     currentChar = sourceFile.getSource();
   }

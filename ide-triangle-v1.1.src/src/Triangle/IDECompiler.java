@@ -58,9 +58,9 @@ public class IDECompiler {
         boolean success = false;
         
         rootAST = parser.parseProgram();
-//        System.out.println("\nHtml file destination: "+filesDestination);
-//        HTMLGenerator writerHTML = new HTMLGenerator(source2);
-//        writerHTML.generateHTML(filesDestination);
+        System.out.println("\nHtml file destination: "+filesDestination);
+        HTMLGenerator writerHTML = new HTMLGenerator(source2);
+        writerHTML.generateHTML(filesDestination);
         if (report.numErrors == 0) {
            
 //            System.out.println("\nXml file destination: "+filesDestination);

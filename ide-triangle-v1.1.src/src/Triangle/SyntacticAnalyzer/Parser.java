@@ -265,8 +265,9 @@ public class Parser {
       Identifier iAST = null;
 
       if (currentToken.kind == Token.IDENTIFIER) {
+          previousTokenPosition = currentToken.position;
           iAST = new PackageIdentifier(currentToken.spelling, previousTokenPosition);
-          acceptIt();
+          currentToken = lexicalAnalyser.scan();
       } else {
           syntacticError("\"%\" cannot be a package identifier","");
       }

@@ -139,11 +139,12 @@ public final class Checker implements Visitor {
     return null;
   }
   
-  //REVISAR
   public Object visitIfCommand(IfCommand ast, Object o) {
+    //Las expresiones Exp y Expi deben ser de tipo booleano
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     if (! eType.equals(StdEnvironment.booleanType))
       reporter.reportError("Boolean expression expected here", "", ast.E.position);
+    //Com1, Comi y Com2, así como sus partes, deben satisfacer las restricciones contextuales.
     ast.C1.visit(this, null);
     ast.C2.visit(this, null);
     return null;
@@ -736,8 +737,10 @@ public final class Checker implements Visitor {
       } else if (binding instanceof VarFormalParameter) {
         ast.type = ((VarFormalParameter) binding).T;
         ast.variable = true;
-        //NUEVO
+      //NUEVO
+      //variable inicializada
       }else if(binding instanceof VarDeclarationBecomes){
+          //Exp debe tener el mismo tipo que se declaró o se infirió para la variable Vn. 
           ast.type = ((VarDeclarationBecomes) binding).E.type; 
           ast.variable = true; 
       } else
@@ -967,48 +970,63 @@ public final class Checker implements Visitor {
     //Kevin
     @Override
     public Object visitWhileDoCommand(WhileDoCommand ast, Object o) {
+        //Exp debe ser de tipo Boolean.
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-        if (! eType.equals(StdEnvironment.booleanType))
-          reporter.reportError("Boolean expression expected here", "", ast.E.position);
+        if (! eType.equals(StdEnvironment.booleanType)){
+            reporter.reportError("Boolean expression expected here", "", ast.E.position);
+        }
+        //Com y sus partes deben satisfacer las restricciones contextuales5       
         ast.C.visit(this, null);
         return null;
     }
 
     @Override
     public Object visitUntilDoCommand(UntilDoCommand ast, Object o) {
+        //Exp debe ser de tipo Boolean.
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-        if (! eType.equals(StdEnvironment.booleanType))
-          reporter.reportError("Boolean expression expected here", "", ast.E.position);
+        if (! eType.equals(StdEnvironment.booleanType)){
+            reporter.reportError("Boolean expression expected here", "", ast.E.position);
+        }
+        //Com y sus partes deben satisfacer las restricciones contextuales5
         ast.C.visit(this, null);
         return null;  
     }
 
     @Override
     public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {
+        //Exp debe ser de tipo Boolean.
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-        if (! eType.equals(StdEnvironment.booleanType))
-          reporter.reportError("Boolean expression expected here", "", ast.E.position);
+        if (! eType.equals(StdEnvironment.booleanType)){
+            reporter.reportError("Boolean expression expected here", "", ast.E.position);
+        }
+        //Com y sus partes deben satisfacer las restricciones contextuales5
         ast.C.visit(this, null);
         return null;
     }
 
     @Override
     public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {
+        //Exp debe ser de tipo Boolean.
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-        if (! eType.equals(StdEnvironment.booleanType))
-          reporter.reportError("Boolean expression expected here", "", ast.E.position);
+        if (! eType.equals(StdEnvironment.booleanType)){
+            reporter.reportError("Boolean expression expected here", "", ast.E.position);
+        }
+        //Com y sus partes deben satisfacer las restricciones contextuales5
         ast.C.visit(this, null);
         return null;
     }
 
     @Override
     public Object visitForDoCommand(ForDoCommand ast, Object o) {
+        //Exp2 debe ser de tipo entero
         TypeDenoter eType = (TypeDenoter) ast.E2.visit(this, null);
         if(!(eType instanceof IntTypeDenoter)){
             reporter.reportError ("wrong expression type, must be an integer type","", ast.E2.position);
         }
+        //Id es declarada en este comando y su alcance es Com; esta declaración de Id no es conocida por Exp1 ni por Exp2.
         idTable.openScope();
         ast.IE.visit(this, null);
+        //Com debe cumplir con las restricciones contextuales
         ast.C.visit(this, null);
         idTable.closeScope();
         return null;
@@ -1021,6 +1039,7 @@ public final class Checker implements Visitor {
         if(binding.duplicated){
             reporter.reportError ("identifier already declared",binding.I.spelling, binding.position);
         }
+        //Exp1 debe ser de tipo entero
         TypeDenoter eType2 = (TypeDenoter) ast.E1.visit(this, null);
         if(!(eType2 instanceof IntTypeDenoter)){
             reporter.reportError ("wrong expression type, must be an integer type","", ast.E1.position);
@@ -1030,9 +1049,11 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
+        //Exp3 debe ser de tipo booleano.
         TypeDenoter eType = (TypeDenoter) ast.E2.visit(this, null);
-        if (! eType.equals(StdEnvironment.booleanType))
-          reporter.reportError("Boolean expression expected here", "", ast.E2.position);
+        if (! eType.equals(StdEnvironment.booleanType)){
+            reporter.reportError("Boolean expression expected here", "", ast.E2.position);
+        }
         idTable.openScope();
         ast.IE.visit(this, null);
         ast.loop.visit(this, null);
@@ -1042,9 +1063,11 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
+        //Exp3 debe ser de tipo booleano.
         TypeDenoter eType = (TypeDenoter) ast.E2.visit(this, null);
-        if (! eType.equals(StdEnvironment.booleanType))
-          reporter.reportError("Boolean expression expected here", "", ast.E2.position);
+        if (! eType.equals(StdEnvironment.booleanType)){
+            reporter.reportError("Boolean expression expected here", "", ast.E2.position);
+        }
         idTable.openScope();
         ast.IE.visit(this, null);
         ast.loop.visit(this, null);
@@ -1054,24 +1077,36 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ProcDeclaration dec = (ProcDeclaration) ast.pfAST.visit(this, o);
+        idTable.enter (dec.I.spelling, ast); // permits recursion
+        if (ast.duplicated)
+          reporter.reportError ("identifier \"%\" already declared", dec.I.spelling, dec.position);
+        idTable.openScope();
+        dec.FPS.visit(this, null);
+        dec.C.visit(this, null);
+        idTable.closeScope();
+        return null;
     }
 
     @Override
     public Object visitPrivateDeclaration(PrivateDeclaration ast, Object o) {
-        idTable.openPrivateScope();
+        idTable.changeToPrivateScope();
+        idTable.openScope();
         if(ast.d1AST instanceof PrivateDeclaration){
-            PrivateDeclaration m = (PrivateDeclaration)ast.d1AST;
-            m.d1AST.visit(this, o);
-            m.d2AST.visit(this, o);
+            PrivateDeclaration nextDec = (PrivateDeclaration)ast.d1AST;
+            nextDec.d1AST.visit(this, o);
+            nextDec.d2AST.visit(this, o);
         }
-        else
-            ast.d1AST.visit(this, o); 
-        idTable.closePrivateScope(); 
+        else{
+            ast.d1AST.visit(this, o);
+        }
+        idTable.closeScope();
+        idTable.changeToPublicScope(); 
         ast.d2AST.visit(this, o); 
         idTable.clearPrivateScope(); 
-        if(ast.d1AST instanceof PrivateDeclaration)
+        if(ast.d1AST instanceof PrivateDeclaration){
             idTable.clearPrivateScope();
+        }
         return null;
     }
     
@@ -1081,25 +1116,20 @@ public final class Checker implements Visitor {
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
         idTable.enter(ast.I.spelling, ast);
         if (ast.duplicated)
-          reporter.reportError ("identifier \"%\" already declared",
-                                ast.I.spelling, ast.position);
+          reporter.reportError ("identifier \"%\" already declared", ast.I.spelling, ast.position);
         return null;
     }
 
     @Override
     public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
-        Declaration binding = idTable.retrieve(ast.iAST.spelling);
-        if (binding == null){
-            idTable.enter(ast.iAST.spelling, ast);
-            idTable.setPackageID(ast.iAST.spelling + ",");
-            ast.dAST.visit(this, null);
-            idTable.setPackageID("");
-            ast.dAST.visit(this, null);
+        idTable.enter(ast.iAST.spelling, ast);
+        if (ast.duplicated){
+            reporter.reportError ("packageIdentifier \"%\" already declared", ast.iAST.spelling, ast.position);
         }
-        else{
-            reporter.reportError ("packageIdentifier \"%\" already declared",
-                            ast.iAST.spelling, ast.position);
-        }
+        idTable.setPackageID(ast.iAST.spelling + ",");
+        ast.dAST.visit(this, null);
+        idTable.setPackageID("");
+        ast.dAST.visit(this, null);
         return null;
     }
 
@@ -1112,7 +1142,7 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return ast.decl.visit(this, o);    
     }
 
     @Override
@@ -1123,25 +1153,20 @@ public final class Checker implements Visitor {
                 ast.iAST.decl = optionalBinding;
                 Declaration packageVariableBinding = idTable.retrieve(ast.iAST.spelling + "," + ast.piAST.spelling);
                 if(packageVariableBinding == null){
-                    reporter.reportError ("variable " + ast.piAST.spelling + " doesnt belong to packageIdentifier \"%\" ",
-                            ast.iAST.spelling, ast.position);
+                    reporter.reportError ("variable " + ast.piAST.spelling + " doesnt belong to packageIdentifier \"%\" ", ast.iAST.spelling, ast.position);
                 }
             }
             else{
-                reporter.reportError ("packageIdentifier \"%\" not declared",
-                            ast.iAST.spelling, ast.position);
+                reporter.reportError ("packageIdentifier \"%\" not declared", ast.iAST.spelling, ast.position);
             }
         }
-        
         Declaration binding = idTable.retrieve(ast.piAST.spelling);
         if (binding != null){
             ast.piAST.decl = binding;
         }
         else{
-                reporter.reportError ("variable name \"%\" not declared",
-                            ast.piAST.spelling, ast.position);
-            }
-        
+            reporter.reportError ("variable name \"%\" not declared", ast.piAST.spelling, ast.position);
+        }
         return binding;
     }
 }

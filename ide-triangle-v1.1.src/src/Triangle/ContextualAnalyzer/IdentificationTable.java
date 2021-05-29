@@ -32,32 +32,26 @@ public final class IdentificationTable {
   // current topmost level.
 
   public void openScope () {
-
     level ++;
   }
   //NUEVO
-  public void openPrivateScope () {
+  public void changeToPrivateScope () {
       privateScope = true;
   }
-  public void closePrivateScope () {
-      privateScope = false; // Para parar de marcar nodos como privados
+  public void changeToPublicScope () {
+      privateScope = false; 
   }
   public void clearPrivateScope () {
-    IdEntry entry, local, privateDecl;
+    IdEntry entry,dec;
 
     entry = this.latest;
-    privateDecl = this.latest.previous;
-    
-    while (privateDecl.privateLvl != true) {
-      local = entry;
-      entry = local.previous;
-      privateDecl = local.previous;
+    dec = entry.previous;    
+    while (!dec.isPrivate) {
+      entry = entry.previous;
+      dec = entry;
     }
-    
-    entry.previous = privateDecl.previous;
-    
+    entry.previous = dec.previous;
     this.latest = entry;
-    
   }
   // Closes the topmost level in the identification table, discarding
   // all entries belonging to that level.
@@ -100,7 +94,10 @@ public final class IdentificationTable {
 
     attr.duplicated = present;
     // Add new entry ...
-    entry = new IdEntry(id, attr, this.level, this.latest);
+    if(privateScope)
+        entry = new IdEntry(id, attr, this.level, this.latest, true);
+    else
+        entry = new IdEntry(id, attr, this.level, this.latest, false);
     this.latest = entry;
   }
 
