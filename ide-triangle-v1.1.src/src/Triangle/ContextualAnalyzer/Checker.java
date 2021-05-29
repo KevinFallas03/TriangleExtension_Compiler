@@ -1188,7 +1188,25 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
-        return ast.decl.visit(this, o);    
+        SimpleVname m = (SimpleVname) ast.decl.visit(this, o);
+        Declaration optionalBinding = idTable.retrieve(m.piAST.spelling);
+        if(optionalBinding == null){
+            reporter.reportError ("packageIdentifier \"%\" not declared",m.piAST.spelling, ast.position);
+            
+        }
+        m.piAST.decl = optionalBinding;
+        Declaration packageVariableBinding = idTable.retrieve(m.piAST.spelling + "," + m.iAST.spelling);
+        if(packageVariableBinding == null){
+            reporter.reportError ("variable " + m.iAST.spelling + " doesnt belong to packageIdentifier \"%\" ",m.piAST.spelling, ast.position);
+        }
+  
+        Declaration binding = idTable.retrieve(m.iAST.spelling);
+        if (binding == null){
+             reporter.reportError ("variable name \"%\" not declared",m.iAST.spelling, ast.position);
+        }
+        m.iAST.decl = binding;
+        
+        return binding;
     }
 
     @Override
