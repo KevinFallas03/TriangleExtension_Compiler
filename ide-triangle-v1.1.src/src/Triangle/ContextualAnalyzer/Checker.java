@@ -1193,26 +1193,23 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitLongIdentifier(LongIdentifier ast, Object o) {
-        if(ast.iAST != null){
+        if(ast.piAST != null){
             Declaration optionalBinding = idTable.retrieve(ast.iAST.spelling);
-            if(optionalBinding != null){
-                ast.iAST.decl = optionalBinding;
-                Declaration packageVariableBinding = idTable.retrieve(ast.iAST.spelling + "," + ast.piAST.spelling);
-                if(packageVariableBinding == null){
-                    reporter.reportError ("variable " + ast.piAST.spelling + " doesnt belong to packageIdentifier \"%\" ", ast.iAST.spelling, ast.position);
-                }
+            if(optionalBinding == null){
+                reporter.reportError ("packageIdentifier \"%\" not declared", ast.iAST.spelling, ast.position);   
             }
-            else{
-                reporter.reportError ("packageIdentifier \"%\" not declared", ast.iAST.spelling, ast.position);
+            ast.piAST.decl = optionalBinding;
+            Declaration packageVariableBinding = idTable.retrieve(ast.piAST.spelling + "," + ast.iAST.spelling);
+            if(packageVariableBinding == null){
+                reporter.reportError ("variable " + ast.iAST.spelling + " doesnt belong to packageIdentifier \"%\" ", ast.piAST.spelling, ast.position);
             }
         }
-        Declaration binding = idTable.retrieve(ast.piAST.spelling);
-        if (binding != null){
-            ast.piAST.decl = binding;
-        }
-        else{
+        
+        Declaration binding = idTable.retrieve(ast.iAST.spelling);
+        if (binding == null){
             reporter.reportError ("variable name \"%\" not declared", ast.piAST.spelling, ast.position);
         }
+        ast.iAST.decl = binding;
         return binding;
     }
 }
