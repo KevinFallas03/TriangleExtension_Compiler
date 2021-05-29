@@ -14,6 +14,9 @@
 
 package Triangle.AbstractSyntaxTrees;
 
+import Triangle.SyntacticAnalyzer.DotVarName;
+import Triangle.SyntacticAnalyzer.SubscriptVarName;
+
 public interface Visitor {
 
   // Commands
@@ -123,8 +126,21 @@ public interface Visitor {
   public abstract Object visitDotVname(DotVname ast, Object o);
   public abstract Object visitSimpleVname(SimpleVname ast, Object o);
   public abstract Object visitSubscriptVname(SubscriptVname ast, Object o);
+  public abstract Object visitPackageVname(PackageVname ast, Object o);
+  public abstract Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o);
+
+  
 
   // Programs
   public abstract Object visitProgram(Program ast, Object o);
+
+    public Object visitPackageLongIdentifier(PackageLongIdentifier aThis, Object o);
+
+    public Object visitSimpleVarName(SimpleVarName aThis, Object o);
+
+    public Object visitDotVarName(DotVarName aThis, Object o);
+
+    public Object visitSubscriptVarName(SubscriptVarName aThis, Object o);
+
 
 }

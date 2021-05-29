@@ -52,6 +52,8 @@ import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.PackageDeclaration;
 import Triangle.AbstractSyntaxTrees.PackageIdentifier;
+import Triangle.AbstractSyntaxTrees.PackageLongIdentifier;
+import Triangle.AbstractSyntaxTrees.PackageVname;
 import Triangle.AbstractSyntaxTrees.PrivateDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
@@ -63,7 +65,9 @@ import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
 import Triangle.AbstractSyntaxTrees.SeqPackageDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
+import Triangle.AbstractSyntaxTrees.SimpleVarName;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
@@ -83,6 +87,8 @@ import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
 import Triangle.AbstractSyntaxTrees.WhileDoCommand;
+import Triangle.SyntacticAnalyzer.DotVarName;
+import Triangle.SyntacticAnalyzer.SubscriptVarName;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -362,11 +368,11 @@ public class TreeVisitor implements Visitor {
     }
     @Override
     public Object visitLongIdentifier(LongIdentifier ast, Object o) {
-        return(createNullary(ast.spelling));
+        return(createNullary(ast.I.spelling));
     }
     @Override
     public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
-        return(createNullary("Package "+ast.spelling));
+        return(createNullary(ast.I.spelling));
     }
     
     public Object visitIntegerLiteral(IntegerLiteral ast, Object obj) {
@@ -385,11 +391,7 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitSimpleVname(SimpleVname ast, Object obj) {
-        if (ast.piAST == null){
-            return(createUnary("Simple Vname", ast.iAST));
-        }else{
-            return(createBinary("Program", ast.piAST, ast.iAST));    
-        }
+        return(createUnary("Simple Vname", ast.VN));
     }
     
     public Object visitSubscriptVname(SubscriptVname ast, Object obj) {
@@ -532,6 +534,36 @@ public class TreeVisitor implements Visitor {
         return(createBinary("PrivateDeclaration", aThis.d1AST,aThis.d2AST));
     }
 // </editor-fold>
+
+    @Override
+    public Object visitPackageVname(PackageVname ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitPackageLongIdentifier(PackageLongIdentifier aThis, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitSimpleVarName(SimpleVarName aThis, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitDotVarName(DotVarName aThis, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitSubscriptVarName(SubscriptVarName aThis, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     
 

@@ -67,6 +67,8 @@ import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.PackageDeclaration;
 import Triangle.AbstractSyntaxTrees.PackageIdentifier;
+import Triangle.AbstractSyntaxTrees.PackageLongIdentifier;
+import Triangle.AbstractSyntaxTrees.PackageVname;
 import Triangle.AbstractSyntaxTrees.PrivateDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
@@ -78,7 +80,9 @@ import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
 import Triangle.AbstractSyntaxTrees.SeqPackageDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
+import Triangle.AbstractSyntaxTrees.SimpleVarName;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
@@ -100,7 +104,9 @@ import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
 import Triangle.AbstractSyntaxTrees.WhileDoCommand;
+import Triangle.SyntacticAnalyzer.DotVarName;
 import Triangle.SyntacticAnalyzer.SourcePosition;
+import Triangle.SyntacticAnalyzer.SubscriptVarName;
 
 public final class Checker implements Visitor {
 
@@ -123,14 +129,14 @@ public final class Checker implements Visitor {
 
     Declaration binding = (Declaration) ast.I.visit(this, null);
     if (binding == null)
-      reportUndeclared(ast.I);
+      reportUndeclared(ast.I.I);
     else if (binding instanceof ProcDeclaration) {
       ast.APS.visit(this, ((ProcDeclaration) binding).FPS);
     } else if (binding instanceof ProcFormalParameter) {
       ast.APS.visit(this, ((ProcFormalParameter) binding).FPS);
     } else
       reporter.reportError("\"%\" is not a procedure identifier",
-                           ast.I.spelling, ast.I.position);
+                           ast.I.I.spelling, ast.I.position);
     return null;
   }
   
@@ -217,7 +223,7 @@ public final class Checker implements Visitor {
   public Object visitCallExpression(CallExpression ast, Object o) {
     Declaration binding = (Declaration) ast.I.visit(this, null);
     if (binding == null) {
-      reportUndeclared(ast.I);
+      reportUndeclared(ast.I.I);
       ast.type = StdEnvironment.errorType;
     } else if (binding instanceof FuncDeclaration) {
       ast.APS.visit(this, ((FuncDeclaration) binding).FPS);
@@ -227,7 +233,7 @@ public final class Checker implements Visitor {
       ast.type = ((FuncFormalParameter) binding).T;
     } else
       reporter.reportError("\"%\" is not a function identifier",
-                           ast.I.spelling, ast.I.position);
+                           ast.I.I.spelling, ast.I.position);
     return ast.type;
   }
 
@@ -628,11 +634,11 @@ public final class Checker implements Visitor {
   public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object o) {
     Declaration binding = (Declaration) ast.I.visit(this, null);
     if (binding == null) {
-      reportUndeclared (ast.I);
+      reportUndeclared (ast.I.I);
       return StdEnvironment.errorType;
     } else if (! (binding instanceof TypeDeclaration)) {
       reporter.reportError ("\"%\" is not a type identifier",
-                            ast.I.spelling, ast.I.position);
+                            ast.I.I.spelling, ast.I.position);
       return StdEnvironment.errorType;
     }
     return ((TypeDeclaration) binding).T;
@@ -718,35 +724,11 @@ public final class Checker implements Visitor {
     return ast.type;
   }
 
-  public Object visitSimpleVname(SimpleVname ast, Object o) {
-    ast.variable = false;
-    ast.type = StdEnvironment.errorType;
-    Declaration binding = (Declaration) ast.iAST.visit(this, null);
-    if (binding == null)
-      reportUndeclared(ast.iAST);
-    else
-      if (binding instanceof ConstDeclaration) {
-        ast.type = ((ConstDeclaration) binding).E.type;
-        ast.variable = false;
-      } else if (binding instanceof VarDeclaration) {
-        ast.type = ((VarDeclaration) binding).T;
-        ast.variable = true;
-      } else if (binding instanceof ConstFormalParameter) {
-        ast.type = ((ConstFormalParameter) binding).T;
-        ast.variable = false;
-      } else if (binding instanceof VarFormalParameter) {
-        ast.type = ((VarFormalParameter) binding).T;
-        ast.variable = true;
-      //NUEVO
-      //variable inicializada
-      }else if(binding instanceof VarDeclarationBecomes){
-          //Exp debe tener el mismo tipo que se declaró o se infirió para la variable Vn. 
-          ast.type = ((VarDeclarationBecomes) binding).E.type; 
-          ast.variable = true; 
-      } else
-        reporter.reportError ("\"%\" is not a const or var identifier",
-                              ast.iAST.spelling, ast.iAST.position);
-    return ast.type;
+ public Object visitSimpleVname(SimpleVname ast, Object o) {
+
+    TypeDenoter vnType = (TypeDenoter) ast.VN.visit(this, null);
+    ast.variable = ast.VN.variable;
+    return vnType;
   }
 
   public Object visitSubscriptVname(SubscriptVname ast, Object o) {
@@ -1122,11 +1104,11 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
-        idTable.enter(ast.iAST.spelling, ast);
+        idTable.enter(ast.iAST.I.spelling, ast);
         if (ast.duplicated){
-            reporter.reportError ("packageIdentifier \"%\" already declared", ast.iAST.spelling, ast.position);
+            reporter.reportError ("packageIdentifier \"%\" already declared", ast.iAST.I.spelling, ast.position);
         }
-        idTable.setPackageID(ast.iAST.spelling + ",");
+        idTable.setPackageID(ast.iAST.I.spelling + ",");
         ast.dAST.visit(this, null);
         idTable.setPackageID("");
         ast.dAST.visit(this, null);
@@ -1142,31 +1124,140 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
-        return ast.decl.visit(this, o);    
+        return null;    
     }
 
     @Override
     public Object visitLongIdentifier(LongIdentifier ast, Object o) {
-        if(ast.iAST != null){
-            Declaration optionalBinding = idTable.retrieve(ast.iAST.spelling);
-            if(optionalBinding != null){
-                ast.iAST.decl = optionalBinding;
-                Declaration packageVariableBinding = idTable.retrieve(ast.iAST.spelling + "," + ast.piAST.spelling);
-                if(packageVariableBinding == null){
-                    reporter.reportError ("variable " + ast.piAST.spelling + " doesnt belong to packageIdentifier \"%\" ", ast.iAST.spelling, ast.position);
-                }
-            }
-            else{
-                reporter.reportError ("packageIdentifier \"%\" not declared", ast.iAST.spelling, ast.position);
-            }
-        }
-        Declaration binding = idTable.retrieve(ast.piAST.spelling);
-        if (binding != null){
-            ast.piAST.decl = binding;
-        }
-        else{
-            reporter.reportError ("variable name \"%\" not declared", ast.piAST.spelling, ast.position);
-        }
-        return binding;
+//        if(ast.iAST != null){
+//            Declaration optionalBinding = idTable.retrieve(ast.iAST.spelling);
+//            if(optionalBinding != null){
+//                ast.iAST.decl = optionalBinding;
+//                Declaration packageVariableBinding = idTable.retrieve(ast.iAST.spelling + "," + ast.piAST.spelling);
+//                if(packageVariableBinding == null){
+//                    reporter.reportError ("variable " + ast.piAST.spelling + " doesnt belong to packageIdentifier \"%\" ", ast.iAST.spelling, ast.position);
+//                }
+//            }
+//            else{
+//                reporter.reportError ("packageIdentifier \"%\" not declared", ast.iAST.spelling, ast.position);
+//            }
+//        }
+//        Declaration binding = idTable.retrieve(ast.piAST.spelling);
+//        if (binding != null){
+//            ast.piAST.decl = binding;
+//        }
+//        else{
+//            reporter.reportError ("variable name \"%\" not declared", ast.piAST.spelling, ast.position);
+//        }
+//        return binding;   
+        return null;
+    }
+
+    @Override
+    public Object visitPackageVname(PackageVname ast, Object o) {
+        VarDeclaration packageDeclaration = (VarDeclaration) ast.PI.visit(this, null);
+
+    if (packageDeclaration != null) {
+      String variable = "";
+      String packageId = packageDeclaration.I.spelling;
+      if (ast.VN instanceof SimpleVarName) {
+        SimpleVarName var = (SimpleVarName) ast.VN;
+        variable = var.I.spelling;
+      }
+
+      else if (ast.VN instanceof DotVarName) {
+        DotVarName var = (DotVarName) ast.VN;
+        SimpleVarName var2 = (SimpleVarName) var.V;
+        variable = var2.I.spelling;
+      } else {
+        SubscriptVarName var = (SubscriptVarName) ast.VN;
+        SimpleVarName var2 = (SimpleVarName) var.V;
+        variable = var2.I.spelling;
+      }
+
+      if (idTable.inPackage(packageId, variable)) {
+        TypeDenoter vnType = (TypeDenoter) ast.VN.visit(this, packageId);
+
+        ast.variable = ast.VN.variable;
+        return vnType;
+      }
+
+      else {
+        reporter.reportError(" \"%\" is not declared in the package", variable, ast.position);
+        return null;
+      }
+
+    }
+    reporter.reportError("package \"%\" is not declared", ast.PI.I.spelling, ast.position);
+    return null;
+    }
+
+    @Override
+    public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) {
+return ast.I.visit(this, null);    }
+
+    @Override
+    public Object visitPackageLongIdentifier(PackageLongIdentifier ast, Object o) {
+    return ast.I.visit(this, ast.PI.I.spelling);
+    }
+
+    @Override
+    public Object visitSimpleVarName(SimpleVarName ast, Object o) {
+          ast.variable = false;
+    ast.type = StdEnvironment.errorType;
+    Declaration binding;
+    if (o instanceof String) {
+      binding = (Declaration) ast.I.visit(this, o);
+    } else
+      binding = (Declaration) ast.I.visit(this, null);
+
+    if (binding == null)
+      reportUndeclared(ast.I);
+    else if (binding instanceof ConstDeclaration) {
+      ast.type = ((ConstDeclaration) binding).E.type;
+      ast.variable = false;
+    } else if (binding instanceof VarDeclaration) {
+
+      ast.type = ((VarDeclaration) binding).T;
+      VarDeclaration var = (VarDeclaration) binding;
+      ast.variable = true;
+    } else if (binding instanceof VarDeclarationBecomes) {
+      ast.type = ((VarDeclarationBecomes) binding).E.type;
+      ast.variable = true;
+    } else if (binding instanceof ConstFormalParameter) {
+      ast.type = ((ConstFormalParameter) binding).T;
+      ast.variable = false;
+    } else if (binding instanceof VarFormalParameter) {
+      ast.type = ((VarFormalParameter) binding).T;
+      ast.variable = true;
+    } else
+      reporter.reportError("\"%\" is not a const or var identifier", ast.I.spelling, ast.I.position);
+    return ast.type;
+    }
+
+    @Override
+    public Object visitDotVarName(DotVarName ast, Object o) {
+ast.type = null;
+
+    TypeDenoter vType;
+    if (o instanceof String)
+      vType = (TypeDenoter) ast.V.visit(this, o);
+
+    else
+      vType = (TypeDenoter) ast.V.visit(this, o);
+
+    ast.variable = ast.V.variable;
+    if (!(vType instanceof RecordTypeDenoter))
+      reporter.reportError("record expected here", "", ast.V.position);
+    else {
+      ast.type = checkFieldIdentifier(((RecordTypeDenoter) vType).FT, ast.I);
+      if (ast.type == StdEnvironment.errorType)
+        reporter.reportError("no field \"%\" in this record type", ast.I.spelling, ast.I.position);
+    }
+    return ast.type;    }
+
+    @Override
+    public Object visitSubscriptVarName(SubscriptVarName ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

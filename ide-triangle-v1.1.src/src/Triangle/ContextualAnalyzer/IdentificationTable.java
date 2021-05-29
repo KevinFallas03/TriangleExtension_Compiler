@@ -75,9 +75,9 @@ public final class IdentificationTable {
   // duplicated is set to to true iff there is already an entry for the
   // same identifier at the current level.
 
-  public void enter (String id, Declaration attr) {
+  public void enter (String[] id, Declaration attr) {
 
-    id = packageID + id;
+    id.push(packageID + id);
     IdEntry entry = this.latest;
     boolean present = false, searching = true;
 
@@ -100,7 +100,20 @@ public final class IdentificationTable {
         entry = new IdEntry(id, attr, this.level, this.latest, false);
     this.latest = entry;
   }
-
+    boolean inPackage(String packageId, String variable) {
+      boolean searching = true;
+      IdEntry entry = this.latest;
+      
+      while (searching) {
+        if (entry == null)
+          searching = false;
+        else if (entry.id[0].equals(packageId) && entry.id[1].equals(variable)) {
+          return true;
+         } else
+         entry = entry.previous;
+      }
+      return false;
+    }
   // Finds an entry for the given identifier in the identification table,
   // if any. If there are several entries for that identifier, finds the
   // entry at the highest level, in accordance with the scope rules.

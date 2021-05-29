@@ -47,6 +47,8 @@ import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.PackageDeclaration;
 import Triangle.AbstractSyntaxTrees.PackageIdentifier;
+import Triangle.AbstractSyntaxTrees.PackageLongIdentifier;
+import Triangle.AbstractSyntaxTrees.PackageVname;
 import Triangle.AbstractSyntaxTrees.PrivateDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
@@ -58,7 +60,9 @@ import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
 import Triangle.AbstractSyntaxTrees.SeqPackageDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
+import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
+import Triangle.AbstractSyntaxTrees.SimpleVarName;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
@@ -78,6 +82,8 @@ import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
 import Triangle.AbstractSyntaxTrees.WhileDoCommand;
+import Triangle.SyntacticAnalyzer.DotVarName;
+import Triangle.SyntacticAnalyzer.SubscriptVarName;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -544,10 +550,10 @@ public class XMLWriterVisitor implements Visitor {
   
   public Object visitSimpleVname(SimpleVname ast, Object obj) {
     writeLineXML("<SimpleVname>");
-    ast.iAST.visit(this, null);
-    if(ast.piAST != null){
-        ast.piAST.visit(this, null);
-    }
+    ast.VN.visit(this, null);
+//    if(ast.piAST != null){
+//        ast.piAST.visit(this, null);
+//    }
     writeLineXML("</SimpleVname>");
     return null;
   }
@@ -717,14 +723,44 @@ public class XMLWriterVisitor implements Visitor {
 
     @Override // new
     public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
-        writeLineXML("<Package value=\"" + ast.spelling + "\"/>");
+        writeLineXML("<Package value=\"" + ast.I.spelling + "\"/>");
         return null;
     }
 
     @Override // new
     public Object visitLongIdentifier(LongIdentifier ast, Object o) {
-        writeLineXML("<LongIdentifier value=\"" + ast.spelling + "\"/>");
+        writeLineXML("<LongIdentifier value=\"" + ast.I.spelling + "\"/>");
         return null;
+    }
+
+    @Override
+    public Object visitPackageVname(PackageVname ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitPackageLongIdentifier(PackageLongIdentifier aThis, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitSimpleVarName(SimpleVarName aThis, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitDotVarName(DotVarName aThis, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitSubscriptVarName(SubscriptVarName aThis, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
    
 }

@@ -18,13 +18,13 @@ import Triangle.AbstractSyntaxTrees.Declaration;
 
 public class IdEntry {
 
-  protected String id;
+  protected String[] id;
   protected Declaration attr;
   protected int level;
   protected IdEntry previous;
   protected boolean isPrivate;
 
-  IdEntry (String id, Declaration attr, int level, IdEntry previous, boolean isPrivate) {
+  IdEntry (String[] id, Declaration attr, int level, IdEntry previous, boolean isPrivate) {
     this.id = id;
     this.attr = attr;
     this.level = level;

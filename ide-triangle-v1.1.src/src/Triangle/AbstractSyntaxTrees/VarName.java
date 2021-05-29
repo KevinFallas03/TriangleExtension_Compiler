@@ -7,12 +7,20 @@ package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
-public abstract class LongIdentifier extends AST {
+/**
+ *
+ * @author emema
+ */
+public abstract class VarName extends AST {
     
-    public LongIdentifier(SourcePosition thePosition) {
+    public VarName(SourcePosition thePosition) {
         super(thePosition);
+        variable = false;
+        type = null;
     }
     
-    public Identifier I;
+  public boolean variable, indexed;
+  public int offset;
+  public TypeDenoter type;
     
 }

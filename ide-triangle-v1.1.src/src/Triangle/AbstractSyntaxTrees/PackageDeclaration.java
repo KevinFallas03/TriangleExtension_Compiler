@@ -13,7 +13,7 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
  */
 public class PackageDeclaration extends Declaration{
     
-    public PackageDeclaration (Identifier iAST, Declaration dAST, SourcePosition sourcePosition) {
+    public PackageDeclaration (PackageIdentifier iAST, Declaration dAST, SourcePosition sourcePosition) {
         super(sourcePosition);
         this.iAST = iAST;
         this.dAST = dAST;
@@ -24,7 +24,7 @@ public class PackageDeclaration extends Declaration{
     return v.visitPackageDeclaration(this, o);
   }
 
-  public Identifier iAST;
+  public PackageIdentifier iAST;
   public Declaration dAST;
 }
 

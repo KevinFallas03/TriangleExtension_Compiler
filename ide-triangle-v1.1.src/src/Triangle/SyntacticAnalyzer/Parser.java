@@ -14,6 +14,9 @@
 
 package Triangle.SyntacticAnalyzer;
 
+import Triangle.AbstractSyntaxTrees.SimpleVarName;
+import Triangle.AbstractSyntaxTrees.PackageLongIdentifier;
+import Triangle.AbstractSyntaxTrees.PackageVname;
 import Triangle.ErrorReporter;
 import Triangle.AbstractSyntaxTrees.ActualParameter;
 import Triangle.AbstractSyntaxTrees.ActualParameterSequence;
@@ -97,6 +100,8 @@ import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
 import Triangle.AbstractSyntaxTrees.WhileDoCommand;
 import Triangle.AbstractSyntaxTrees.PackageIdentifier;
+import Triangle.AbstractSyntaxTrees.SimpleLongIdentifier;
+import Triangle.AbstractSyntaxTrees.VarName;
 
 public class Parser {
 
@@ -240,38 +245,38 @@ public class Parser {
 // parseIdentifier parses an identifier, and constructs a leaf AST to
 // represent it.
   
-  Identifier parseLongIdentifier() throws SyntaxError {
-    Identifier I = null;
-    SourcePosition positionLong = new SourcePosition();
-    start(positionLong);
-    if(currentToken.kind == Token.IDENTIFIER){
-        Identifier piAST = parsePackageIdentifier();
-        if(currentToken.kind == Token.DOLLAR){
-            acceptIt();
-            Identifier iAST = parseIdentifier();
-            finish(positionLong);          
-            I = new LongIdentifier(piAST, iAST, positionLong,currentToken.spelling);
-        }else{
-            finish(positionLong);
-            I = new Identifier(piAST.spelling,positionLong);
-          }          
-    }
-    else{
-      syntacticError("\"%\" not expected as Identifier expression",currentToken.spelling);
-    }
-    return I;
-  }
-  Identifier parsePackageIdentifier() throws SyntaxError {
-      Identifier iAST = null;
-
-      if (currentToken.kind == Token.IDENTIFIER) {
-          previousTokenPosition = currentToken.position;
-          iAST = new PackageIdentifier(currentToken.spelling, previousTokenPosition);
-          currentToken = lexicalAnalyser.scan();
+  LongIdentifier parseLongIdentifier() throws SyntaxError {
+      LongIdentifier longIdentifierAST = null;
+      SourcePosition longIdentifierPos = new SourcePosition();
+      start(longIdentifierPos);
+      
+      Identifier iAST = parseIdentifier();
+      if (currentToken.kind == Token.DOLLAR) {
+          finish(longIdentifierPos);
+          PackageIdentifier piAST = new PackageIdentifier(iAST, longIdentifierPos);
+          accept(Token.DOLLAR);
+          
+          Identifier i2AST = parseIdentifier();
+          finish(longIdentifierPos);
+          longIdentifierAST = new PackageLongIdentifier(piAST, i2AST, longIdentifierPos);
       } else {
-          syntacticError("\"%\" cannot be a package identifier","");
+          finish(longIdentifierPos);
+          longIdentifierAST = new SimpleLongIdentifier(iAST, longIdentifierPos);
       }
-    return iAST;
+      
+      return longIdentifierAST;
+  }
+  
+  PackageIdentifier parsePackageIdentifier() throws SyntaxError {
+      PackageIdentifier piAST = null;
+      SourcePosition packageIdentifierPos = new SourcePosition();
+      
+      start(packageIdentifierPos);
+      Identifier iAST = parseIdentifier();
+      finish(packageIdentifierPos);
+      
+      piAST = new PackageIdentifier(iAST, packageIdentifierPos);
+      return piAST;
   }
   Identifier parseIdentifier() throws SyntaxError {
     Identifier I = null;
@@ -351,7 +356,7 @@ public class Parser {
 
     case Token.IDENTIFIER:
       {
-        Identifier iAST = parseLongIdentifier(); //Nuevo
+        LongIdentifier iAST = parseLongIdentifier(); //Nuevo
         if (currentToken.kind == Token.LPAREN) {
           acceptIt();
           ActualParameterSequence apsAST = parseActualParameterSequence();
@@ -361,11 +366,12 @@ public class Parser {
 
         } else {
 
-          Vname vAST = parseRestOfVname(iAST);
+          VarName vAST = parseRestOfVarName(iAST.I);
+          SimpleVname vnameAST = new SimpleVname (vAST, vAST.position);
           accept(Token.BECOMES);
           Expression eAST = parseExpression();
           finish(commandPos);
-          commandAST = new AssignCommand(vAST, eAST, commandPos);
+          commandAST = new AssignCommand(vnameAST, eAST, commandPos);
         }
       }
       break;
@@ -564,7 +570,7 @@ public class Parser {
 
     case Token.IDENTIFIER:
       {
-        Identifier iAST= parseLongIdentifier(); // cambio de Identifier a Long-Identifier
+        LongIdentifier iAST= parseLongIdentifier(); // cambio de Identifier a Long-Identifier
         if (currentToken.kind == Token.LPAREN) {
           acceptIt();
           ActualParameterSequence apsAST = parseActualParameterSequence();
@@ -573,9 +579,17 @@ public class Parser {
           expressionAST = new CallExpression(iAST, apsAST, expressionPos);
 
         } else {
-          Vname vAST = parseRestOfVname(iAST);
-          finish(expressionPos);
-          expressionAST = new VnameExpression(vAST, expressionPos);
+          if (iAST instanceof PackageLongIdentifier) {
+             VarName varnAST = parseRestOfVarName(iAST.I);
+             finish(expressionPos);
+             PackageVname pvnAST = new PackageVname (((PackageLongIdentifier) iAST).PI,varnAST, expressionPos);    
+             expressionAST = new VnameExpression(pvnAST, expressionPos); 
+          } else {
+            VarName varnAST = parseRestOfVarName(iAST.I);
+            finish(expressionPos);
+            SimpleVname svnAST = new SimpleVname (varnAST, expressionPos);
+            expressionAST = new VnameExpression(svnAST, expressionPos);      
+          }
         }
       }
       break;
@@ -653,74 +667,77 @@ public class Parser {
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-  Vname parseVname () throws SyntaxError {
-    Vname vnameAST = null; // in case there's a syntactic error
-    SourcePosition vnamePos = new SourcePosition();
-    start(vnamePos);
-    Identifier iAST = null;
-    if (currentToken.kind == Token.IDENTIFIER){ // nuevo
-        iAST = parsePackageIdentifier();
-        accept(Token.DOLLAR);
-    }
-    vnameAST = parseVarName(iAST);
-    return vnameAST;
-    
-  }
-
-  Vname parseRestOfVname(Identifier identifierAST) throws SyntaxError {
-    SourcePosition vnamePos = new SourcePosition();
-    vnamePos = identifierAST.position;
-    Vname vAST = new SimpleVname(identifierAST, vnamePos);
-
-    while (currentToken.kind == Token.DOT || currentToken.kind == Token.LBRACKET) {
-
-      if (currentToken.kind == Token.DOT) {
-        acceptIt();
-        Identifier iAST = parseIdentifier();
-        vAST = new DotVname(vAST, iAST, vnamePos);
+  Vname parseVname() throws SyntaxError {
+      Vname vnameAST = null;
+      SourcePosition vnamePos = new SourcePosition();
+      start(vnamePos);
+      
+      Identifier iAST = parseIdentifier();
+      if (currentToken.kind == Token.DOLLAR) {
+          finish(vnamePos);
+          PackageIdentifier piAST = new PackageIdentifier(iAST, vnamePos);
+          accept(Token.DOLLAR);
+          
+          VarName vnAST = parseVarName();
+          finish(vnamePos);
+          vnameAST = new PackageVname(piAST, vnAST, vnamePos);
       } else {
-        acceptIt();
-        Expression eAST = parseExpression();
-        accept(Token.RBRACKET);
-        finish(vnamePos);
-        vAST = new SubscriptVname(vAST, eAST, vnamePos);
+          VarName vnAST = parseRestOfVarName(iAST);
+          finish(vnamePos);
+          vnameAST = new SimpleVname(vnAST, vnamePos);
       }
-    }
-    return vAST;
+      
+      return vnameAST;
   }
-  Vname parseRestOfVarName(Identifier pidentifierAST,Identifier identifierAST) throws SyntaxError {
+
+//  Vname parseRestOfVname(Identifier identifierAST) throws SyntaxError {
+//    SourcePosition vnamePos = new SourcePosition();
+//    vnamePos = identifierAST.position;
+//    Vname vAST = new SimpleVname(identifierAST, vnamePos);
+//
+//    while (currentToken.kind == Token.DOT || currentToken.kind == Token.LBRACKET) {
+//
+//      if (currentToken.kind == Token.DOT) {
+//        acceptIt();
+//        Identifier iAST = parseIdentifier();
+//        vAST = new DotVname(vAST, iAST, vnamePos);
+//      } else {
+//        acceptIt();
+//        Expression eAST = parseExpression();
+//        accept(Token.RBRACKET);
+//        finish(vnamePos);
+//        vAST = new SubscriptVname(vAST, eAST, vnamePos);
+//      }
+//    }
+//    return vAST;
+//  }
+  VarName parseRestOfVarName(Identifier identifierAST) throws SyntaxError {
     SourcePosition varNamePos = new SourcePosition();
     varNamePos = identifierAST.position;
-    Vname vAST = new SimpleVname(identifierAST, pidentifierAST, varNamePos);
-    
-    while (currentToken.kind == Token.DOT || currentToken.kind == Token.LBRACKET) {
+    VarName vAST = new SimpleVarName(identifierAST, varNamePos);
+
+    while (currentToken.kind == Token.DOT ||
+           currentToken.kind == Token.LBRACKET) {
+
       if (currentToken.kind == Token.DOT) {
         acceptIt();
         Identifier iAST = parseIdentifier();
-        finish(varNamePos);
-        vAST = new DotVname(vAST, iAST, varNamePos);
+        vAST = new DotVarName(vAST, iAST, varNamePos);
       } else {
         acceptIt();
         Expression eAST = parseExpression();
         accept(Token.RBRACKET);
         finish(varNamePos);
-        vAST = new SubscriptVname(vAST, eAST, varNamePos);
+        vAST = new SubscriptVarName(vAST, eAST, varNamePos);
       }
     }
     return vAST;
   }
-  Vname parseVarName(Identifier piAST) throws SyntaxError{
-      SourcePosition vnamePos = new SourcePosition();
-      Vname vAST = null;
-      
-      if (currentToken.kind == Token.IDENTIFIER) {
-          acceptIt();
-          Identifier iAST = parseIdentifier();
-          vAST = parseRestOfVarName(piAST,iAST);
-      } else {
-          syntacticError("Expected identifier not \"%\"",currentToken.spelling);
-      }
-    return vAST;     
+  VarName parseVarName() throws SyntaxError {
+    VarName varNameAST = null; // in case there's a syntactic error
+    Identifier iAST = parseIdentifier();
+    varNameAST = parseRestOfVarName(iAST);
+    return varNameAST;
   }
 // </editor-fold>
   
@@ -884,7 +901,7 @@ public class Parser {
       SourcePosition declarationPos = new SourcePosition();
       start(declarationPos);
       acceptIt();
-      Identifier iAST = parsePackageIdentifier(); 
+      PackageIdentifier iAST = parsePackageIdentifier(); 
       accept(Token.IS);
       Declaration dAST = parseDeclaration();
       accept(Token.END);
@@ -1116,7 +1133,7 @@ public class Parser {
 
     case Token.IDENTIFIER:
       {
-        Identifier iAST = parseLongIdentifier(); // cambio de Identifier a Long-Identifier
+        LongIdentifier iAST = parseLongIdentifier(); // cambio de Identifier a Long-Identifier
         finish(typePos);
         typeAST = new SimpleTypeDenoter(iAST, typePos);
       }

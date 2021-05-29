@@ -16,18 +16,22 @@ package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
-public class PackageIdentifier extends Identifier {
-
-    public PackageIdentifier(String spelling, SourcePosition previousTokenPosition) {
-        super (spelling, previousTokenPosition);
-        type = null;
-        decl = null; 
+public class PackageIdentifier extends AST {
+    
+    public PackageIdentifier(Identifier iAST, SourcePosition thePosition) {
+        super(thePosition);
+        
+        I = iAST;
+    }
+    
+    public Object visit(Visitor v, Object o) {
+        return v.visitPackageIdentifier(this, o);
     }
 
-  public Object visit(Visitor v, Object o) {
-    return v.visitPackageIdentifier(this, o);
-  }
-
-  public TypeDenoter type;
-  public AST decl; // Either a Declaration or a FieldTypeDenoter
+    public Object visitXML(Visitor v, Object o) {
+        return v.visitPackageIdentifier(this, o);
+    }
+    
+    public Identifier I;
+    
 }
