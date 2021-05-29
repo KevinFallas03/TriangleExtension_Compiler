@@ -1091,7 +1091,6 @@ public final class Checker implements Visitor {
     @Override
     public Object visitPrivateDeclaration(PrivateDeclaration ast, Object o) {
         idTable.changeToPrivateScope();
-        idTable.openScope();
         if(ast.d1AST instanceof PrivateDeclaration){
             PrivateDeclaration nextDec = (PrivateDeclaration)ast.d1AST;
             nextDec.d1AST.visit(this, o);
@@ -1100,7 +1099,6 @@ public final class Checker implements Visitor {
         else{
             ast.d1AST.visit(this, o);
         }
-        idTable.closeScope();
         idTable.changeToPublicScope(); 
         ast.d2AST.visit(this, o); 
         idTable.clearPrivateScope(); 
