@@ -103,7 +103,8 @@ import Triangle.AbstractSyntaxTrees.WhileDoCommand;
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public final class Checker implements Visitor {
-
+  boolean header;
+  boolean body;
   // Commands
 
   // Always returns null. Does not use the given object.
@@ -317,38 +318,85 @@ public final class Checker implements Visitor {
   
   //REVISAR
   public Object visitFuncDeclaration(FuncDeclaration ast, Object o) {
-    ast.T = (TypeDenoter) ast.T.visit(this, null);
-    idTable.enter (ast.I.spelling, ast); // permits recursion
-    if (ast.duplicated)
-      reporter.reportError ("identifier \"%\" already declared",
-                            ast.I.spelling, ast.position);
-    idTable.openScope();
-    ast.FPS.visit(this, null);
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-    idTable.closeScope();
-    if (! ast.T.equals(eType))
-      reporter.reportError ("body of function \"%\" has wrong type",
-                            ast.I.spelling, ast.E.position);
-    return null;
+      if(o == null){
+          ast.T = (TypeDenoter) ast.T.visit(this, null);
+          idTable.enter (ast.I.spelling, ast); // permits recursion
+          if (ast.duplicated){
+              reporter.reportError ("identifier \"%\" already declared", ast.I.spelling, ast.position);
+          }
+          idTable.openScope();
+          ast.FPS.visit(this, null);
+          TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+          idTable.closeScope();
+          if(! ast.T.equals(eType)){
+              reporter.reportError ("body of function \"%\" has wrong type", ast.I.spelling, ast.E.position);
+          }
+          return null;
+      }else{
+          String flag = (String) o;
+          if(flag.equals("enter")){
+              ast.T = (TypeDenoter) ast.T.visit(this, null);
+              idTable.enter (ast.I.spelling, ast); // permits recursion
+              if (ast.duplicated){
+                  reporter.reportError ("identifier \"%\" already declared",ast.I.spelling, ast.position);
+              }
+              return null;
+          }else{
+              idTable.openScope();
+              ast.FPS.visit(this, null);
+              TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+              idTable.closeScope();
+              if (! ast.T.equals(eType)){
+                  reporter.reportError ("body of function \"%\" has wrong type",ast.I.spelling, ast.E.position);
+              }
+              return null;
+        }
+      }
   }
   
   //REVISAR
   public Object visitProcDeclaration(ProcDeclaration ast, Object o) {
-    idTable.enter (ast.I.spelling, ast); // permits recursion
-    if (ast.duplicated)
-      reporter.reportError ("identifier \"%\" already declared",
-                            ast.I.spelling, ast.position);
-    idTable.openScope();
-    ast.FPS.visit(this, null);
-    ast.C.visit(this, null);
-    idTable.closeScope();
-    return null;
+      if(o == null){
+          idTable.enter (ast.I.spelling, ast); // permits recursion
+          if (ast.duplicated){
+              reporter.reportError ("identifier \"%\" already declared",ast.I.spelling, ast.position);
+          }
+          idTable.openScope();
+          ast.FPS.visit(this, null);
+          ast.C.visit(this, null);
+          idTable.closeScope();
+      }else{
+          String flag = (String) o;
+          if(flag.equals("enter")){
+              idTable.enter (ast.I.spelling, ast); // permits recursion
+              if (ast.duplicated){
+                  reporter.reportError ("identifier \"%\" already declared",ast.I.spelling, ast.position);
+              }
+          }else{
+              idTable.openScope();
+              ast.FPS.visit(this, null);
+              ast.C.visit(this, null);
+              idTable.closeScope();
+          }
+      }
+      return null;
   }
   
   //REVISAR
   public Object visitSequentialDeclaration(SequentialDeclaration ast, Object o) {
-    ast.D1.visit(this, null);
-    ast.D2.visit(this, null);
+      if(o == null){
+          ast.D1.visit(this, null);
+          ast.D2.visit(this, null);
+      }else{//NUEVO
+        if(this.header){
+            ast.D1.visit(this, "enter");
+            ast.D2.visit(this, "enter");
+        }else{
+            ast.D1.visit(this, "command");
+            ast.D2.visit(this, "command");
+        }
+      }
+    
     return null;
   }
 
@@ -789,6 +837,8 @@ public final class Checker implements Visitor {
   /////////////////////////////////////////////////////////////////////////////
 
   public Checker (ErrorReporter reporter) {
+    this.header = false;
+    this.body = false;
     this.reporter = reporter;
     this.idTable = new IdentificationTable ();
     establishStdEnvironment();
@@ -1077,14 +1127,12 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-        ProcDeclaration dec = (ProcDeclaration) ast.pfAST.visit(this, o);
-        idTable.enter (dec.I.spelling, ast); // permits recursion
-        if (ast.duplicated)
-          reporter.reportError ("identifier \"%\" already declared", dec.I.spelling, dec.position);
-        idTable.openScope();
-        dec.FPS.visit(this, null);
-        dec.C.visit(this, null);
-        idTable.closeScope();
+        this.header = true;
+        ast.pfAST.visit(this, "flag");
+        this.header = false;
+        this.body = true;
+        ast.pfAST.visit(this, "flag");
+        this.header = false;
         return null;
     }
 
