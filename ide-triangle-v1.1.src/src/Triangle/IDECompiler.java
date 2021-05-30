@@ -66,9 +66,9 @@ public class IDECompiler {
 //            System.out.println("\nXml file destination: "+filesDestination);
 //            XMLWriter writerXML = new XMLWriter(filesDestination);
 //            writerXML.write(rootAST);
-//            System.out.println("Contextual Analysis ...");
-//            Checker checker = new Checker(report);
-//            checker.check(rootAST);
+            System.out.println("Contextual Analysis ...");
+            Checker checker = new Checker(report);
+            checker.check(rootAST);
             if (report.numErrors == 0) {
                 //System.out.println("Code Generation ...");
                 //Encoder encoder = new Encoder(report);

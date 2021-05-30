@@ -350,7 +350,7 @@ public final class Checker implements Visitor {
                   reporter.reportError ("body of function \"%\" has wrong type",ast.I.spelling, ast.E.position);
               }
               return null;
-        }
+          }
       }
   }
   
@@ -528,7 +528,7 @@ public final class Checker implements Visitor {
   // Actual Parameters
 
   // Always returns null. Uses the given FormalParameter.
-
+  //REVISAR
   public Object visitConstActualParameter(ConstActualParameter ast, Object o) {
     FormalParameter fp = (FormalParameter) o;
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
@@ -1034,7 +1034,8 @@ public final class Checker implements Visitor {
     public Object visitUntilDoCommand(UntilDoCommand ast, Object o) {
         //Exp debe ser de tipo Boolean.
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-        if (! eType.equals(StdEnvironment.booleanType)){
+        if (!eType.equals(StdEnvironment.booleanType)){
+            System.out.println("holaaa");
             reporter.reportError("Boolean expression expected here", "", ast.E.position);
         }
         //Com y sus partes deben satisfacer las restricciones contextuales5
@@ -1101,9 +1102,6 @@ public final class Checker implements Visitor {
     public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
         //Exp3 debe ser de tipo booleano.
         TypeDenoter eType = (TypeDenoter) ast.E2.visit(this, null);
-        if (! eType.equals(StdEnvironment.booleanType)){
-            reporter.reportError("Boolean expression expected here", "", ast.E2.position);
-        }
         idTable.openScope();
         ast.IE.visit(this, null);
         ast.loop.visit(this, null);
@@ -1115,9 +1113,6 @@ public final class Checker implements Visitor {
     public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
         //Exp3 debe ser de tipo booleano.
         TypeDenoter eType = (TypeDenoter) ast.E2.visit(this, null);
-        if (! eType.equals(StdEnvironment.booleanType)){
-            reporter.reportError("Boolean expression expected here", "", ast.E2.position);
-        }
         idTable.openScope();
         ast.IE.visit(this, null);
         ast.loop.visit(this, null);
