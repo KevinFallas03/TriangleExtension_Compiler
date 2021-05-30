@@ -77,7 +77,7 @@ public final class IdentificationTable {
 
   public void enter (String id, Declaration attr) {
 
-    id = packageID + id;
+    id = packageID + id; 
     IdEntry entry = this.latest;
     boolean present = false, searching = true;
 
