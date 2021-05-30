@@ -42,27 +42,24 @@ public final class IdentificationTable {
       privateScope = false; 
   }
   public void clearPrivateScope () {
-    // Eliminar ultimo nivel de nodos marcados como privados
+    IdEntry last, local, penultimate;
 
-    IdEntry ultimo, local, penultimo;
-
-    ultimo = this.latest;
-    penultimo = ultimo.previous;
-    if(ultimo.isPrivate == true){
-        penultimo = this.latest;
-        ultimo.previous = null;
+    last = this.latest;
+    penultimate = last.previous;
+    if(last.isPrivate == true){
+        penultimate = this.latest;
+        last.previous = null;
     }else{
-        while(penultimo.isPrivate != true) {
-            ultimo = penultimo;
-            penultimo = ultimo.previous;
+        while(penultimate.isPrivate != true) {
+            last = penultimate;
+            penultimate = last.previous;
         }
-        if(penultimo.previous == null){
-            ultimo.previous = null;
+        if(penultimate.previous == null){
+            last.previous = null;
         }else{
-            ultimo.previous = penultimo.previous;
-            penultimo.previous = null;
-        }
-        
+            last.previous = penultimate.previous;
+            penultimate.previous = null;
+        }  
     }
   }
   // Closes the topmost level in the identification table, discarding
@@ -108,7 +105,6 @@ public final class IdentificationTable {
     // Add new entry ...
     if(privateScope){
         entry = new IdEntry(id, attr, this.level, this.latest, true);
-        System.out.println(id);
     }
     else{
         entry = new IdEntry(id, attr, this.level, this.latest, false);

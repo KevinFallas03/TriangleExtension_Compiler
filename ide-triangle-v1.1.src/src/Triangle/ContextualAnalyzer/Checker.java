@@ -1034,8 +1034,7 @@ public final class Checker implements Visitor {
         //Exp debe ser de tipo Boolean.
         TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
         if (!eType.equals(StdEnvironment.booleanType)){
-            System.out.println("holaaa");
-            reporter.reportError("Boolean expression expected here", "", ast.E.position);
+            reporter.reportError("BooleanSystem expression expected here", "", ast.E.position);
         }
         //Com y sus partes deben satisfacer las restricciones contextuales5
         ast.C.visit(this, null);
