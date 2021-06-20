@@ -135,7 +135,7 @@ public final class Checker implements Visitor {
     return null;
   }
   
-  //REVISAR
+  //SE CAMBIO
   public Object visitEmptyCommand(EmptyCommand ast, Object o) {
     return null;
   }
@@ -242,7 +242,6 @@ public final class Checker implements Visitor {
     return ast.type;
   }
   
-  //REVISAR
   public Object visitIfExpression(IfExpression ast, Object o) {
     TypeDenoter e1Type = (TypeDenoter) ast.E1.visit(this, null);
     if (! e1Type.equals(StdEnvironment.booleanType))
@@ -316,7 +315,7 @@ public final class Checker implements Visitor {
     return null;
   }
   
-  //REVISAR
+  //SE CAMBIO
   public Object visitFuncDeclaration(FuncDeclaration ast, Object o) {
       if(o == null){
           ast.T = (TypeDenoter) ast.T.visit(this, null);
@@ -354,7 +353,7 @@ public final class Checker implements Visitor {
       }
   }
   
-  //REVISAR
+  //SE CAMBIO
   public Object visitProcDeclaration(ProcDeclaration ast, Object o) {
       if(o == null){
           idTable.enter (ast.I.spelling, ast); // permits recursion
@@ -382,7 +381,7 @@ public final class Checker implements Visitor {
       return null;
   }
   
-  //REVISAR
+  //SE CAMBIO
   public Object visitSequentialDeclaration(SequentialDeclaration ast, Object o) {
       if(o == null){
           ast.D1.visit(this, null);
@@ -528,7 +527,7 @@ public final class Checker implements Visitor {
   // Actual Parameters
 
   // Always returns null. Uses the given FormalParameter.
-  //REVISAR
+  //SE CAMBIO
   public Object visitConstActualParameter(ConstActualParameter ast, Object o) {
       if(ast != null && o !=null){
           FormalParameter fp = (FormalParameter) o;
@@ -749,7 +748,6 @@ public final class Checker implements Visitor {
   // Returns the TypeDenoter of the Vname. Does not use the
   // given object.
   
-  //REVISAR VNAME
   public Object visitDotVname(DotVname ast, Object o) {
     ast.type = null;
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);

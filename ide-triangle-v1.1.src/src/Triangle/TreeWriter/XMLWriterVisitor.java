@@ -667,7 +667,7 @@ public class XMLWriterVisitor implements Visitor {
         ast.IE.visit(this, null);
         ast.E2.visit(this, null);
         ast.loop.visit(this, null);
-        writeLineXML("</ForUntiCommand>");
+        writeLineXML("</ForUntilCommand>");
         return null; 
     }
 

@@ -1011,78 +1011,244 @@ public final class Encoder implements Visitor {
     }
   }
 
-    @Override
+    @Override//Madri
     public Object visitWhileDoCommand(WhileDoCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //OPCION1 ANDREY
+        Frame frame = (Frame) o;
+        int jumpAddr, loopAddr;
+
+        jumpAddr = nextInstrAddr;
+        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+        loopAddr = nextInstrAddr;
+        aThis.C.visit(this, frame);
+        patch(jumpAddr, nextInstrAddr);
+        aThis.E.visit(this, frame);
+        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+        return null;
     }
 
-    @Override
+    @Override//Madri
     public Object visitUntilDoCommand(UntilDoCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //OPCION 1 ANDRES
+//        Frame frame = (Frame) o;
+//        int loopAddr;
+//        loopAddr = nextInstrAddr;
+//        aThis.C.visit(this, frame);
+//        aThis.E.visit(this, frame);
+//        emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);
+//        return null;
+        
+        //OPCION 2 ANDREY
+        Frame frame = (Frame) o;
+        int jumpAddr, loopAddr;
+
+        jumpAddr = nextInstrAddr;
+        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+        loopAddr = nextInstrAddr;
+        aThis.C.visit(this, frame);
+        patch(jumpAddr, nextInstrAddr);
+        aThis.E.visit(this, frame);
+        emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);
+        return null;
     }
 
-    @Override
+    @Override//Ulises
     public Object visitDoWhileCommand(DoWhileCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //OPCION 1 ANDRES
+//        Frame frame = (Frame) o;
+//        int loopAddr;
+//        loopAddr = nextInstrAddr;
+//        aThis.C.visit(this, frame);
+//        aThis.E.visit(this, frame);
+//        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+//        return null;
+        
+        //OPCION 2 ANDREY
+        Frame frame = (Frame) o;
+        int jumpAddr, loopAddr;
+
+        jumpAddr = nextInstrAddr;
+        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+        loopAddr = nextInstrAddr;
+        aThis.C.visit(this, frame);
+        patch(jumpAddr, nextInstrAddr);
+        aThis.E.visit(this, frame);
+        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+        return null;
     }
 
-    @Override
+    @Override//Madri
     public Object visitDoUntilCommand(DoUntilCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //OPCION 1 ANDREY
+        Frame frame = (Frame) o;
+        int loopAddr;
+        loopAddr = nextInstrAddr;
+        aThis.C.visit(this, frame);
+        aThis.E.visit(this, frame);
+        emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);
+        return null;
     }
 
-    @Override
+    @Override//Madri
     public Object visitForDoCommand(ForDoCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //OPCION 1 ANDREY
+        Frame frame = (Frame) o;
+        int jumpAddr, loopAddr;
+        aThis.E2.visit(this, frame);
+        aThis.IE.visit(this, frame);
+        jumpAddr = nextInstrAddr;
+        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+        loopAddr = nextInstrAddr;
+        emit(Machine.LOADop, 1, Machine.STr, -1);
+        aThis.C.visit(this, frame);
+        emit(Machine.POPop, 1, 0, 0);
+        emit(Machine.CALLop, 0, Machine.PBr, 5);
+        patch(jumpAddr, nextInstrAddr);
+        emit(Machine.LOADop, 2, Machine.STr, -2);
+        emit(Machine.CALLop, 0, Machine.PBr, 15);
+        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+        emit(Machine.POPop, 2, 0, 0);
+        return null;
     }
 
-    @Override
+    @Override//Madri
     public Object visitForIdentifierExpression(ForIdentifierExpression aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //OPCION 1 Andrey
+        Frame frame = (Frame) o;
+        Integer valSize = (Integer) aThis.E1.visit(this, frame);
+        return valSize;
     }
 
-    @Override
+    @Override//Ulises
     public Object visitForWhileCommand(ForWhileCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //OPCION 1 ANDREY
+        Frame frame = (Frame) o;
+        int jumpAddr;
+//                , loopAddr;
+        aThis.E2.visit(this, frame);
+        aThis.IE.visit(this, frame);
+        jumpAddr = nextInstrAddr;
+        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+//        loopAddr = nextInstrAddr;
+        emit(Machine.LOADop, 1, Machine.STr, -1);
+        aThis.loop.visit(this, frame);
+        emit(Machine.POPop, 1, 0, 0);
+        emit(Machine.CALLop, 0, Machine.PBr, 5);
+        patch(jumpAddr, nextInstrAddr);
+//        emit(Machine.LOADop, 2, Machine.STr, -2);
+//        emit(Machine.CALLop, 0, Machine.PBr, 15);
+//        aThis.E3.visit(this, frame);
+//        emit(Machine.CALLop, 0, Machine.PBr, 3);
+//        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+//        emit(Machine.POPop, 2, 0, 0);
+        return null;
     }
 
-    @Override
+    @Override//Kevin
     public Object visitForUntilCommand(ForUntilCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //OPCION 1 ANDREY
+        Frame frame = (Frame) o;
+        int jumpAddr;
+//                , loopAddr;
+        aThis.E2.visit(this, frame);
+        aThis.IE.visit(this, frame);
+        jumpAddr = nextInstrAddr;
+        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+//        loopAddr = nextInstrAddr;
+        emit(Machine.LOADop, 1, Machine.STr, -1);
+        aThis.loop.visit(this, frame);
+        emit(Machine.POPop, 1, 0, 0);
+        emit(Machine.CALLop, 0, Machine.PBr, 5);
+        patch(jumpAddr, nextInstrAddr);
+//        emit(Machine.LOADop, 2, Machine.STr, -2);
+//        emit(Machine.CALLop, 0, Machine.PBr, 15);
+//        aThis.E3.visit(this, frame);
+//        emit(Machine.CALLop, 0, Machine.PBr, 3);
+//        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+//        emit(Machine.POPop, 2, 0, 0);
+        return null;
+
     }
 
-    @Override
+    @Override//Ulises
     public Object visitRecursiveDeclaration(RecursiveDeclaration aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        //OPCION 1 ANDREY
+//        Integer valSize ;
+//        Frame frame = (Frame) o;
+//        Integer position = nextInstrAddr;
+//        //emit(Machine.CALLop, 0, Machine.CBr, 0);
+//        valSize = (Integer) aThis.pfAST.visit(this, frame);
+//        //patch(position, nextInstrAddr);
+//        //valSize = (Integer) ast.ProcFuncAST.visit(this, frame);
+//        //patch(position, nextInstrAddr);
+//        return valSize;
+        
+        Frame frame = (Frame) o;
+        int extraSize;
+
+//        machineEnabled = false;
+        int nextInstrAddrTemp = nextInstrAddr;
+
+        extraSize = ((Integer) aThis.pfAST.visit(this, frame)).intValue();
+        nextInstrAddr  = nextInstrAddrTemp;
+        extraSize = ((Integer) aThis.pfAST.visit(this, frame)).intValue();
+
+//        machineEnabled = true;
+        nextInstrAddr  = nextInstrAddrTemp;
+        extraSize = ((Integer) aThis.pfAST.visit(this, frame)).intValue();
+        return new Integer(extraSize );
     }
 
-    @Override
+    @Override//Ulises
     public Object visitPrivateDeclaration(PrivateDeclaration aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //opcion joel
+        Frame frame = (Frame) o;
+        int extraSize1, extraSize2;
+
+        extraSize1 = ((Integer) aThis.d1AST.visit(this, frame)).intValue();
+        Frame frame1 = new Frame (frame, extraSize1);
+        extraSize2 = ((Integer) aThis.d2AST.visit(this, frame1)).intValue();
+        return new Integer(extraSize1 + extraSize2);
+        
     }
 
-    @Override
+    @Override//Ulises
     public Object visitVarDeclarationBecomes(VarDeclarationBecomes ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //OPCION 1 GABO
+        Frame frame = (Frame) o;
+        int extraSize = (Integer) ast.E.visit(this, frame);
+        emit(Machine.PUSHop, 0, 0, extraSize);
+        ast.entity = new KnownAddress(Machine.addressSize, frame.level, frame.size);
+        return new Integer(extraSize);
     }
 
-    @Override
+    @Override//Kevin
     public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ast.dAST.visit(this, o);
+        ast.iAST.visit(this, o);
+        return null;
     }
 
-    @Override
+    @Override//Kevin
     public Object visitSeqPackageDeclaration(SeqPackageDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //OPCION 1 CHARLIE
+        Frame frame = (Frame)o;
+        int extraSize1 = ((Integer)ast.d1AST.visit(this, frame)).intValue();
+        Frame frame1 = new Frame (frame, extraSize1);
+        int extraSize2 = ((Integer)ast.d2AST.visit(this, frame1)).intValue();
+        
+        return new Integer(extraSize1 + extraSize2);
     }
 
-    @Override
+    @Override//Kevin
     public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
-    @Override
+    @Override//Kevin
     public Object visitLongIdentifier(LongIdentifier ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //OPCION 1 Charlie
+        visitIdentifier(ast, o);
+        return null;
     }
 }
