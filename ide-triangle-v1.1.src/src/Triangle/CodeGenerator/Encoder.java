@@ -1013,35 +1013,22 @@ public final class Encoder implements Visitor {
 
     @Override//Madri
     public Object visitWhileDoCommand(WhileDoCommand aThis, Object o) {
-        //OPCION1 ANDREY
         Frame frame = (Frame) o;
         int jumpAddr, loopAddr;
-
         jumpAddr = nextInstrAddr;
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
         loopAddr = nextInstrAddr;
         aThis.C.visit(this, frame);
         patch(jumpAddr, nextInstrAddr);
         aThis.E.visit(this, frame);
-        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+        emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);
         return null;
     }
 
     @Override//Madri
     public Object visitUntilDoCommand(UntilDoCommand aThis, Object o) {
-        //OPCION 1 ANDRES
-//        Frame frame = (Frame) o;
-//        int loopAddr;
-//        loopAddr = nextInstrAddr;
-//        aThis.C.visit(this, frame);
-//        aThis.E.visit(this, frame);
-//        emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);
-//        return null;
-        
-        //OPCION 2 ANDREY
         Frame frame = (Frame) o;
         int jumpAddr, loopAddr;
-
         jumpAddr = nextInstrAddr;
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
         loopAddr = nextInstrAddr;
@@ -1054,24 +1041,10 @@ public final class Encoder implements Visitor {
 
     @Override//Ulises
     public Object visitDoWhileCommand(DoWhileCommand aThis, Object o) {
-        //OPCION 1 ANDRES
-//        Frame frame = (Frame) o;
-//        int loopAddr;
-//        loopAddr = nextInstrAddr;
-//        aThis.C.visit(this, frame);
-//        aThis.E.visit(this, frame);
-//        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
-//        return null;
-        
-        //OPCION 2 ANDREY
         Frame frame = (Frame) o;
-        int jumpAddr, loopAddr;
-
-        jumpAddr = nextInstrAddr;
-        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+        int loopAddr;
         loopAddr = nextInstrAddr;
         aThis.C.visit(this, frame);
-        patch(jumpAddr, nextInstrAddr);
         aThis.E.visit(this, frame);
         emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
         return null;
@@ -1079,7 +1052,6 @@ public final class Encoder implements Visitor {
 
     @Override//Madri
     public Object visitDoUntilCommand(DoUntilCommand aThis, Object o) {
-        //OPCION 1 ANDREY
         Frame frame = (Frame) o;
         int loopAddr;
         loopAddr = nextInstrAddr;
@@ -1091,7 +1063,6 @@ public final class Encoder implements Visitor {
 
     @Override//Madri
     public Object visitForDoCommand(ForDoCommand aThis, Object o) {
-        //OPCION 1 ANDREY
         Frame frame = (Frame) o;
         int jumpAddr, loopAddr;
         aThis.E2.visit(this, frame);
@@ -1113,7 +1084,6 @@ public final class Encoder implements Visitor {
 
     @Override//Madri
     public Object visitForIdentifierExpression(ForIdentifierExpression aThis, Object o) {
-        //OPCION 1 Andrey
         Frame frame = (Frame) o;
         Integer valSize = (Integer) aThis.E1.visit(this, frame);
         return valSize;
@@ -1121,87 +1091,68 @@ public final class Encoder implements Visitor {
 
     @Override//Ulises
     public Object visitForWhileCommand(ForWhileCommand aThis, Object o) {
-        //OPCION 1 ANDREY
         Frame frame = (Frame) o;
-        int jumpAddr;
-//                , loopAddr;
+        int jumpAddr, loopAddr;
         aThis.E2.visit(this, frame);
         aThis.IE.visit(this, frame);
         jumpAddr = nextInstrAddr;
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
-//        loopAddr = nextInstrAddr;
+        loopAddr = nextInstrAddr;
         emit(Machine.LOADop, 1, Machine.STr, -1);
-        aThis.loop.visit(this, frame);
+        
+        WhileDoCommand m = (WhileDoCommand)aThis.loop;
+        m.C.visit(this, frame);
         emit(Machine.POPop, 1, 0, 0);
         emit(Machine.CALLop, 0, Machine.PBr, 5);
         patch(jumpAddr, nextInstrAddr);
-//        emit(Machine.LOADop, 2, Machine.STr, -2);
-//        emit(Machine.CALLop, 0, Machine.PBr, 15);
-//        aThis.E3.visit(this, frame);
-//        emit(Machine.CALLop, 0, Machine.PBr, 3);
-//        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
-//        emit(Machine.POPop, 2, 0, 0);
+        emit(Machine.LOADop, 2, Machine.STr, -2);
+        emit(Machine.CALLop, 0, Machine.PBr, 15);
+        m.E.visit(this, frame);
+        emit(Machine.CALLop, 0, Machine.PBr, 2);
+        emit(Machine.CALLop, 0, Machine.PBr, 3);
+        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+        emit(Machine.POPop, 2, 0, 0);
         return null;
     }
 
     @Override//Kevin
     public Object visitForUntilCommand(ForUntilCommand aThis, Object o) {
-        //OPCION 1 ANDREY
         Frame frame = (Frame) o;
-        int jumpAddr;
-//                , loopAddr;
+        int jumpAddr, loopAddr;
         aThis.E2.visit(this, frame);
         aThis.IE.visit(this, frame);
         jumpAddr = nextInstrAddr;
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
-//        loopAddr = nextInstrAddr;
+        loopAddr = nextInstrAddr;
         emit(Machine.LOADop, 1, Machine.STr, -1);
-        aThis.loop.visit(this, frame);
+        
+        UntilDoCommand m = (UntilDoCommand)aThis.loop;
+        aThis.loop.visit(this,frame);
+        m.C.visit(this, frame);
         emit(Machine.POPop, 1, 0, 0);
         emit(Machine.CALLop, 0, Machine.PBr, 5);
         patch(jumpAddr, nextInstrAddr);
-//        emit(Machine.LOADop, 2, Machine.STr, -2);
-//        emit(Machine.CALLop, 0, Machine.PBr, 15);
-//        aThis.E3.visit(this, frame);
-//        emit(Machine.CALLop, 0, Machine.PBr, 3);
-//        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
-//        emit(Machine.POPop, 2, 0, 0);
+        emit(Machine.LOADop, 2, Machine.STr, -2);
+        emit(Machine.CALLop, 0, Machine.PBr, 15);
+        m.E.visit(this, frame);
+        emit(Machine.CALLop, 0, Machine.PBr, 2);
+        emit(Machine.CALLop, 0, Machine.PBr, 3);
+        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+        emit(Machine.POPop, 2, 0, 0);
         return null;
-
     }
 
     @Override//Ulises
     public Object visitRecursiveDeclaration(RecursiveDeclaration aThis, Object o) {
-//        //OPCION 1 ANDREY
-//        Integer valSize ;
-//        Frame frame = (Frame) o;
-//        Integer position = nextInstrAddr;
-//        //emit(Machine.CALLop, 0, Machine.CBr, 0);
-//        valSize = (Integer) aThis.pfAST.visit(this, frame);
-//        //patch(position, nextInstrAddr);
-//        //valSize = (Integer) ast.ProcFuncAST.visit(this, frame);
-//        //patch(position, nextInstrAddr);
-//        return valSize;
-        
+        Integer valSize ;
         Frame frame = (Frame) o;
-        int extraSize;
-
-//        machineEnabled = false;
-        int nextInstrAddrTemp = nextInstrAddr;
-
-        extraSize = ((Integer) aThis.pfAST.visit(this, frame)).intValue();
-        nextInstrAddr  = nextInstrAddrTemp;
-        extraSize = ((Integer) aThis.pfAST.visit(this, frame)).intValue();
-
-//        machineEnabled = true;
-        nextInstrAddr  = nextInstrAddrTemp;
-        extraSize = ((Integer) aThis.pfAST.visit(this, frame)).intValue();
-        return new Integer(extraSize );
+        Integer position = nextInstrAddr;
+        valSize = (Integer) aThis.pfAST.visit(this, frame);
+        return valSize;
     }
 
     @Override//Ulises
     public Object visitPrivateDeclaration(PrivateDeclaration aThis, Object o) {
-        //opcion joel
         Frame frame = (Frame) o;
         int extraSize1, extraSize2;
 
@@ -1214,7 +1165,6 @@ public final class Encoder implements Visitor {
 
     @Override//Ulises
     public Object visitVarDeclarationBecomes(VarDeclarationBecomes ast, Object o) {
-        //OPCION 1 GABO
         Frame frame = (Frame) o;
         int extraSize = (Integer) ast.E.visit(this, frame);
         emit(Machine.PUSHop, 0, 0, extraSize);
@@ -1231,7 +1181,6 @@ public final class Encoder implements Visitor {
 
     @Override//Kevin
     public Object visitSeqPackageDeclaration(SeqPackageDeclaration ast, Object o) {
-        //OPCION 1 CHARLIE
         Frame frame = (Frame)o;
         int extraSize1 = ((Integer)ast.d1AST.visit(this, frame)).intValue();
         Frame frame1 = new Frame (frame, extraSize1);
@@ -1247,7 +1196,6 @@ public final class Encoder implements Visitor {
 
     @Override//Kevin
     public Object visitLongIdentifier(LongIdentifier ast, Object o) {
-        //OPCION 1 Charlie
         visitIdentifier(ast, o);
         return null;
     }
