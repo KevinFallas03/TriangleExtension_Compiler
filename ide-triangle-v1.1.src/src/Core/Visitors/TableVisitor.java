@@ -641,75 +641,98 @@ public class TableVisitor implements Visitor {
   // <editor-fold defaultstate="collapsed" desc=" Loops ">
   // Loops
     @Override
-    public Object visitWhileDoCommand(WhileDoCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitWhileDoCommand(WhileDoCommand ast, Object o) {
+      ast.E.visit(this, null);
+      ast.C.visit(this, null);
+      
+      return(null);
     }
     @Override
-    public Object visitUntilDoCommand(UntilDoCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitUntilDoCommand(UntilDoCommand ast, Object o) {
+        ast.C.visit(this, o);
+        ast.E.visit(this, o);
+        return null;
     }
+    
     @Override
-    public Object visitDoWhileCommand(DoWhileCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {
+        ast.C.visit(this, o);
+        ast.E.visit(this, o);
+        return null;
     }
 
     @Override
-    public Object visitDoUntilCommand(DoUntilCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {
+        ast.C.visit(this, o);
+        ast.E.visit(this, o);
+        return null;
     }
+    
     @Override
-    public Object visitForDoCommand(ForDoCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitForDoCommand(ForDoCommand ast, Object o) {
+        ast.E2.visit(this, o);
+        ast.C.visit(this, o);
+        ast.IE.visit(this, o);
+        return null;
+    }
+    
+     @Override
+    public Object visitForIdentifierExpression(ForIdentifierExpression ast, Object o) {
+        ast.E1.visit(this, o);
+        ast.I.visit(this, o);
+        return null;
     }
      @Override
-    public Object visitForIdentifierExpression(ForIdentifierExpression aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-     @Override
-    public Object visitForWhileCommand(ForWhileCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
+        ast.E2.visit(this, o);
+        ast.loop.visit(this, o);
+        ast.IE.visit(this, o);
+        return null;
     }
     @Override
-    public Object visitForUntilCommand(ForUntilCommand aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
+        ast.E2.visit(this, o);
+        ast.loop.visit(this, o);
+        ast.IE.visit(this, o);
+        return null;
     }
     // </editor-fold>
   
   // <editor-fold defaultstate="collapsed" desc=" Recursive and private ">
     @Override
-    public Object visitRecursiveDeclaration(RecursiveDeclaration aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
+        return null;
     }
 
     @Override
-    public Object visitPrivateDeclaration(PrivateDeclaration aThis, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object visitPrivateDeclaration(PrivateDeclaration ast, Object o) {
+        return null;    
     }
     // </editor-fold>
 
     @Override
     public Object visitVarDeclarationBecomes(VarDeclarationBecomes ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override
     public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override
     public Object visitSeqPackageDeclaration(SeqPackageDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override
     public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override
     public Object visitLongIdentifier(LongIdentifier ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
 
