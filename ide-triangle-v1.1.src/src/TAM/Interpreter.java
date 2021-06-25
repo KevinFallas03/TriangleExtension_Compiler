@@ -452,124 +452,124 @@ public class Interpreter {
       n = currentInstr.n;
       d = currentInstr.d;
       // Execute instruction ...
-      switch (op) {
-        case Machine.LOADop:
-          addr = d + content(r);
-          checkSpace(n);
-          for (index = 0; index < n; index++)
-            data[ST + index] = data[addr + index];
-          ST = ST + n;
-          CP = CP + 1;
-          break;
-        case Machine.LOADAop:
-          addr = d + content(r);
-          checkSpace(1);
-          data[ST] = addr;
-          ST = ST + 1;
-          CP = CP + 1;
-          break;
-        case Machine.LOADIop:
-          ST = ST - 1;
-          addr = data[ST];
-          checkSpace(n);
-          for (index = 0; index < n; index++)
-            data[ST + index] = data[addr + index];
-          ST = ST + n;
-          CP = CP + 1;
-          break;
-        case Machine.LOADLop:
-          checkSpace(1);
-          data[ST] = d;
-          ST = ST + 1;
-          CP = CP + 1;
-          break;
-        case Machine.STOREop:
-          addr = d + content(r);
-          ST = ST - n;
-          for (index = 0; index < n; index++)
-            data[addr + index] = data[ST + index];
-          CP = CP + 1;
-          break;
-        case Machine.STOREIop:
-          ST = ST - 1;
-          addr = data[ST];
-          ST = ST - n;
-          for (index = 0; index < n; index++)
-            data[addr + index] = data[ST + index];
-          CP = CP + 1;
-          break;
-        case Machine.CALLop:
-          addr = d + content(r);
-          if (addr >= Machine.PB) {
-            callPrimitive(addr - Machine.PB);
+        switch (op) {
+          case Machine.LOADop:
+            addr = d + content(r);
+            checkSpace(n);
+            for (index = 0; index < n; index++)
+              data[ST + index] = data[addr + index];
+            ST = ST + n;
             CP = CP + 1;
-          } else {
-            checkSpace(3);
-            if ((0 <= n) && (n <= 15))
-              data[ST] = content(n); // static link
-            else
-              status = failedInvalidInstruction;
-            data[ST + 1] = LB; // dynamic link
-            data[ST + 2] = CP + 1; // return address
-            LB = ST;
-            ST = ST + 3;
-            CP = addr;
-          }
-          break;
-        case Machine.CALLIop:
-          ST = ST - 2;
-          addr = data[ST + 1];
-          if (addr >= Machine.PB) {
-            callPrimitive(addr - Machine.PB);
+            break;
+          case Machine.LOADAop:
+            addr = d + content(r);
+            checkSpace(1);
+            data[ST] = addr;
+            ST = ST + 1;
             CP = CP + 1;
-          } else {
-            // data[ST] = static link already
-            data[ST + 1] = LB; // dynamic link
-            data[ST + 2] = CP + 1; // return address
-            LB = ST;
-            ST = ST + 3;
-            CP = addr;
-          }
-          break;
-        case Machine.RETURNop:
-          addr = LB - d;
-          CP = data[LB + 2];
-          LB = data[LB + 1];
-          ST = ST - n;
-          for (index = 0; index < n; index++)
-            data[addr + index] = data[ST + index];
-          ST = addr + n;
-          break;
-        case Machine.PUSHop:
-          checkSpace(d);
-          ST = ST + d;
-          CP = CP + 1;
-          break;
-        case Machine.POPop:
-          addr = ST - n - d;
-          ST = ST - n;
-          for (index = 0; index < n; index++)
-            data[addr + index] = data[ST + index];
-          ST = addr + n;
-          CP = CP + 1;
-          break;
-        case Machine.JUMPop:
-          CP = d + content(r);
-          break;
-        case Machine.JUMPIop:
-          ST = ST - 1;
-          CP = data[ST];
-          break;
-        case Machine.JUMPIFop:
-          ST = ST - 1;
-          if (data[ST] == n)
+            break;
+          case Machine.LOADIop:
+            ST = ST - 1;
+            addr = data[ST];
+            checkSpace(n);
+            for (index = 0; index < n; index++)
+              data[ST + index] = data[addr + index];
+            ST = ST + n;
+            CP = CP + 1;
+            break;
+          case Machine.LOADLop:
+            checkSpace(1);
+            data[ST] = d;
+            ST = ST + 1;
+            CP = CP + 1;
+            break;
+          case Machine.STOREop:
+            addr = d + content(r);
+            ST = ST - n;
+            for (index = 0; index < n; index++)
+              data[addr + index] = data[ST + index];
+            CP = CP + 1;
+            break;
+          case Machine.STOREIop:
+            ST = ST - 1;
+            addr = data[ST];
+            ST = ST - n;
+            for (index = 0; index < n; index++)
+              data[addr + index] = data[ST + index];
+            CP = CP + 1;
+            break;
+          case Machine.CALLop:
+            addr = d + content(r);
+            if (addr >= Machine.PB) {
+              callPrimitive(addr - Machine.PB);
+              CP = CP + 1;
+            } else {
+              checkSpace(3);
+              if ((0 <= n) && (n <= 15))
+                data[ST] = content(n); // static link
+              else
+                status = failedInvalidInstruction;
+              data[ST + 1] = LB; // dynamic link
+              data[ST + 2] = CP + 1; // return address
+              LB = ST;
+              ST = ST + 3;
+              CP = addr;
+            }
+            break;
+          case Machine.CALLIop:
+            ST = ST - 2;
+            addr = data[ST + 1];
+            if (addr >= Machine.PB) {
+              callPrimitive(addr - Machine.PB);
+              CP = CP + 1;
+            } else {
+              // data[ST] = static link already
+              data[ST + 1] = LB; // dynamic link
+              data[ST + 2] = CP + 1; // return address
+              LB = ST;
+              ST = ST + 3;
+              CP = addr;
+            }
+            break;
+          case Machine.RETURNop:
+            addr = LB - d;
+            CP = data[LB + 2];
+            LB = data[LB + 1];
+            ST = ST - n;
+            for (index = 0; index < n; index++)
+              data[addr + index] = data[ST + index];
+            ST = addr + n;
+            break;
+          case Machine.PUSHop:
+            checkSpace(d);
+            ST = ST + d;
+            CP = CP + 1;
+            break;
+          case Machine.POPop:
+            addr = ST - n - d;
+            ST = ST - n;
+            for (index = 0; index < n; index++)
+              data[addr + index] = data[ST + index];
+            ST = addr + n;
+            CP = CP + 1;
+            break;
+          case Machine.JUMPop:
             CP = d + content(r);
-          else
-            CP = CP + 1;
-          break;
-        case Machine.HALTop:
-          status = halted;
-          break;
+            break;
+          case Machine.JUMPIop:
+            ST = ST - 1;
+            CP = data[ST];
+            break;
+          case Machine.JUMPIFop:
+            ST = ST - 1;
+            if (data[ST] == n)
+              CP = d + content(r);
+            else
+              CP = CP + 1;
+            break;
+          case Machine.HALTop:
+            status = halted;
+            break;
       }
       if ((CP < CB) || (CP >= CT))
         status = failedInvalidCodeAddress;

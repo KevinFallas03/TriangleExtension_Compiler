@@ -1068,66 +1068,20 @@ public final class Encoder implements Visitor {
 
     @Override//Madri
     public Object visitForDoCommand(ForDoCommand ast ,Object o) { // execute [ loop for I from E1 to E2 do C ]
-//        SourcePosition dummyPos = new SourcePosition();
-//        Identifier dummyI = new Identifier("", dummyPos);
-//        
-//        int jumpAddr, loopAddr;
-//        Frame frame = (Frame) o;
-//        emit(Machine.PUSHop, 0, 0, 2); //Save spaces for control variables and superior limit
-//        
-//        ForIdentifierExpression forIE = (ForIdentifierExpression)ast.IE;
-//        //For fetch
-//        SimpleVname id = new SimpleVname(forIE.I, forIE.I.position);
-//        SimpleVname expr2 = new SimpleVname(dummyI, dummyPos);
-//        
-//        dummyI.decl = ast.E2;
-//        id.iAST.decl = new ForIdentifierExpression(forIE.I,forIE.E1,forIE.I.position);
-//        
-//        id.iAST.decl.entity = new KnownAddress(Machine.addressSize, frame.level, frame.size);
-//        frame.size += 1;
-//        expr2.iAST.decl.entity = new KnownAddress(Machine.addressSize, frame.level, frame.size);
-//        frame.size += 1;
-//        
-//        forIE.E1.visit(this, frame); // evaluate E1
-//        encodeStore(id, frame, Machine.integerSize); // assign and save
-//        ast.E2.visit(this, frame); // evaluate E2
-//        encodeStore(expr2, frame, Machine.integerSize); // assign and save
-//        Integer valSize = (Integer)ast.IE.visit(this, frame);
-//        //loop
-//        jumpAddr = nextInstrAddr;
-//        emit(Machine.JUMPop, 0, Machine.CBr, 0); // Jumps to encodeFetch
-//        loopAddr = nextInstrAddr;
-//        ast.C.visit(this, frame); // Execute command
-//        
-//        encodeFetch(id, frame, Machine.integerSize); // load id
-//        emit(Machine.CALLop, 0, Machine.PBr, Machine.succDisplacement); // increment id
-//        encodeStore(id, frame, Machine.integerSize); // save id
-//        patch(jumpAddr, nextInstrAddr);
-//        
-//        
-//        encodeFetch(id, frame, Machine.integerSize); // load id
-//        encodeFetch(expr2, frame, Machine.integerSize); // load superior limmit
-//        emit(Machine.CALLop, Machine.LBr, Machine.PBr, Machine.gtDisplacement); // evaluate by gt  
-//        emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr); // Jumps to command
-//        
-//        // Exit 
-//        emit(Machine.POPop, 0, 0, 2); // clean storage space
-//        frame.size -= 2;
         int jumpAddr, loopAddr;
         Frame frame = (Frame) o;
         
-        ast.E2.visit(this, frame);
-        ast.IE.visit(this, frame);
+        ast.E2.visit(this, frame); // evaluate E2
+        ast.IE.visit(this, frame); // evaluate E1
         
         //JUMP to evalcond
         jumpAddr = nextInstrAddr; 
         emit(Machine.JUMPop, 0,Machine.CBr,0);
         loopAddr = nextInstrAddr;
         
-        //Repetir
-        ast.C.visit(this, frame);
+        //loop
+        ast.C.visit(this, frame); // execute C
         emit(Machine.CALLop, 0, Machine.PBr, Machine.succDisplacement);
-//        emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.succDisplacement);
         
         //Evalcond
         int evalcond = nextInstrAddr;
@@ -1175,9 +1129,9 @@ public final class Encoder implements Visitor {
             return null;
         }
         catch(Exception e){
-            throw new UnsupportedOperationException("Loop ForWhile not supported yet.");
+            System.out.println("Loop ForWhile not supported yet.");
         }
-        
+      return null;
     }
 
     @Override//Kevin
@@ -1207,8 +1161,9 @@ public final class Encoder implements Visitor {
             emit(Machine.POPop, 2, 0, 0);
             return null;
         }catch(Exception e){
-            throw new UnsupportedOperationException("Loop ForUntil not supported yet.");
+            System.out.println("Loop ForUntil not supported yet.");
         }
+      return null;
     }
 
     @Override//Ulises
@@ -1220,8 +1175,9 @@ public final class Encoder implements Visitor {
             valSize = (Integer) ast.pfAST.visit(this, frame);
             return valSize;
         }catch(Exception e){
-            throw new UnsupportedOperationException("Recursive not supported yet.");
+            System.out.println("Recursive not supported yet.");
         }
+      return null;
     }
 
     @Override//Ulises
@@ -1251,8 +1207,9 @@ public final class Encoder implements Visitor {
             ast.iAST.visit(this, o);
             return null;
         }catch(Exception e){
-            throw new UnsupportedOperationException("PackageDeclaration not supported yet.");
+            System.out.println("PackageDeclaration not supported yet.");
         }
+        return null;
     }
 
     @Override//Kevin
@@ -1269,8 +1226,9 @@ public final class Encoder implements Visitor {
         try{
             return null;
         }catch(Exception e){
-            throw new UnsupportedOperationException("PackageIdentifier not supported yet.");
+            System.out.println("PackageIdentifier not supported yet.");
         }
+      return null;
         
     }
 

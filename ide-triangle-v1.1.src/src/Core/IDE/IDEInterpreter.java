@@ -30,8 +30,12 @@ public class IDEInterpreter {
     public synchronized void Run(final String fileName) {
         new Thread(new Runnable() {
             public void run() {
-                TAM.Interpreter.main(new String[] {fileName});
-                delegate.actionPerformed(null);
+                try{
+                    TAM.Interpreter.main(new String[] {fileName});
+                    delegate.actionPerformed(null);
+                }catch(Exception e){
+                    System.out.println(e.toString());
+                }
             }
         }).start();
     }      
