@@ -1094,64 +1094,79 @@ public final class Encoder implements Visitor {
 
     @Override//Ulises
     public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
-        Frame frame = (Frame) o;
-        int jumpAddr, loopAddr;
-        ast.E2.visit(this, frame);
-        ast.IE.visit(this, frame);
-        jumpAddr = nextInstrAddr;
-        emit(Machine.JUMPop, 0, Machine.CBr, 0);
-        loopAddr = nextInstrAddr;
-        emit(Machine.LOADop, 1, Machine.STr, -1);
+        try{
+            Frame frame = (Frame) o;
+            int jumpAddr, loopAddr;
+            ast.E2.visit(this, frame);
+            ast.IE.visit(this, frame);
+            jumpAddr = nextInstrAddr;
+            emit(Machine.JUMPop, 0, Machine.CBr, 0);
+            loopAddr = nextInstrAddr;
+            emit(Machine.LOADop, 1, Machine.STr, -1);
+
+            WhileDoCommand m = (WhileDoCommand)ast.loop;
+            m.C.visit(this, frame);
+            emit(Machine.POPop, 1, 0, 0);
+            emit(Machine.CALLop, 0, Machine.PBr, 5);
+            patch(jumpAddr, nextInstrAddr);
+            emit(Machine.LOADop, 2, Machine.STr, -2);
+            emit(Machine.CALLop, 0, Machine.PBr, 15);
+            m.E.visit(this, frame);
+            emit(Machine.CALLop, 0, Machine.PBr, 2);
+            emit(Machine.CALLop, 0, Machine.PBr, 3);
+            emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+            emit(Machine.POPop, 2, 0, 0);
+            return null;
+        }
+        catch(Exception e){
+            throw new UnsupportedOperationException("Loop ForWhile not supported yet.");
+        }
         
-        WhileDoCommand m = (WhileDoCommand)ast.loop;
-        m.C.visit(this, frame);
-        emit(Machine.POPop, 1, 0, 0);
-        emit(Machine.CALLop, 0, Machine.PBr, 5);
-        patch(jumpAddr, nextInstrAddr);
-        emit(Machine.LOADop, 2, Machine.STr, -2);
-        emit(Machine.CALLop, 0, Machine.PBr, 15);
-        m.E.visit(this, frame);
-        emit(Machine.CALLop, 0, Machine.PBr, 2);
-        emit(Machine.CALLop, 0, Machine.PBr, 3);
-        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
-        emit(Machine.POPop, 2, 0, 0);
-        return null;
     }
 
     @Override//Kevin
     public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
-        Frame frame = (Frame) o;
-        int jumpAddr, loopAddr;
-        ast.E2.visit(this, frame);
-        ast.IE.visit(this, frame);
-        jumpAddr = nextInstrAddr;
-        emit(Machine.JUMPop, 0, Machine.CBr, 0);
-        loopAddr = nextInstrAddr;
-        emit(Machine.LOADop, 1, Machine.STr, -1);
         
-        UntilDoCommand m = (UntilDoCommand)ast.loop;
-        ast.loop.visit(this,frame);
-        m.C.visit(this, frame);
-        emit(Machine.POPop, 1, 0, 0);
-        emit(Machine.CALLop, 0, Machine.PBr, 5);
-        patch(jumpAddr, nextInstrAddr);
-        emit(Machine.LOADop, 2, Machine.STr, -2);
-        emit(Machine.CALLop, 0, Machine.PBr, 15);
-        m.E.visit(this, frame);
-        emit(Machine.CALLop, 0, Machine.PBr, 2);
-        emit(Machine.CALLop, 0, Machine.PBr, 3);
-        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
-        emit(Machine.POPop, 2, 0, 0);
-        return null;
+        try{
+            Frame frame = (Frame) o;
+            int jumpAddr, loopAddr;
+            ast.E2.visit(this, frame);
+            ast.IE.visit(this, frame);
+            jumpAddr = nextInstrAddr;
+            emit(Machine.JUMPop, 0, Machine.CBr, 0);
+            loopAddr = nextInstrAddr;
+            emit(Machine.LOADop, 1, Machine.STr, -1);
+
+            UntilDoCommand m = (UntilDoCommand)ast.loop;
+            ast.loop.visit(this,frame);
+            m.C.visit(this, frame);
+            emit(Machine.POPop, 1, 0, 0);
+            emit(Machine.CALLop, 0, Machine.PBr, 5);
+            patch(jumpAddr, nextInstrAddr);
+            emit(Machine.LOADop, 2, Machine.STr, -2);
+            emit(Machine.CALLop, 0, Machine.PBr, 15);
+            m.E.visit(this, frame);
+            emit(Machine.CALLop, 0, Machine.PBr, 2);
+            emit(Machine.CALLop, 0, Machine.PBr, 3);
+            emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+            emit(Machine.POPop, 2, 0, 0);
+            return null;
+        }catch(Exception e){
+            throw new UnsupportedOperationException("Loop ForUntil not supported yet.");
+        }
     }
 
     @Override//Ulises
     public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-        Integer valSize ;
-        Frame frame = (Frame) o;
-        Integer position = nextInstrAddr;
-        valSize = (Integer) ast.pfAST.visit(this, frame);
-        return valSize;
+        try{
+            Integer valSize ;
+            Frame frame = (Frame) o;
+            Integer position = nextInstrAddr;
+            valSize = (Integer) ast.pfAST.visit(this, frame);
+            return valSize;
+        }catch(Exception e){
+            throw new UnsupportedOperationException("Recursive not supported yet.");
+        }
     }
 
     @Override//Ulises
@@ -1177,9 +1192,13 @@ public final class Encoder implements Visitor {
 
     @Override//Kevin
     public Object visitPackageDeclaration(PackageDeclaration ast, Object o) {
-        ast.dAST.visit(this, o);
-        ast.iAST.visit(this, o);
-        return null;
+        try{
+            ast.dAST.visit(this, o);
+            ast.iAST.visit(this, o);
+            return null;
+        }catch(Exception e){
+            throw new UnsupportedOperationException("PackageDeclaration not supported yet.");
+        }
     }
 
     @Override//Kevin
@@ -1194,12 +1213,12 @@ public final class Encoder implements Visitor {
 
     @Override//Kevin
     public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
-//        try{
-//             
-//        }catch(){
-//            
-//        }
-        return null;
+        try{
+            return null;
+        }catch(Exception e){
+            throw new UnsupportedOperationException("PackageIdentifier not supported yet.");
+        }
+        
     }
 
     @Override//Kevin
