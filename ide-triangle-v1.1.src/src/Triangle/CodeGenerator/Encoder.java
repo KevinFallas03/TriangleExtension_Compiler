@@ -1015,29 +1015,29 @@ public final class Encoder implements Visitor {
     */
     
     @Override//Madri
-    public Object visitWhileDoCommand(WhileDoCommand ast, Object o) { // execute [ while E do C ]
+    public Object visitWhileDoCommand(WhileDoCommand ast, Object o) { // execute [ loop while E do C ]
         Frame frame = (Frame) o;
         int jumpAddr, loopAddr;
-        jumpAddr = nextInstrAddr;
-        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+        jumpAddr = nextInstrAddr; 
+        emit(Machine.JUMPop, 0, Machine.CBr, 0); // jump to the expression
         loopAddr = nextInstrAddr;
-        ast.C.visit(this, frame);
+        ast.C.visit(this, frame); // execute C
         patch(jumpAddr, nextInstrAddr);
-        ast.E.visit(this, frame);
+        ast.E.visit(this, frame); // evaluate E
         emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);
         return null;
     }
 
     @Override//Madri
-    public Object visitUntilDoCommand(UntilDoCommand ast, Object o) {
+    public Object visitUntilDoCommand(UntilDoCommand ast, Object o) { // execute [ loop until E do C ]
         Frame frame = (Frame) o;
         int jumpAddr, loopAddr;
         jumpAddr = nextInstrAddr;
-        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+        emit(Machine.JUMPop, 0, Machine.CBr, 0); // jump to the expression
         loopAddr = nextInstrAddr;
-        ast.C.visit(this, frame);
-        patch(jumpAddr, nextInstrAddr);
-        ast.E.visit(this, frame);
+        ast.C.visit(this, frame); // execute C
+        patch(jumpAddr, nextInstrAddr); 
+        ast.E.visit(this, frame); // evaluate E
         emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);
         return null;
     }
@@ -1054,27 +1054,27 @@ public final class Encoder implements Visitor {
     }
 
     @Override//Madri
-    public Object visitDoUntilCommand(DoUntilCommand aThis, Object o) {
+    public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {
         Frame frame = (Frame) o;
         int loopAddr;
         loopAddr = nextInstrAddr;
-        aThis.C.visit(this, frame);
-        aThis.E.visit(this, frame);
+        ast.C.visit(this, frame);
+        ast.E.visit(this, frame);
         emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);
         return null;
     }
 
     @Override//Madri
-    public Object visitForDoCommand(ForDoCommand aThis, Object o) {
+    public Object visitForDoCommand(ForDoCommand ast ,Object o) {
         Frame frame = (Frame) o;
         int jumpAddr, loopAddr;
-        aThis.E2.visit(this, frame);
-        aThis.IE.visit(this, frame);
+        ast.E2.visit(this, frame);
+        ast.IE.visit(this, frame);
         jumpAddr = nextInstrAddr;
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
         loopAddr = nextInstrAddr;
         emit(Machine.LOADop, 1, Machine.STr, -1);
-        aThis.C.visit(this, frame);
+        ast.C.visit(this, frame);
         emit(Machine.POPop, 1, 0, 0);
         emit(Machine.CALLop, 0, Machine.PBr, 5);
         patch(jumpAddr, nextInstrAddr);
@@ -1086,24 +1086,24 @@ public final class Encoder implements Visitor {
     }
 
     @Override//Madri
-    public Object visitForIdentifierExpression(ForIdentifierExpression aThis, Object o) {
+    public Object visitForIdentifierExpression(ForIdentifierExpression ast, Object o) {
         Frame frame = (Frame) o;
-        Integer valSize = (Integer) aThis.E1.visit(this, frame);
+        Integer valSize = (Integer) ast.E1.visit(this, frame);
         return valSize;
     }
 
     @Override//Ulises
-    public Object visitForWhileCommand(ForWhileCommand aThis, Object o) {
+    public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
         Frame frame = (Frame) o;
         int jumpAddr, loopAddr;
-        aThis.E2.visit(this, frame);
-        aThis.IE.visit(this, frame);
+        ast.E2.visit(this, frame);
+        ast.IE.visit(this, frame);
         jumpAddr = nextInstrAddr;
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
         loopAddr = nextInstrAddr;
         emit(Machine.LOADop, 1, Machine.STr, -1);
         
-        WhileDoCommand m = (WhileDoCommand)aThis.loop;
+        WhileDoCommand m = (WhileDoCommand)ast.loop;
         m.C.visit(this, frame);
         emit(Machine.POPop, 1, 0, 0);
         emit(Machine.CALLop, 0, Machine.PBr, 5);
@@ -1119,18 +1119,18 @@ public final class Encoder implements Visitor {
     }
 
     @Override//Kevin
-    public Object visitForUntilCommand(ForUntilCommand aThis, Object o) {
+    public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
         Frame frame = (Frame) o;
         int jumpAddr, loopAddr;
-        aThis.E2.visit(this, frame);
-        aThis.IE.visit(this, frame);
+        ast.E2.visit(this, frame);
+        ast.IE.visit(this, frame);
         jumpAddr = nextInstrAddr;
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
         loopAddr = nextInstrAddr;
         emit(Machine.LOADop, 1, Machine.STr, -1);
         
-        UntilDoCommand m = (UntilDoCommand)aThis.loop;
-        aThis.loop.visit(this,frame);
+        UntilDoCommand m = (UntilDoCommand)ast.loop;
+        ast.loop.visit(this,frame);
         m.C.visit(this, frame);
         emit(Machine.POPop, 1, 0, 0);
         emit(Machine.CALLop, 0, Machine.PBr, 5);
@@ -1146,22 +1146,22 @@ public final class Encoder implements Visitor {
     }
 
     @Override//Ulises
-    public Object visitRecursiveDeclaration(RecursiveDeclaration aThis, Object o) {
+    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
         Integer valSize ;
         Frame frame = (Frame) o;
         Integer position = nextInstrAddr;
-        valSize = (Integer) aThis.pfAST.visit(this, frame);
+        valSize = (Integer) ast.pfAST.visit(this, frame);
         return valSize;
     }
 
     @Override//Ulises
-    public Object visitPrivateDeclaration(PrivateDeclaration aThis, Object o) {
+    public Object visitPrivateDeclaration(PrivateDeclaration ast, Object o) {
         Frame frame = (Frame) o;
         int extraSize1, extraSize2;
 
-        extraSize1 = ((Integer) aThis.d1AST.visit(this, frame)).intValue();
+        extraSize1 = ((Integer) ast.d1AST.visit(this, frame)).intValue();
         Frame frame1 = new Frame (frame, extraSize1);
-        extraSize2 = ((Integer) aThis.d2AST.visit(this, frame1)).intValue();
+        extraSize2 = ((Integer) ast.d2AST.visit(this, frame1)).intValue();
         return new Integer(extraSize1 + extraSize2);
         
     }
