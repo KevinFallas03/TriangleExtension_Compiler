@@ -1010,42 +1010,45 @@ public final class Encoder implements Visitor {
       }
     }
   }
-
+    /* 
+    * New generation routines
+    */
+    
     @Override//Madri
-    public Object visitWhileDoCommand(WhileDoCommand aThis, Object o) {
+    public Object visitWhileDoCommand(WhileDoCommand ast, Object o) { // execute [ while E do C ]
         Frame frame = (Frame) o;
         int jumpAddr, loopAddr;
         jumpAddr = nextInstrAddr;
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
         loopAddr = nextInstrAddr;
-        aThis.C.visit(this, frame);
+        ast.C.visit(this, frame);
         patch(jumpAddr, nextInstrAddr);
-        aThis.E.visit(this, frame);
+        ast.E.visit(this, frame);
         emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);
         return null;
     }
 
     @Override//Madri
-    public Object visitUntilDoCommand(UntilDoCommand aThis, Object o) {
+    public Object visitUntilDoCommand(UntilDoCommand ast, Object o) {
         Frame frame = (Frame) o;
         int jumpAddr, loopAddr;
         jumpAddr = nextInstrAddr;
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
         loopAddr = nextInstrAddr;
-        aThis.C.visit(this, frame);
+        ast.C.visit(this, frame);
         patch(jumpAddr, nextInstrAddr);
-        aThis.E.visit(this, frame);
+        ast.E.visit(this, frame);
         emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);
         return null;
     }
 
     @Override//Ulises
-    public Object visitDoWhileCommand(DoWhileCommand aThis, Object o) {
+    public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {
         Frame frame = (Frame) o;
         int loopAddr;
         loopAddr = nextInstrAddr;
-        aThis.C.visit(this, frame);
-        aThis.E.visit(this, frame);
+        ast.C.visit(this, frame);
+        ast.E.visit(this, frame);
         emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
         return null;
     }
@@ -1163,7 +1166,7 @@ public final class Encoder implements Visitor {
         
     }
 
-    @Override//Ulises
+    @Override//Kevin
     public Object visitVarDeclarationBecomes(VarDeclarationBecomes ast, Object o) {
         Frame frame = (Frame) o;
         int extraSize = (Integer) ast.E.visit(this, frame);
@@ -1191,6 +1194,11 @@ public final class Encoder implements Visitor {
 
     @Override//Kevin
     public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
+//        try{
+//             
+//        }catch(){
+//            
+//        }
         return null;
     }
 
