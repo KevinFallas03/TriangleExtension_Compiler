@@ -1107,25 +1107,25 @@ public final class Encoder implements Visitor {
         try{
             Frame frame = (Frame) o;
             int jumpAddr, loopAddr;
-            ast.E2.visit(this, frame);
-            ast.IE.visit(this, frame);
+            ast.E2.visit(this, frame); // evaluate expression 2
+            ast.IE.visit(this, frame);  // evaluate the identifier and the expression 1
             jumpAddr = nextInstrAddr;
-            emit(Machine.JUMPop, 0, Machine.CBr, 0);
+            emit(Machine.JUMPop, 0, Machine.CBr, 0); 
             loopAddr = nextInstrAddr;
             emit(Machine.LOADop, 1, Machine.STr, -1);
 
-            WhileDoCommand m = (WhileDoCommand)ast.loop;
-            m.C.visit(this, frame);
-            emit(Machine.POPop, 1, 0, 0);
+            WhileDoCommand m = (WhileDoCommand)ast.loop; // get the values in while command
+            m.C.visit(this, frame); // execute the command
+            emit(Machine.POPop, 1, 0, 0); 
             emit(Machine.CALLop, 0, Machine.PBr, 5);
             patch(jumpAddr, nextInstrAddr);
             emit(Machine.LOADop, 2, Machine.STr, -2);
             emit(Machine.CALLop, 0, Machine.PBr, 15);
-            m.E.visit(this, frame);
+            m.E.visit(this, frame); // evaluate the expression
             emit(Machine.CALLop, 0, Machine.PBr, 2);
             emit(Machine.CALLop, 0, Machine.PBr, 3);
-            emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
-            emit(Machine.POPop, 2, 0, 0);
+            emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);// jump to the command visit if the expression is true
+            emit(Machine.POPop, 2, 0, 0);  // clean the stack for exit the loop
             return null;
         }
         catch(Exception e){
@@ -1137,28 +1137,31 @@ public final class Encoder implements Visitor {
     @Override//Kevin
     public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
         try{
-            Frame frame = (Frame) o;
+            Frame frame = (Frame) o; 
             int jumpAddr, loopAddr;
-            ast.E2.visit(this, frame);
-            ast.IE.visit(this, frame);
+            ast.E2.visit(this, frame); // evaluate expression 2
+            ast.IE.visit(this, frame); // evaluate the identifier and the expression 1
             jumpAddr = nextInstrAddr;
-            emit(Machine.JUMPop, 0, Machine.CBr, 0);
+            emit(Machine.JUMPop, 0, Machine.CBr, 0); // jump to the load
             loopAddr = nextInstrAddr;
-            emit(Machine.LOADop, 1, Machine.STr, -1);
+            emit(Machine.LOADop, 1, Machine.STr, -1); 
 
-            UntilDoCommand m = (UntilDoCommand)ast.loop;
-            ast.loop.visit(this,frame);
-            m.C.visit(this, frame);
+            UntilDoCommand untilCommand = (UntilDoCommand)ast.loop; // get the values in until command
+            ast.loop.visit(this,frame); // execute the command
+            untilCommand.C.visit(this, frame);  // execute the command
             emit(Machine.POPop, 1, 0, 0);
             emit(Machine.CALLop, 0, Machine.PBr, 5);
-            patch(jumpAddr, nextInstrAddr);
+            
+            patch(jumpAddr, nextInstrAddr); 
             emit(Machine.LOADop, 2, Machine.STr, -2);
             emit(Machine.CALLop, 0, Machine.PBr, 15);
-            m.E.visit(this, frame);
+            
+            untilCommand.E.visit(this, frame); // evaluate the expression in the until command
+            
             emit(Machine.CALLop, 0, Machine.PBr, 2);
             emit(Machine.CALLop, 0, Machine.PBr, 3);
-            emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
-            emit(Machine.POPop, 2, 0, 0);
+            emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr); // jump to the loop visit if the expression is true
+            emit(Machine.POPop, 2, 0, 0); // clean the stack for exit the loop
             return null;
         }catch(Exception e){
             System.out.println("Loop ForUntil not supported yet.");
@@ -1194,7 +1197,7 @@ public final class Encoder implements Visitor {
     @Override//Kevin
     public Object visitVarDeclarationBecomes(VarDeclarationBecomes ast, Object o) {
         Frame frame = (Frame) o;
-        int extraSize = (Integer) ast.E.visit(this, frame);
+        int extraSize = (Integer) ast.E.visit(this, frame); 
         emit(Machine.PUSHop, 0, 0, extraSize);
         ast.entity = new KnownAddress(Machine.addressSize, frame.level, frame.size);
         return new Integer(extraSize);   
