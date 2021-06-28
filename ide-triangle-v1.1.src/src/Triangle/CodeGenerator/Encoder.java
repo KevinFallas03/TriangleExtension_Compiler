@@ -1105,28 +1105,37 @@ public final class Encoder implements Visitor {
     @Override//Ulises
     public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
         try{
-            Frame frame = (Frame) o;
             int jumpAddr, loopAddr;
-            ast.E2.visit(this, frame); // evaluate expression 2
-            ast.IE.visit(this, frame);  // evaluate the identifier and the expression 1
-            jumpAddr = nextInstrAddr;
-            emit(Machine.JUMPop, 0, Machine.CBr, 0); 
-            loopAddr = nextInstrAddr;
-            emit(Machine.LOADop, 1, Machine.STr, -1);
+            Frame frame = (Frame) o;
 
-            WhileDoCommand m = (WhileDoCommand)ast.loop; // get the values in while command
-            m.C.visit(this, frame); // execute the command
-            emit(Machine.POPop, 1, 0, 0); 
-            emit(Machine.CALLop, 0, Machine.PBr, 5);
-            patch(jumpAddr, nextInstrAddr);
+            ast.E2.visit(this, frame); // evaluate E2
+            ast.IE.visit(this, frame); // evaluate E1
+            
+            WhileDoCommand whileExpComm = (WhileDoCommand)ast.loop; // get the expression and command in while
+            whileExpComm.E.visit(this, frame); // evaluate expression 3 which is from the while
+            
+            emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, 0); // is the expression is false exit the loop
+            
+            //JUMP to evalcond
+            jumpAddr = nextInstrAddr; 
+            emit(Machine.JUMPop, 0,Machine.CBr,0);
+            loopAddr = nextInstrAddr;
+        
+            //loop
+            whileExpComm.C.visit(this, frame); // execute C
+            emit(Machine.CALLop, 0, Machine.PBr, Machine.succDisplacement);
+
+            //Evalcond
+            int evalcond = nextInstrAddr;
+            patch(jumpAddr,evalcond);
             emit(Machine.LOADop, 2, Machine.STr, -2);
-            emit(Machine.CALLop, 0, Machine.PBr, 15);
-            m.E.visit(this, frame); // evaluate the expression
-            emit(Machine.CALLop, 0, Machine.PBr, 2);
-            emit(Machine.CALLop, 0, Machine.PBr, 3);
-            emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);// jump to the command visit if the expression is true
-            emit(Machine.POPop, 2, 0, 0);  // clean the stack for exit the loop
+            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.geDisplacement);
+            emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+
+            //Exit
+            emit(Machine.POPop, 0, 0, 2);
             return null;
+            
         }
         catch(Exception e){
             System.out.println("Loop ForWhile not supported yet.");
